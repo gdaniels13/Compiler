@@ -1,0 +1,10 @@
+var world:integer;
+
+begin
+	world:=13;
+	if world >10 then
+	elseif world < 10 then
+	else
+	end
+	end 
+	.
