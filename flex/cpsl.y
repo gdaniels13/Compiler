@@ -90,7 +90,12 @@ int yyerror(const char *p)
 %left 		AND_SYMBOL
 %right 		NOT_SYMBOL
 
-%nonassoc 	LESS_SYMBOL LESS_EQUAL_SYMBOL GREAT_SYMBOL GREAT_EQUAL_SYMBOL EQUAL_SYMBOL NOT_EQUAL_SYMBOL
+%nonassoc 	LESS_SYMBOL 
+%nonassoc 	LESS_EQUAL_SYMBOL
+%nonassoc 	GREAT_SYMBOL
+%nonassoc 	GREAT_EQUAL_SYMBOL
+%nonassoc 	EQUAL_SYMBOL
+%nonassoc 	NOT_EQUAL_SYMBOL
 
 %left		ADD_SYMBOL SUB_SYMBOL
 %left 		MULT_SYMBOL DIV_SYMBOL PERCENT_SYMBOL
@@ -100,12 +105,7 @@ int yyerror(const char *p)
 
 %%
 Program:  ConstantDecl TypeDecl VarDecl subProgram Block DOT_SYMBOL
-		| ConstantDecl VarDecl subProgram Block DOT_SYMBOL
-		| ConstantDecl TypeDecl subProgram Block DOT_SYMBOL
-		| ConstantDecl subProgram Block  DOT_SYMBOL
-		| TypeDecl VarDecl subProgram Block DOT_SYMBOL
-		| TypeDecl Block subProgram DOT_SYMBOL
-		| VarDecl Block subProgram DOT_SYMBOL
+
 		;
 
 		subProgram: ProcedureDecl subProgram
@@ -148,6 +148,7 @@ Block: BEGIN_SYMBOL StatementSequence END_SYMBOL
 /*3.1.3*/
 
 TypeDecl:	TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL SEMI_COLON_SYMBOL subTypeDecl
+		|
 		;
 
 		subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
@@ -272,32 +273,44 @@ NullStatement: /*empty*/
 /*3.3*/
 
 
-Expression: Expression OR_SYMBOL Expression
-			| Expression AND_SYMBOL Expression
-			| Expression EQUAL_SYMBOL Expression
-			| Expression NOT_EQUAL_SYMBOL Expression
-			| Expression LESS_EQUAL_SYMBOL Expression
-			| Expression GREAT_EQUAL_SYMBOL Expression
-			| Expression LESS_SYMBOL Expression
-			| Expression GREAT_SYMBOL Expression
-			| Expression ADD_SYMBOL Expression
-			| Expression SUB_SYMBOL Expression
-			| Expression MULT_SYMBOL Expression
-			| Expression DIV_SYMBOL Expression
-			| Expression PERCENT_SYMBOL Expression
+Expression: subExpression Operator subExpression
 			| NOT_SYMBOL Expression
 			| SUB_SYMBOL Expression %prec UMINUS
 			| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-			| ID_SYMBOL LEFT_BRACE_SYMBOL  Expression  RIGHT_BRACE_SYMBOL
-			| ID_SYMBOL LEFT_BRACE_SYMBOL Expression subExpressionIdent RIGHT_BRACE_SYMBOL
+			| ID_SYMBOL LEFT_BRACE_SYMBOL subExpressionIdent RIGHT_BRACE_SYMBOL
 			| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 			| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 			| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 			| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-			| LValue
-			| ConstExpression
+			| subExpression
 			;
-	subExpressionIdent: COMMA_SYMBOL Expression subExpressionIdent
+
+	subExpression: LValue
+					|INTEGER_SYMBOL
+					|CHARACTER_SYMBOL
+					|STRING_SYMBOL
+					;
+
+Operator: 		OR_SYMBOL
+				| AND_SYMBOL
+				| EQUAL_SYMBOL
+				| NOT_EQUAL_SYMBOL
+				| LESS_EQUAL_SYMBOL
+				| GREAT_EQUAL_SYMBOL
+				| LESS_SYMBOL
+				| GREAT_SYMBOL
+				| ADD_SYMBOL
+				| SUB_SYMBOL
+				| MULT_SYMBOL
+				| DIV_SYMBOL
+				| PERCENT_SYMBOL
+				;
+
+	subExpressionIdent: Expression subSubExpressionIndent
+						| /*empty*/
+						;
+
+		subSubExpressionIndent: COMMA_SYMBOL Expression subSubExpressionIndent
 						| /*empty*/
 						;
 

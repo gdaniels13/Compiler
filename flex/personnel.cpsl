@@ -2,6 +2,7 @@ $ Program to sort personnel data
 
 const
   TABLEN = 20;
+const
   NAMELEN = 24;
 
 type
