@@ -16,7 +16,7 @@ var
   table : array[1:TABLEN] of ptype;
   persons : integer;
 
-function exchname (var a,b:ntype) : boolean
+function exchname (var a,b:ntype) : boolean;
   var
     i:integer;
 begin
@@ -30,12 +30,12 @@ begin
   return false;
 end;
 
-function exchange (a,b: integer) : boolean
+function exchange (a,b: integer) : boolean;
 begin
   return a > b;
 end;
 
-procedure nameread (var a : ntype)
+procedure nameread (var a : ntype);
   var
     c:char;
     i:integer;
@@ -70,7 +70,7 @@ begin
   end;
 end;
 
-procedure personswap (var a,b : ptype)
+procedure personswap (var a,b : ptype);
   var
     t : ptype;
 begin
@@ -133,4 +133,4 @@ begin
   write("\n\tSorted by name:\n\n");
   namesort();
   printtable();
-end;
+end.

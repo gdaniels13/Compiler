@@ -121,7 +121,7 @@ ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYM
 
 /*3.1.2*/ 
 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-			| PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body
+			| PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 			;
 
 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
@@ -147,7 +147,7 @@ Block: BEGIN_SYMBOL StatementSequence END_SYMBOL
 
 /*3.1.3*/
 
-TypeDecl:	TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL SEMI_COLON_SYMBOL subTypeDecl
+TypeDecl:	TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
 		|
 		;
 
@@ -170,7 +170,7 @@ RecordType: RECORD_SYMBOL subRecordType END_SYMBOL
 				|	/*empty*/
 				;
 
-ArrayType: ARRAY_SYMBOL RIGHT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
+ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
 		;
 
 IdentList: ID_SYMBOL subIdentList
@@ -182,6 +182,7 @@ IdentList: ID_SYMBOL subIdentList
 /*3.1.4*/
 
 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
+		|
 		;
 
 		subVarDecl:IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
@@ -232,8 +233,11 @@ WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
 RepeatStatment: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL Expression
 				;
 
-ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression TO_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
+ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
 			;
+		subForType: DOWNTO_SYMBOL
+					| TO_SYMBOL
+					;
 
 StopStatement: STOP_SYMBOL
 			;
@@ -291,6 +295,11 @@ Expression: subExpression Operator subExpression
 					|STRING_SYMBOL
 					;
 
+LValue: ID_SYMBOL
+		| LValue DOT_SYMBOL LValue
+		| LValue LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+		;
+
 Operator: 		OR_SYMBOL
 				| AND_SYMBOL
 				| EQUAL_SYMBOL
@@ -314,11 +323,6 @@ Operator: 		OR_SYMBOL
 						| /*empty*/
 						;
 
-
-LValue: ID_SYMBOL
-		| ID_SYMBOL DOT_SYMBOL ID_SYMBOL
-		| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
-		;
 
 ConstExpression: ConstExpression OR_SYMBOL ConstExpression
 			| ConstExpression AND_SYMBOL ConstExpression
