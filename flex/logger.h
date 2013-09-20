@@ -2,30 +2,29 @@
 #define LOOGER_H
 
 #include <iostream>
+#include <memory>
 #include <mutex>
 
 enum LogLevel{
-	VERBOSE = 1,
-	DEBUG = 2,
-	INFO = 3,
-	SILENT = 4
+	VERBOSE = 4,
+	DEBUG = 3,
+	ERROR = 2,
+	SILENT = 1
 };
 
 class Logger
 {
 public:
     static void LogMessage(std::string newString);
-    static void LogMessage(int lineNumber, std::string newString);
     static void LogMessage(std::string newString, std::string token);
     static void LogMessage(std::string newString, int token);
-    static void LogMessage(std::string newString, std::string token, int lineNumber);
-	static void LogMessage(std::string newString, int token,int lineNumber);
-	static void SetLevel(LogLevel);
+    static void SetLevel(LogLevel);
+
 private:
-	static LogLevel level;
-	static Logger * instance;
 	Logger();
-	static Logger * getInstance();
+	static std::shared_ptr<Logger> getInstance();
+	static std::shared_ptr<Logger> m_instance;
 	std::mutex m_mutex;
+	static LogLevel level;
 };
 #endif

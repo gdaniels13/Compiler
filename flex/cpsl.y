@@ -115,9 +115,11 @@ Program:  ConstantDecl TypeDecl VarDecl subProgram Block DOT_SYMBOL
 
 
 /* 3.1.1 */
-ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL ConstantDecl
-					|
+ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl
 					;
+		subConstantDecl: SEMI_COLON_SYMBOL EQUAL_SYMBOL ConstExpression
+						|
+						;
 
 /*3.1.2*/ 
 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
