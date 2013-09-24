@@ -1,26 +1,22 @@
-default: logger cpsl
+default: logger.o cpsl
 
 
-log: default
-	./cpsl testFile.cpsl > ./out.txt
-	subl out.txt
-
-run: default
-	echo "factorial"
-	./cpsl factorial.cpsl
-	echo "personnel"
-	./cpsl personnel.cpsl
-	echo "expressions"
-	./cpsl expressions.cpsl
+# run: default
+# 	echo "factorial"
+# 	./cpsl factorial.cpsl
+# 	echo "personnel"
+# 	./cpsl personnel.cpsl
+# 	echo "expressions"
+# 	./cpsl expressions.cpsl
 
 
-cpsl: flex bison
+cpsl: bison flex
 	g++ -o cpsl -std=c++11 logger.o lex.yy.c cpsl.tab.c -ll
 
 flex: cpsl.l
 	flex cpsl.l
 
-logger: 
+logger.o: logger.cpp logger.h
 	g++ -std=c++11 logger.h logger.cpp -c
 
 
@@ -36,6 +32,8 @@ clean:
 	-rm lex.yy.c
 	-rm out.txt
 	-rm gregDaniels.tar
+	-rm cpsl.tab.*
+	-rm cpsl.output
 
 
 tar: clean

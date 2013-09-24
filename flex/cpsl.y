@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <cstdio>
+#include "logger.h"
 #define YYERROR_VERBOSE 1
 
 
@@ -13,8 +14,8 @@ int yylex();
 
 int yyerror(const char *p) 
 { 
-	fprintf(stdout, "%s", p);
-	std::cout << " on line "<< numLines  << std::endl; 
+	Logger::logError(p,numLines);
+
 
 }
 
@@ -105,7 +106,6 @@ int yyerror(const char *p)
 
 %%
 Program:  ConstantDecl TypeDecl VarDecl subProgram Block DOT_SYMBOL
-
 		;
 
 		subProgram: ProcedureDecl subProgram
@@ -116,9 +116,10 @@ Program:  ConstantDecl TypeDecl VarDecl subProgram Block DOT_SYMBOL
 
 /* 3.1.1 */
 ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl
+					|
 					;
-		subConstantDecl: SEMI_COLON_SYMBOL EQUAL_SYMBOL ConstExpression
-						|
+		subConstantDecl:  ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl
+						| 
 						;
 
 /*3.1.2*/ 
@@ -360,6 +361,16 @@ int main(int argc, char ** argv)
 		yyin = fopen( argv[0], "r" );
 	else
 		yyin = stdin;
+	argc--,argv++;
+	if(argc>0)
+	{
+		if(argv[0][1] == 'v')
+		{
+			Logger::SetLevel(VERBOSE);
+		}
+	}
 	yyparse();
+
+	std::cout<<"finished Parsing\n";
 	return 0;
 };

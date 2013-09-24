@@ -1,6 +1,8 @@
 #include "logger.h"
 
 std::shared_ptr<Logger> Logger::m_instance;
+LogLevel Logger::m_level;
+
 
 Logger::Logger():
 m_mutex()
@@ -13,34 +15,51 @@ std::shared_ptr<Logger> Logger::getInstance()
 	{
 		std::shared_ptr<Logger> logger(new Logger());
 		m_instance = logger;
-		level = ERROR;
+		m_level = ERROR;
 	}
 	return m_instance;
 	
 }
 
-void Logger::LogMessage(std::string newString)
-{
-	getInstance()->m_mutex.lock();
-    std::cout << newString << std::endl;
-    getInstance()->m_mutex.unlock();
-}
-
-void Logger::LogMessage(std::string newString, std::string token)
-{
-	getInstance()->m_mutex.lock();
-    std::cout << newString << " " << token << std::endl;
-    getInstance()->m_mutex.unlock();
-}
-
-void Logger::LogMessage(std::string newString, int token)
-{
-	getInstance()->m_mutex.lock();
-    std::cout << newString << " " << token << std::endl;
-    getInstance()->m_mutex.unlock();
-}
-
 void Logger::SetLevel(LogLevel t)
 {
-	getInstance()->level = t;
+	getInstance()->m_level = t;
 }
+
+
+void Logger::logError(std::string newString, int lineNumber)
+{
+	getInstance()->m_mutex.lock();
+	if(getInstance()->getLevel() >= ERROR)
+	{
+   		std::cout<<"ERROR Line "<<lineNumber<<": " << newString << std::endl;
+	}
+    getInstance()->m_mutex.unlock();
+}
+
+void Logger::logDebug(std::string newString, int lineNumber)
+{
+	getInstance()->m_mutex.lock();
+	if(getInstance()->getLevel() >= DEBUG)
+	{
+   		std::cout<<"DEBUG Line "<<lineNumber<<": " << newString << std::endl;
+	}
+    getInstance()->m_mutex.unlock();
+}
+
+void Logger::logMessage(std::string newString, int lineNumber)
+{
+	getInstance()->m_mutex.lock();
+	if(getInstance()->getLevel() >= VERBOSE)
+	{
+   		std::cout<<"INFO Line "<<lineNumber<<": " << newString << std::endl;
+	}
+    getInstance()->m_mutex.unlock();
+}
+
+LogLevel Logger::getLevel()
+{
+	return m_level;
+}
+
+

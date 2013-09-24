@@ -15,16 +15,19 @@ enum LogLevel{
 class Logger
 {
 public:
-    static void LogMessage(std::string newString);
+    static void LogMesslineNumberage(std::string newString);
     static void LogMessage(std::string newString, std::string token);
     static void LogMessage(std::string newString, int token);
-    static void SetLevel(LogLevel);
-
+	static void SetLevel(LogLevel);
+	static void logError(std::string newString, int lineNumber);
+	static void logDebug(std::string newString, int lineNumber);
+	static void logMessage(std::string newString, int lineNumber);
 private:
+	static LogLevel getLevel();
 	Logger();
 	static std::shared_ptr<Logger> getInstance();
 	static std::shared_ptr<Logger> m_instance;
 	std::mutex m_mutex;
-	static LogLevel level;
+	static LogLevel m_level;
 };
 #endif
