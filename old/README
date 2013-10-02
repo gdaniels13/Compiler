@@ -1,7 +1,0 @@
-Currently to run the analyzer run
-
-cpsl <fileName> -v 
-
-all output will print to the screen.
-
-make test will run the above command on testFile.cpsl
