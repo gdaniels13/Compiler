@@ -12,240 +12,241 @@ Grammar
     4           | /* empty */
 
     5 ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl
+    6             | /* empty */
 
-    6 subConstantDecl: SEMI_COLON_SYMBOL EQUAL_SYMBOL ConstExpression
-    7                | /* empty */
+    7 subConstantDecl: ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl
+    8                | /* empty */
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-    9              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   10              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
-   12 FormalParameters: /* empty */
-   13                 | VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
-   14                 | IdentList COLON_SYMBOL Type subFormalParameters
+   13 FormalParameters: /* empty */
+   14                 | VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
+   15                 | IdentList COLON_SYMBOL Type subFormalParameters
 
-   15 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
-   16                    | SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
-   17                    | /* empty */
+   16 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
+   17                    | SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
+   18                    | /* empty */
 
-   18 Body: ConstantDecl TypeDecl VarDecl Block
+   19 Body: ConstantDecl TypeDecl VarDecl Block
 
-   19 Block: BEGIN_SYMBOL StatementSequence END_SYMBOL
+   20 Block: BEGIN_SYMBOL StatementSequence END_SYMBOL
 
-   20 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
-   21         | /* empty */
+   21 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
+   22         | /* empty */
 
-   22 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
-   23            | /* empty */
+   23 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
+   24            | /* empty */
 
-   24 Type: SimpleType
-   25     | RecordType
-   26     | ArrayType
+   25 Type: SimpleType
+   26     | RecordType
+   27     | ArrayType
 
-   27 SimpleType: ID_SYMBOL
+   28 SimpleType: ID_SYMBOL
 
-   28 RecordType: RECORD_SYMBOL subRecordType END_SYMBOL
+   29 RecordType: RECORD_SYMBOL subRecordType END_SYMBOL
 
-   29 subRecordType: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subRecordType
-   30              | /* empty */
+   30 subRecordType: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subRecordType
+   31              | /* empty */
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
 
-   32 IdentList: ID_SYMBOL subIdentList
+   33 IdentList: ID_SYMBOL subIdentList
 
-   33 subIdentList: COMMA_SYMBOL ID_SYMBOL subIdentList
-   34             | /* empty */
+   34 subIdentList: COMMA_SYMBOL ID_SYMBOL subIdentList
+   35             | /* empty */
 
-   35 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
-   36        | /* empty */
+   36 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
+   37        | /* empty */
 
-   37 subVarDecl: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
-   38           | /* empty */
+   38 subVarDecl: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
+   39           | /* empty */
 
-   39 StatementSequence: Statement subStatementSequence
+   40 StatementSequence: Statement subStatementSequence
 
-   40 subStatementSequence: SEMI_COLON_SYMBOL Statement subStatementSequence
-   41                     | /* empty */
+   41 subStatementSequence: SEMI_COLON_SYMBOL Statement subStatementSequence
+   42                     | /* empty */
 
-   42 Statement: Assignment
-   43          | IfStatement
-   44          | WhileStatement
-   45          | RepeatStatment
-   46          | ForStatement
-   47          | StopStatement
-   48          | ReturnStatment
-   49          | ReadStatement
-   50          | WriteStatement
-   51          | ProcedureCall
-   52          | NullStatement
+   43 Statement: Assignment
+   44          | IfStatement
+   45          | WhileStatement
+   46          | RepeatStatment
+   47          | ForStatement
+   48          | StopStatement
+   49          | ReturnStatment
+   50          | ReadStatement
+   51          | WriteStatement
+   52          | ProcedureCall
+   53          | NullStatement
 
-   53 Assignment: LValue ASSIGN_SYMBOL ConstExpression
+   54 Assignment: LValue ASSIGN_SYMBOL ConstExpression
 
-   54 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL
+   55 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL
 
-   55 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment
-   56              | /* empty */
+   56 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment
+   57              | /* empty */
 
-   57 subElse: ELSE_SYMBOL StatementSequence
-   58        | /* empty */
+   58 subElse: ELSE_SYMBOL StatementSequence
+   59        | /* empty */
 
-   59 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
+   60 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
 
-   60 RepeatStatment: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL Expression
+   61 RepeatStatment: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL Expression
 
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
 
-   62 subForType: DOWNTO_SYMBOL
-   63           | TO_SYMBOL
+   63 subForType: DOWNTO_SYMBOL
+   64           | TO_SYMBOL
 
-   64 StopStatement: STOP_SYMBOL
+   65 StopStatement: STOP_SYMBOL
 
-   65 ReturnStatment: RETURN_SYMBOL Expression
-   66               | RETURN_SYMBOL
+   66 ReturnStatment: RETURN_SYMBOL Expression
+   67               | RETURN_SYMBOL
 
-   67 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue subReadStatement RIGHT_BRACE_SYMBOL
+   68 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue subReadStatement RIGHT_BRACE_SYMBOL
 
-   68 subReadStatement: COMMA_SYMBOL LValue subReadStatement
-   69                 | /* empty */
+   69 subReadStatement: COMMA_SYMBOL LValue subReadStatement
+   70                 | /* empty */
 
-   70 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression subWriteStatement RIGHT_BRACE_SYMBOL
+   71 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression subWriteStatement RIGHT_BRACE_SYMBOL
 
-   71 subWriteStatement: COMMA_SYMBOL Expression subWriteStatement
-   72                  | /* empty */
+   72 subWriteStatement: COMMA_SYMBOL Expression subWriteStatement
+   73                  | /* empty */
 
-   73 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
-   74              | ID_SYMBOL LEFT_BRACE_SYMBOL Expression subProcedureCall RIGHT_BRACE_SYMBOL
+   74 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
+   75              | ID_SYMBOL LEFT_BRACE_SYMBOL Expression subProcedureCall RIGHT_BRACE_SYMBOL
 
-   75 subProcedureCall: COMMA_SYMBOL Expression subProcedureCall
-   76                 | /* empty */
+   76 subProcedureCall: COMMA_SYMBOL Expression subProcedureCall
+   77                 | /* empty */
 
-   77 NullStatement: /* empty */
+   78 NullStatement: /* empty */
 
-   78 Expression: subExpression Operator subExpression
-   79           | NOT_SYMBOL Expression
-   80           | SUB_SYMBOL Expression
-   81           | LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-   82           | ID_SYMBOL LEFT_BRACE_SYMBOL subExpressionIdent RIGHT_BRACE_SYMBOL
-   83           | CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-   84           | ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-   85           | PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-   86           | SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-   87           | subExpression
+   79 Expression: subExpression Operator subExpression
+   80           | NOT_SYMBOL Expression
+   81           | SUB_SYMBOL Expression
+   82           | LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   83           | ID_SYMBOL LEFT_BRACE_SYMBOL subExpressionIdent RIGHT_BRACE_SYMBOL
+   84           | CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   85           | ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   86           | PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   87           | SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   88           | subExpression
 
-   88 subExpression: LValue
-   89              | INTEGER_SYMBOL
-   90              | CHARACTER_SYMBOL
-   91              | STRING_SYMBOL
+   89 subExpression: LValue
+   90              | INTEGER_SYMBOL
+   91              | CHARACTER_SYMBOL
+   92              | STRING_SYMBOL
 
-   92 LValue: ID_SYMBOL
-   93       | LValue DOT_SYMBOL LValue
-   94       | LValue LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+   93 LValue: ID_SYMBOL
+   94       | LValue DOT_SYMBOL LValue
+   95       | LValue LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
 
-   95 Operator: OR_SYMBOL
-   96         | AND_SYMBOL
-   97         | EQUAL_SYMBOL
-   98         | NOT_EQUAL_SYMBOL
-   99         | LESS_EQUAL_SYMBOL
-  100         | GREAT_EQUAL_SYMBOL
-  101         | LESS_SYMBOL
-  102         | GREAT_SYMBOL
-  103         | ADD_SYMBOL
-  104         | SUB_SYMBOL
-  105         | MULT_SYMBOL
-  106         | DIV_SYMBOL
-  107         | PERCENT_SYMBOL
+   96 Operator: OR_SYMBOL
+   97         | AND_SYMBOL
+   98         | EQUAL_SYMBOL
+   99         | NOT_EQUAL_SYMBOL
+  100         | LESS_EQUAL_SYMBOL
+  101         | GREAT_EQUAL_SYMBOL
+  102         | LESS_SYMBOL
+  103         | GREAT_SYMBOL
+  104         | ADD_SYMBOL
+  105         | SUB_SYMBOL
+  106         | MULT_SYMBOL
+  107         | DIV_SYMBOL
+  108         | PERCENT_SYMBOL
 
-  108 subExpressionIdent: Expression subSubExpressionIndent
-  109                   | /* empty */
+  109 subExpressionIdent: Expression subSubExpressionIndent
+  110                   | /* empty */
 
-  110 subSubExpressionIndent: COMMA_SYMBOL Expression subSubExpressionIndent
-  111                       | /* empty */
+  111 subSubExpressionIndent: COMMA_SYMBOL Expression subSubExpressionIndent
+  112                       | /* empty */
 
-  112 ConstExpression: ConstExpression OR_SYMBOL ConstExpression
-  113                | ConstExpression AND_SYMBOL ConstExpression
-  114                | ConstExpression EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression LESS_SYMBOL ConstExpression
-  119                | ConstExpression GREAT_SYMBOL ConstExpression
-  120                | ConstExpression ADD_SYMBOL ConstExpression
-  121                | ConstExpression SUB_SYMBOL ConstExpression
-  122                | ConstExpression MULT_SYMBOL ConstExpression
-  123                | ConstExpression DIV_SYMBOL ConstExpression
-  124                | ConstExpression PERCENT_SYMBOL ConstExpression
-  125                | NOT_SYMBOL ConstExpression
-  126                | SUB_SYMBOL ConstExpression
-  127                | LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL
-  128                | INTEGER_SYMBOL
-  129                | CHARACTER_SYMBOL
-  130                | STRING_SYMBOL
-  131                | ID_SYMBOL
+  113 ConstExpression: ConstExpression OR_SYMBOL ConstExpression
+  114                | ConstExpression AND_SYMBOL ConstExpression
+  115                | ConstExpression EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression LESS_SYMBOL ConstExpression
+  120                | ConstExpression GREAT_SYMBOL ConstExpression
+  121                | ConstExpression ADD_SYMBOL ConstExpression
+  122                | ConstExpression SUB_SYMBOL ConstExpression
+  123                | ConstExpression MULT_SYMBOL ConstExpression
+  124                | ConstExpression DIV_SYMBOL ConstExpression
+  125                | ConstExpression PERCENT_SYMBOL ConstExpression
+  126                | NOT_SYMBOL ConstExpression
+  127                | SUB_SYMBOL ConstExpression
+  128                | LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL
+  129                | INTEGER_SYMBOL
+  130                | CHARACTER_SYMBOL
+  131                | STRING_SYMBOL
+  132                | ID_SYMBOL
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-ID_SYMBOL (258) 5 8 9 10 11 20 22 27 32 33 61 73 74 82 92 131
-CHARACTER_SYMBOL (259) 90 129
-INTEGER_SYMBOL (260) 89 128
-STRING_SYMBOL (261) 91 130
-ARRAY_SYMBOL (262) 31
-BEGIN_SYMBOL (263) 19
-ELSE_SYMBOL (264) 57
-ELSEIF_SYMBOL (265) 55
-IF_SYMBOL (266) 54
-OF_SYMBOL (267) 31
-RECORD_SYMBOL (268) 28
-REPEAT_SYMBOL (269) 60
-TO_SYMBOL (270) 63
-TYPE_SYMBOL (271) 20
-CHR_SYMBOL (272) 83
+ID_SYMBOL (258) 5 7 9 10 11 12 21 23 28 33 34 62 74 75 83 93 132
+CHARACTER_SYMBOL (259) 91 130
+INTEGER_SYMBOL (260) 90 129
+STRING_SYMBOL (261) 92 131
+ARRAY_SYMBOL (262) 32
+BEGIN_SYMBOL (263) 20
+ELSE_SYMBOL (264) 58
+ELSEIF_SYMBOL (265) 56
+IF_SYMBOL (266) 55
+OF_SYMBOL (267) 32
+RECORD_SYMBOL (268) 29
+REPEAT_SYMBOL (269) 61
+TO_SYMBOL (270) 64
+TYPE_SYMBOL (271) 21
+CHR_SYMBOL (272) 84
 CONST_SYMBOL (273) 5
-DO_SYMBOL (274) 59 61
-END_SYMBOL (275) 19 28 54 59 61
-FOR_SYMBOL (276) 61
-FORWARD_SYMBOL (277) 8 10
-ORD_SYMBOL (278) 84
-PRED_SYMBOL (279) 85
-PROCEDURE_SYMBOL (280) 8 9
-RETURN_SYMBOL (281) 65 66
-STOP_SYMBOL (282) 64
-SUCC_SYMBOL (283) 86
-UNTIL_SYMBOL (284) 60
-VAR_SYMBOL (285) 13 15 35
-WHILE_SYMBOL (286) 59
-DOWNTO_SYMBOL (287) 62
-FUNCTION_SYMBOL (288) 10 11
-READ_SYMBOL (289) 67
-THEN_SYMBOL (290) 54 55
-WRITE_SYMBOL (291) 70
-ASSIGN_SYMBOL (292) 53 61
-ADD_SYMBOL (293) 103 120
-SUB_SYMBOL (294) 80 104 121 126
-MULT_SYMBOL (295) 105 122
-DIV_SYMBOL (296) 106 123
-AND_SYMBOL (297) 96 113
-OR_SYMBOL (298) 95 112
-NOT_SYMBOL (299) 79 125
-EQUAL_SYMBOL (300) 5 6 20 22 97 114
-NOT_EQUAL_SYMBOL (301) 98 115
-LESS_SYMBOL (302) 101 118
-LESS_EQUAL_SYMBOL (303) 99 116
-GREAT_SYMBOL (304) 102 119
-GREAT_EQUAL_SYMBOL (305) 100 117
-DOT_SYMBOL (306) 1 93
-COMMA_SYMBOL (307) 33 68 71 75 110
-COLON_SYMBOL (308) 10 11 13 14 15 16 29 31 35 37
-SEMI_COLON_SYMBOL (309) 5 6 8 9 10 11 15 16 20 22 29 35 37 40
-LEFT_BRACE_SYMBOL (310) 8 9 10 11 67 70 73 74 81 82 83 84 85 86 127
-RIGHT_BRACE_SYMBOL (311) 8 9 10 11 67 70 73 74 81 82 83 84 85 86 127
-LEFT_SQUARE_SYMBOL (312) 31 94
-RIGHT_SQUARE_SYMBOL (313) 31 94
-PERCENT_SYMBOL (314) 107 124
+DO_SYMBOL (274) 60 62
+END_SYMBOL (275) 20 29 55 60 62
+FOR_SYMBOL (276) 62
+FORWARD_SYMBOL (277) 9 11
+ORD_SYMBOL (278) 85
+PRED_SYMBOL (279) 86
+PROCEDURE_SYMBOL (280) 9 10
+RETURN_SYMBOL (281) 66 67
+STOP_SYMBOL (282) 65
+SUCC_SYMBOL (283) 87
+UNTIL_SYMBOL (284) 61
+VAR_SYMBOL (285) 14 16 36
+WHILE_SYMBOL (286) 60
+DOWNTO_SYMBOL (287) 63
+FUNCTION_SYMBOL (288) 11 12
+READ_SYMBOL (289) 68
+THEN_SYMBOL (290) 55 56
+WRITE_SYMBOL (291) 71
+ASSIGN_SYMBOL (292) 54 62
+ADD_SYMBOL (293) 104 121
+SUB_SYMBOL (294) 81 105 122 127
+MULT_SYMBOL (295) 106 123
+DIV_SYMBOL (296) 107 124
+AND_SYMBOL (297) 97 114
+OR_SYMBOL (298) 96 113
+NOT_SYMBOL (299) 80 126
+EQUAL_SYMBOL (300) 5 7 21 23 98 115
+NOT_EQUAL_SYMBOL (301) 99 116
+LESS_SYMBOL (302) 102 119
+LESS_EQUAL_SYMBOL (303) 100 117
+GREAT_SYMBOL (304) 103 120
+GREAT_EQUAL_SYMBOL (305) 101 118
+DOT_SYMBOL (306) 1 94
+COMMA_SYMBOL (307) 34 69 72 76 111
+COLON_SYMBOL (308) 11 12 14 15 16 17 30 32 36 38
+SEMI_COLON_SYMBOL (309) 5 7 9 10 11 12 16 17 21 23 30 36 38 41
+LEFT_BRACE_SYMBOL (310) 9 10 11 12 68 71 74 75 82 83 84 85 86 87 128
+RIGHT_BRACE_SYMBOL (311) 9 10 11 12 68 71 74 75 82 83 84 85 86 87 128
+LEFT_SQUARE_SYMBOL (312) 32 95
+RIGHT_SQUARE_SYMBOL (313) 32 95
+PERCENT_SYMBOL (314) 108 125
 UMINUS (315)
 
 
@@ -258,101 +259,101 @@ Program (62)
 subProgram (63)
     on left: 2 3 4, on right: 1 2 3
 ConstantDecl (64)
-    on left: 5, on right: 1 18
+    on left: 5 6, on right: 1 19
 subConstantDecl (65)
-    on left: 6 7, on right: 5
+    on left: 7 8, on right: 5 7
 ProcedureDecl (66)
-    on left: 8 9, on right: 2
+    on left: 9 10, on right: 2
 FunctionDecl (67)
-    on left: 10 11, on right: 3
+    on left: 11 12, on right: 3
 FormalParameters (68)
-    on left: 12 13 14, on right: 8 9 10 11
+    on left: 13 14 15, on right: 9 10 11 12
 subFormalParameters (69)
-    on left: 15 16 17, on right: 13 14 15 16
+    on left: 16 17 18, on right: 14 15 16 17
 Body (70)
-    on left: 18, on right: 9 11
+    on left: 19, on right: 10 12
 Block (71)
-    on left: 19, on right: 1 18
+    on left: 20, on right: 1 19
 TypeDecl (72)
-    on left: 20 21, on right: 1 18
+    on left: 21 22, on right: 1 19
 subTypeDecl (73)
-    on left: 22 23, on right: 20 22
+    on left: 23 24, on right: 21 23
 Type (74)
-    on left: 24 25 26, on right: 10 11 13 14 15 16 20 22 29 31 35 37
+    on left: 25 26 27, on right: 11 12 14 15 16 17 21 23 30 32 36 38
 SimpleType (75)
-    on left: 27, on right: 24
-RecordType (76)
     on left: 28, on right: 25
+RecordType (76)
+    on left: 29, on right: 26
 subRecordType (77)
-    on left: 29 30, on right: 28 29
+    on left: 30 31, on right: 29 30
 ArrayType (78)
-    on left: 31, on right: 26
+    on left: 32, on right: 27
 IdentList (79)
-    on left: 32, on right: 13 14 15 16 29 35 37
+    on left: 33, on right: 14 15 16 17 30 36 38
 subIdentList (80)
-    on left: 33 34, on right: 32 33
+    on left: 34 35, on right: 33 34
 VarDecl (81)
-    on left: 35 36, on right: 1 18
+    on left: 36 37, on right: 1 19
 subVarDecl (82)
-    on left: 37 38, on right: 35 37
+    on left: 38 39, on right: 36 38
 StatementSequence (83)
-    on left: 39, on right: 19 54 55 57 59 60 61
+    on left: 40, on right: 20 55 56 58 60 61 62
 subStatementSequence (84)
-    on left: 40 41, on right: 39 40
+    on left: 41 42, on right: 40 41
 Statement (85)
-    on left: 42 43 44 45 46 47 48 49 50 51 52, on right: 39 40
+    on left: 43 44 45 46 47 48 49 50 51 52 53, on right: 40 41
 Assignment (86)
-    on left: 53, on right: 42
-IfStatement (87)
     on left: 54, on right: 43
+IfStatement (87)
+    on left: 55, on right: 44
 subIfStatment (88)
-    on left: 55 56, on right: 54 55
+    on left: 56 57, on right: 55 56
 subElse (89)
-    on left: 57 58, on right: 54
+    on left: 58 59, on right: 55
 WhileStatement (90)
-    on left: 59, on right: 44
-RepeatStatment (91)
     on left: 60, on right: 45
-ForStatement (92)
+RepeatStatment (91)
     on left: 61, on right: 46
+ForStatement (92)
+    on left: 62, on right: 47
 subForType (93)
-    on left: 62 63, on right: 61
+    on left: 63 64, on right: 62
 StopStatement (94)
-    on left: 64, on right: 47
+    on left: 65, on right: 48
 ReturnStatment (95)
-    on left: 65 66, on right: 48
+    on left: 66 67, on right: 49
 ReadStatement (96)
-    on left: 67, on right: 49
+    on left: 68, on right: 50
 subReadStatement (97)
-    on left: 68 69, on right: 67 68
+    on left: 69 70, on right: 68 69
 WriteStatement (98)
-    on left: 70, on right: 50
+    on left: 71, on right: 51
 subWriteStatement (99)
-    on left: 71 72, on right: 70 71
+    on left: 72 73, on right: 71 72
 ProcedureCall (100)
-    on left: 73 74, on right: 51
+    on left: 74 75, on right: 52
 subProcedureCall (101)
-    on left: 75 76, on right: 74 75
+    on left: 76 77, on right: 75 76
 NullStatement (102)
-    on left: 77, on right: 52
+    on left: 78, on right: 53
 Expression (103)
-    on left: 78 79 80 81 82 83 84 85 86 87, on right: 54 55 59 60 61
-    65 70 71 74 75 79 80 81 83 84 85 86 94 108 110
+    on left: 79 80 81 82 83 84 85 86 87 88, on right: 55 56 60 61 62
+    66 71 72 75 76 80 81 82 84 85 86 87 95 109 111
 subExpression (104)
-    on left: 88 89 90 91, on right: 78 87
+    on left: 89 90 91 92, on right: 79 88
 LValue (105)
-    on left: 92 93 94, on right: 53 67 68 88 93 94
+    on left: 93 94 95, on right: 54 68 69 89 94 95
 Operator (106)
-    on left: 95 96 97 98 99 100 101 102 103 104 105 106 107, on right:
-    78
+    on left: 96 97 98 99 100 101 102 103 104 105 106 107 108, on right:
+    79
 subExpressionIdent (107)
-    on left: 108 109, on right: 82
+    on left: 109 110, on right: 83
 subSubExpressionIndent (108)
-    on left: 110 111, on right: 108 110
+    on left: 111 112, on right: 109 111
 ConstExpression (109)
-    on left: 112 113 114 115 116 117 118 119 120 121 122 123 124 125
-    126 127 128 129 130 131, on right: 5 6 31 53 112 113 114 115 116
-    117 118 119 120 121 122 123 124 125 126 127
+    on left: 113 114 115 116 117 118 119 120 121 122 123 124 125 126
+    127 128 129 130 131 132, on right: 5 7 32 54 113 114 115 116 117
+    118 119 120 121 122 123 124 125 126 127 128
 
 
 state 0
@@ -360,6 +361,8 @@ state 0
     0 $accept: . Program $end
 
     CONST_SYMBOL  shift, and go to state 1
+
+    $default  reduce using rule 6 (ConstantDecl)
 
     Program       go to state 2
     ConstantDecl  go to state 3
@@ -385,7 +388,7 @@ state 3
 
     TYPE_SYMBOL  shift, and go to state 6
 
-    $default  reduce using rule 21 (TypeDecl)
+    $default  reduce using rule 22 (TypeDecl)
 
     TypeDecl  go to state 7
 
@@ -406,7 +409,7 @@ state 5
 
 state 6
 
-   20 TypeDecl: TYPE_SYMBOL . ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
+   21 TypeDecl: TYPE_SYMBOL . ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
 
     ID_SYMBOL  shift, and go to state 9
 
@@ -417,7 +420,7 @@ state 7
 
     VAR_SYMBOL  shift, and go to state 10
 
-    $default  reduce using rule 36 (VarDecl)
+    $default  reduce using rule 37 (VarDecl)
 
     VarDecl  go to state 11
 
@@ -439,14 +442,14 @@ state 8
 
 state 9
 
-   20 TypeDecl: TYPE_SYMBOL ID_SYMBOL . EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
+   21 TypeDecl: TYPE_SYMBOL ID_SYMBOL . EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
 
     EQUAL_SYMBOL  shift, and go to state 20
 
 
 state 10
 
-   35 VarDecl: VAR_SYMBOL . IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
+   36 VarDecl: VAR_SYMBOL . IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
 
     ID_SYMBOL  shift, and go to state 21
 
@@ -469,35 +472,35 @@ state 11
 
 state 12
 
-  131 ConstExpression: ID_SYMBOL .
+  132 ConstExpression: ID_SYMBOL .
 
-    $default  reduce using rule 131 (ConstExpression)
+    $default  reduce using rule 132 (ConstExpression)
 
 
 state 13
 
-  129 ConstExpression: CHARACTER_SYMBOL .
-
-    $default  reduce using rule 129 (ConstExpression)
-
-
-state 14
-
-  128 ConstExpression: INTEGER_SYMBOL .
-
-    $default  reduce using rule 128 (ConstExpression)
-
-
-state 15
-
-  130 ConstExpression: STRING_SYMBOL .
+  130 ConstExpression: CHARACTER_SYMBOL .
 
     $default  reduce using rule 130 (ConstExpression)
 
 
+state 14
+
+  129 ConstExpression: INTEGER_SYMBOL .
+
+    $default  reduce using rule 129 (ConstExpression)
+
+
+state 15
+
+  131 ConstExpression: STRING_SYMBOL .
+
+    $default  reduce using rule 131 (ConstExpression)
+
+
 state 16
 
-  126 ConstExpression: SUB_SYMBOL . ConstExpression
+  127 ConstExpression: SUB_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -512,7 +515,7 @@ state 16
 
 state 17
 
-  125 ConstExpression: NOT_SYMBOL . ConstExpression
+  126 ConstExpression: NOT_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -527,7 +530,7 @@ state 17
 
 state 18
 
-  127 ConstExpression: LEFT_BRACE_SYMBOL . ConstExpression RIGHT_BRACE_SYMBOL
+  128 ConstExpression: LEFT_BRACE_SYMBOL . ConstExpression RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -543,19 +546,19 @@ state 18
 state 19
 
     5 ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression . SEMI_COLON_SYMBOL subConstantDecl
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -575,7 +578,7 @@ state 19
 
 state 20
 
-   20 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL . Type SEMI_COLON_SYMBOL subTypeDecl
+   21 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL . Type SEMI_COLON_SYMBOL subTypeDecl
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
@@ -589,34 +592,34 @@ state 20
 
 state 21
 
-   32 IdentList: ID_SYMBOL . subIdentList
+   33 IdentList: ID_SYMBOL . subIdentList
 
     COMMA_SYMBOL  shift, and go to state 52
 
-    $default  reduce using rule 34 (subIdentList)
+    $default  reduce using rule 35 (subIdentList)
 
     subIdentList  go to state 53
 
 
 state 22
 
-   35 VarDecl: VAR_SYMBOL IdentList . COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
+   36 VarDecl: VAR_SYMBOL IdentList . COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
 
     COLON_SYMBOL  shift, and go to state 54
 
 
 state 23
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-    9              | PROCEDURE_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+    9 ProcedureDecl: PROCEDURE_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   10              | PROCEDURE_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     ID_SYMBOL  shift, and go to state 55
 
 
 state 24
 
-   10 FunctionDecl: FUNCTION_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   11 FunctionDecl: FUNCTION_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL . ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     ID_SYMBOL  shift, and go to state 56
 
@@ -660,40 +663,40 @@ state 27
 
 state 28
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
-  126                | SUB_SYMBOL ConstExpression .
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  127                | SUB_SYMBOL ConstExpression .
 
-    $default  reduce using rule 126 (ConstExpression)
+    $default  reduce using rule 127 (ConstExpression)
 
 
 state 29
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
-  125                | NOT_SYMBOL ConstExpression .
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  126                | NOT_SYMBOL ConstExpression .
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -707,25 +710,25 @@ state 29
     GREAT_EQUAL_SYMBOL  shift, and go to state 42
     PERCENT_SYMBOL      shift, and go to state 44
 
-    $default  reduce using rule 125 (ConstExpression)
+    $default  reduce using rule 126 (ConstExpression)
 
 
 state 30
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
-  127                | LEFT_BRACE_SYMBOL ConstExpression . RIGHT_BRACE_SYMBOL
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  128                | LEFT_BRACE_SYMBOL ConstExpression . RIGHT_BRACE_SYMBOL
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -745,7 +748,7 @@ state 30
 
 state 31
 
-  120 ConstExpression: ConstExpression ADD_SYMBOL . ConstExpression
+  121 ConstExpression: ConstExpression ADD_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -760,7 +763,7 @@ state 31
 
 state 32
 
-  121 ConstExpression: ConstExpression SUB_SYMBOL . ConstExpression
+  122 ConstExpression: ConstExpression SUB_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -775,7 +778,7 @@ state 32
 
 state 33
 
-  122 ConstExpression: ConstExpression MULT_SYMBOL . ConstExpression
+  123 ConstExpression: ConstExpression MULT_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -790,7 +793,7 @@ state 33
 
 state 34
 
-  123 ConstExpression: ConstExpression DIV_SYMBOL . ConstExpression
+  124 ConstExpression: ConstExpression DIV_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -805,7 +808,7 @@ state 34
 
 state 35
 
-  113 ConstExpression: ConstExpression AND_SYMBOL . ConstExpression
+  114 ConstExpression: ConstExpression AND_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -820,7 +823,7 @@ state 35
 
 state 36
 
-  112 ConstExpression: ConstExpression OR_SYMBOL . ConstExpression
+  113 ConstExpression: ConstExpression OR_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -835,7 +838,7 @@ state 36
 
 state 37
 
-  114 ConstExpression: ConstExpression EQUAL_SYMBOL . ConstExpression
+  115 ConstExpression: ConstExpression EQUAL_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -850,7 +853,7 @@ state 37
 
 state 38
 
-  115 ConstExpression: ConstExpression NOT_EQUAL_SYMBOL . ConstExpression
+  116 ConstExpression: ConstExpression NOT_EQUAL_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -865,7 +868,7 @@ state 38
 
 state 39
 
-  118 ConstExpression: ConstExpression LESS_SYMBOL . ConstExpression
+  119 ConstExpression: ConstExpression LESS_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -880,7 +883,7 @@ state 39
 
 state 40
 
-  116 ConstExpression: ConstExpression LESS_EQUAL_SYMBOL . ConstExpression
+  117 ConstExpression: ConstExpression LESS_EQUAL_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -895,7 +898,7 @@ state 40
 
 state 41
 
-  119 ConstExpression: ConstExpression GREAT_SYMBOL . ConstExpression
+  120 ConstExpression: ConstExpression GREAT_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -910,7 +913,7 @@ state 41
 
 state 42
 
-  117 ConstExpression: ConstExpression GREAT_EQUAL_SYMBOL . ConstExpression
+  118 ConstExpression: ConstExpression GREAT_EQUAL_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -927,16 +930,16 @@ state 43
 
     5 ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL . subConstantDecl
 
-    SEMI_COLON_SYMBOL  shift, and go to state 74
+    ID_SYMBOL  shift, and go to state 74
 
-    $default  reduce using rule 7 (subConstantDecl)
+    $default  reduce using rule 8 (subConstantDecl)
 
     subConstantDecl  go to state 75
 
 
 state 44
 
-  124 ConstExpression: ConstExpression PERCENT_SYMBOL . ConstExpression
+  125 ConstExpression: ConstExpression PERCENT_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -951,25 +954,25 @@ state 44
 
 state 45
 
-   27 SimpleType: ID_SYMBOL .
+   28 SimpleType: ID_SYMBOL .
 
-    $default  reduce using rule 27 (SimpleType)
+    $default  reduce using rule 28 (SimpleType)
 
 
 state 46
 
-   31 ArrayType: ARRAY_SYMBOL . LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
+   32 ArrayType: ARRAY_SYMBOL . LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
 
     LEFT_SQUARE_SYMBOL  shift, and go to state 77
 
 
 state 47
 
-   28 RecordType: RECORD_SYMBOL . subRecordType END_SYMBOL
+   29 RecordType: RECORD_SYMBOL . subRecordType END_SYMBOL
 
     ID_SYMBOL  shift, and go to state 21
 
-    $default  reduce using rule 30 (subRecordType)
+    $default  reduce using rule 31 (subRecordType)
 
     subRecordType  go to state 78
     IdentList      go to state 79
@@ -977,49 +980,49 @@ state 47
 
 state 48
 
-   20 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type . SEMI_COLON_SYMBOL subTypeDecl
+   21 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type . SEMI_COLON_SYMBOL subTypeDecl
 
     SEMI_COLON_SYMBOL  shift, and go to state 80
 
 
 state 49
 
-   24 Type: SimpleType .
-
-    $default  reduce using rule 24 (Type)
-
-
-state 50
-
-   25 Type: RecordType .
+   25 Type: SimpleType .
 
     $default  reduce using rule 25 (Type)
 
 
-state 51
+state 50
 
-   26 Type: ArrayType .
+   26 Type: RecordType .
 
     $default  reduce using rule 26 (Type)
 
 
+state 51
+
+   27 Type: ArrayType .
+
+    $default  reduce using rule 27 (Type)
+
+
 state 52
 
-   33 subIdentList: COMMA_SYMBOL . ID_SYMBOL subIdentList
+   34 subIdentList: COMMA_SYMBOL . ID_SYMBOL subIdentList
 
     ID_SYMBOL  shift, and go to state 81
 
 
 state 53
 
-   32 IdentList: ID_SYMBOL subIdentList .
+   33 IdentList: ID_SYMBOL subIdentList .
 
-    $default  reduce using rule 32 (IdentList)
+    $default  reduce using rule 33 (IdentList)
 
 
 state 54
 
-   35 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL . Type SEMI_COLON_SYMBOL subVarDecl
+   36 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL . Type SEMI_COLON_SYMBOL subVarDecl
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
@@ -1033,23 +1036,23 @@ state 54
 
 state 55
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-    9              | PROCEDURE_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   10              | PROCEDURE_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 83
 
 
 state 56
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL . LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 84
 
 
 state 57
 
-   19 Block: BEGIN_SYMBOL . StatementSequence END_SYMBOL
+   20 Block: BEGIN_SYMBOL . StatementSequence END_SYMBOL
 
     ID_SYMBOL      shift, and go to state 85
     IF_SYMBOL      shift, and go to state 86
@@ -1061,7 +1064,7 @@ state 57
     READ_SYMBOL    shift, and go to state 92
     WRITE_SYMBOL   shift, and go to state 93
 
-    $default  reduce using rule 77 (NullStatement)
+    $default  reduce using rule 78 (NullStatement)
 
     StatementSequence  go to state 94
     Statement          go to state 95
@@ -1102,51 +1105,27 @@ state 60
 
 state 61
 
-  127 ConstExpression: LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL .
+  128 ConstExpression: LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL .
 
-    $default  reduce using rule 127 (ConstExpression)
+    $default  reduce using rule 128 (ConstExpression)
 
 
 state 62
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  120                | ConstExpression ADD_SYMBOL ConstExpression .
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
-
-    MULT_SYMBOL     shift, and go to state 33
-    DIV_SYMBOL      shift, and go to state 34
-    PERCENT_SYMBOL  shift, and go to state 44
-
-    $default  reduce using rule 120 (ConstExpression)
-
-
-state 63
-
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  121                | ConstExpression SUB_SYMBOL ConstExpression .
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  121                | ConstExpression ADD_SYMBOL ConstExpression .
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     MULT_SYMBOL     shift, and go to state 33
     DIV_SYMBOL      shift, and go to state 34
@@ -1155,62 +1134,86 @@ state 63
     $default  reduce using rule 121 (ConstExpression)
 
 
-state 64
+state 63
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  122                | ConstExpression MULT_SYMBOL ConstExpression .
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  122                | ConstExpression SUB_SYMBOL ConstExpression .
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
+
+    MULT_SYMBOL     shift, and go to state 33
+    DIV_SYMBOL      shift, and go to state 34
+    PERCENT_SYMBOL  shift, and go to state 44
 
     $default  reduce using rule 122 (ConstExpression)
 
 
-state 65
+state 64
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  123                | ConstExpression DIV_SYMBOL ConstExpression .
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  123                | ConstExpression MULT_SYMBOL ConstExpression .
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     $default  reduce using rule 123 (ConstExpression)
 
 
+state 65
+
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  124                | ConstExpression DIV_SYMBOL ConstExpression .
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
+
+    $default  reduce using rule 124 (ConstExpression)
+
+
 state 66
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  113                | ConstExpression AND_SYMBOL ConstExpression .
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  114                | ConstExpression AND_SYMBOL ConstExpression .
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -1224,25 +1227,25 @@ state 66
     GREAT_EQUAL_SYMBOL  shift, and go to state 42
     PERCENT_SYMBOL      shift, and go to state 44
 
-    $default  reduce using rule 113 (ConstExpression)
+    $default  reduce using rule 114 (ConstExpression)
 
 
 state 67
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  112                | ConstExpression OR_SYMBOL ConstExpression .
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  113                | ConstExpression OR_SYMBOL ConstExpression .
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -1257,25 +1260,25 @@ state 67
     GREAT_EQUAL_SYMBOL  shift, and go to state 42
     PERCENT_SYMBOL      shift, and go to state 44
 
-    $default  reduce using rule 112 (ConstExpression)
+    $default  reduce using rule 113 (ConstExpression)
 
 
 state 68
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  114                | ConstExpression EQUAL_SYMBOL ConstExpression .
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  115                | ConstExpression EQUAL_SYMBOL ConstExpression .
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL        shift, and go to state 31
     SUB_SYMBOL        shift, and go to state 32
@@ -1286,25 +1289,25 @@ state 68
 
     EQUAL_SYMBOL  error (nonassociative)
 
-    $default  reduce using rule 114 (ConstExpression)
+    $default  reduce using rule 115 (ConstExpression)
 
 
 state 69
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression NOT_EQUAL_SYMBOL ConstExpression .
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression NOT_EQUAL_SYMBOL ConstExpression .
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL      shift, and go to state 31
     SUB_SYMBOL      shift, and go to state 32
@@ -1314,25 +1317,25 @@ state 69
 
     NOT_EQUAL_SYMBOL  error (nonassociative)
 
-    $default  reduce using rule 115 (ConstExpression)
+    $default  reduce using rule 116 (ConstExpression)
 
 
 state 70
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  118                | ConstExpression LESS_SYMBOL ConstExpression .
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  119                | ConstExpression LESS_SYMBOL ConstExpression .
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -1347,25 +1350,25 @@ state 70
 
     LESS_SYMBOL  error (nonassociative)
 
-    $default  reduce using rule 118 (ConstExpression)
+    $default  reduce using rule 119 (ConstExpression)
 
 
 state 71
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression LESS_EQUAL_SYMBOL ConstExpression .
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression LESS_EQUAL_SYMBOL ConstExpression .
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -1379,25 +1382,25 @@ state 71
 
     LESS_EQUAL_SYMBOL  error (nonassociative)
 
-    $default  reduce using rule 116 (ConstExpression)
+    $default  reduce using rule 117 (ConstExpression)
 
 
 state 72
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  119                | ConstExpression GREAT_SYMBOL ConstExpression .
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  120                | ConstExpression GREAT_SYMBOL ConstExpression .
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -1410,25 +1413,25 @@ state 72
 
     GREAT_SYMBOL  error (nonassociative)
 
-    $default  reduce using rule 119 (ConstExpression)
+    $default  reduce using rule 120 (ConstExpression)
 
 
 state 73
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression GREAT_EQUAL_SYMBOL ConstExpression .
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression GREAT_EQUAL_SYMBOL ConstExpression .
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL        shift, and go to state 31
     SUB_SYMBOL        shift, and go to state 32
@@ -1440,12 +1443,12 @@ state 73
 
     GREAT_EQUAL_SYMBOL  error (nonassociative)
 
-    $default  reduce using rule 117 (ConstExpression)
+    $default  reduce using rule 118 (ConstExpression)
 
 
 state 74
 
-    6 subConstantDecl: SEMI_COLON_SYMBOL . EQUAL_SYMBOL ConstExpression
+    7 subConstantDecl: ID_SYMBOL . EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl
 
     EQUAL_SYMBOL  shift, and go to state 109
 
@@ -1459,27 +1462,27 @@ state 75
 
 state 76
 
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
-  124                | ConstExpression PERCENT_SYMBOL ConstExpression .
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
+  125                | ConstExpression PERCENT_SYMBOL ConstExpression .
 
-    $default  reduce using rule 124 (ConstExpression)
+    $default  reduce using rule 125 (ConstExpression)
 
 
 state 77
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL . ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL . ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -1494,56 +1497,56 @@ state 77
 
 state 78
 
-   28 RecordType: RECORD_SYMBOL subRecordType . END_SYMBOL
+   29 RecordType: RECORD_SYMBOL subRecordType . END_SYMBOL
 
     END_SYMBOL  shift, and go to state 111
 
 
 state 79
 
-   29 subRecordType: IdentList . COLON_SYMBOL Type SEMI_COLON_SYMBOL subRecordType
+   30 subRecordType: IdentList . COLON_SYMBOL Type SEMI_COLON_SYMBOL subRecordType
 
     COLON_SYMBOL  shift, and go to state 112
 
 
 state 80
 
-   20 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL . subTypeDecl
+   21 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL . subTypeDecl
 
     ID_SYMBOL  shift, and go to state 113
 
-    $default  reduce using rule 23 (subTypeDecl)
+    $default  reduce using rule 24 (subTypeDecl)
 
     subTypeDecl  go to state 114
 
 
 state 81
 
-   33 subIdentList: COMMA_SYMBOL ID_SYMBOL . subIdentList
+   34 subIdentList: COMMA_SYMBOL ID_SYMBOL . subIdentList
 
     COMMA_SYMBOL  shift, and go to state 52
 
-    $default  reduce using rule 34 (subIdentList)
+    $default  reduce using rule 35 (subIdentList)
 
     subIdentList  go to state 115
 
 
 state 82
 
-   35 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type . SEMI_COLON_SYMBOL subVarDecl
+   36 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type . SEMI_COLON_SYMBOL subVarDecl
 
     SEMI_COLON_SYMBOL  shift, and go to state 116
 
 
 state 83
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-    9              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   10              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     ID_SYMBOL   shift, and go to state 21
     VAR_SYMBOL  shift, and go to state 117
 
-    $default  reduce using rule 12 (FormalParameters)
+    $default  reduce using rule 13 (FormalParameters)
 
     FormalParameters  go to state 118
     IdentList         go to state 119
@@ -1551,13 +1554,13 @@ state 83
 
 state 84
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL . FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     ID_SYMBOL   shift, and go to state 21
     VAR_SYMBOL  shift, and go to state 117
 
-    $default  reduce using rule 12 (FormalParameters)
+    $default  reduce using rule 13 (FormalParameters)
 
     FormalParameters  go to state 120
     IdentList         go to state 119
@@ -1565,18 +1568,18 @@ state 84
 
 state 85
 
-   73 ProcedureCall: ID_SYMBOL . LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
-   74              | ID_SYMBOL . LEFT_BRACE_SYMBOL Expression subProcedureCall RIGHT_BRACE_SYMBOL
-   92 LValue: ID_SYMBOL .
+   74 ProcedureCall: ID_SYMBOL . LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
+   75              | ID_SYMBOL . LEFT_BRACE_SYMBOL Expression subProcedureCall RIGHT_BRACE_SYMBOL
+   93 LValue: ID_SYMBOL .
 
     LEFT_BRACE_SYMBOL  shift, and go to state 121
 
-    $default  reduce using rule 92 (LValue)
+    $default  reduce using rule 93 (LValue)
 
 
 state 86
 
-   54 IfStatement: IF_SYMBOL . Expression THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL
+   55 IfStatement: IF_SYMBOL . Expression THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -1597,7 +1600,7 @@ state 86
 
 state 87
 
-   60 RepeatStatment: REPEAT_SYMBOL . StatementSequence UNTIL_SYMBOL Expression
+   61 RepeatStatment: REPEAT_SYMBOL . StatementSequence UNTIL_SYMBOL Expression
 
     ID_SYMBOL      shift, and go to state 85
     IF_SYMBOL      shift, and go to state 86
@@ -1609,7 +1612,7 @@ state 87
     READ_SYMBOL    shift, and go to state 92
     WRITE_SYMBOL   shift, and go to state 93
 
-    $default  reduce using rule 77 (NullStatement)
+    $default  reduce using rule 78 (NullStatement)
 
     StatementSequence  go to state 136
     Statement          go to state 95
@@ -1629,15 +1632,15 @@ state 87
 
 state 88
 
-   61 ForStatement: FOR_SYMBOL . ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
+   62 ForStatement: FOR_SYMBOL . ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
 
     ID_SYMBOL  shift, and go to state 137
 
 
 state 89
 
-   65 ReturnStatment: RETURN_SYMBOL . Expression
-   66               | RETURN_SYMBOL .
+   66 ReturnStatment: RETURN_SYMBOL . Expression
+   67               | RETURN_SYMBOL .
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -1651,7 +1654,7 @@ state 89
     NOT_SYMBOL         shift, and go to state 131
     LEFT_BRACE_SYMBOL  shift, and go to state 132
 
-    $default  reduce using rule 66 (ReturnStatment)
+    $default  reduce using rule 67 (ReturnStatment)
 
     Expression     go to state 138
     subExpression  go to state 134
@@ -1660,14 +1663,14 @@ state 89
 
 state 90
 
-   64 StopStatement: STOP_SYMBOL .
+   65 StopStatement: STOP_SYMBOL .
 
-    $default  reduce using rule 64 (StopStatement)
+    $default  reduce using rule 65 (StopStatement)
 
 
 state 91
 
-   59 WhileStatement: WHILE_SYMBOL . Expression DO_SYMBOL StatementSequence END_SYMBOL
+   60 WhileStatement: WHILE_SYMBOL . Expression DO_SYMBOL StatementSequence END_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -1688,118 +1691,118 @@ state 91
 
 state 92
 
-   67 ReadStatement: READ_SYMBOL . LEFT_BRACE_SYMBOL LValue subReadStatement RIGHT_BRACE_SYMBOL
+   68 ReadStatement: READ_SYMBOL . LEFT_BRACE_SYMBOL LValue subReadStatement RIGHT_BRACE_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 140
 
 
 state 93
 
-   70 WriteStatement: WRITE_SYMBOL . LEFT_BRACE_SYMBOL Expression subWriteStatement RIGHT_BRACE_SYMBOL
+   71 WriteStatement: WRITE_SYMBOL . LEFT_BRACE_SYMBOL Expression subWriteStatement RIGHT_BRACE_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 141
 
 
 state 94
 
-   19 Block: BEGIN_SYMBOL StatementSequence . END_SYMBOL
+   20 Block: BEGIN_SYMBOL StatementSequence . END_SYMBOL
 
     END_SYMBOL  shift, and go to state 142
 
 
 state 95
 
-   39 StatementSequence: Statement . subStatementSequence
+   40 StatementSequence: Statement . subStatementSequence
 
     SEMI_COLON_SYMBOL  shift, and go to state 143
 
-    $default  reduce using rule 41 (subStatementSequence)
+    $default  reduce using rule 42 (subStatementSequence)
 
     subStatementSequence  go to state 144
 
 
 state 96
 
-   42 Statement: Assignment .
-
-    $default  reduce using rule 42 (Statement)
-
-
-state 97
-
-   43 Statement: IfStatement .
+   43 Statement: Assignment .
 
     $default  reduce using rule 43 (Statement)
 
 
-state 98
+state 97
 
-   44 Statement: WhileStatement .
+   44 Statement: IfStatement .
 
     $default  reduce using rule 44 (Statement)
 
 
-state 99
+state 98
 
-   45 Statement: RepeatStatment .
+   45 Statement: WhileStatement .
 
     $default  reduce using rule 45 (Statement)
 
 
-state 100
+state 99
 
-   46 Statement: ForStatement .
+   46 Statement: RepeatStatment .
 
     $default  reduce using rule 46 (Statement)
 
 
-state 101
+state 100
 
-   47 Statement: StopStatement .
+   47 Statement: ForStatement .
 
     $default  reduce using rule 47 (Statement)
 
 
-state 102
+state 101
 
-   48 Statement: ReturnStatment .
+   48 Statement: StopStatement .
 
     $default  reduce using rule 48 (Statement)
 
 
-state 103
+state 102
 
-   49 Statement: ReadStatement .
+   49 Statement: ReturnStatment .
 
     $default  reduce using rule 49 (Statement)
 
 
-state 104
+state 103
 
-   50 Statement: WriteStatement .
+   50 Statement: ReadStatement .
 
     $default  reduce using rule 50 (Statement)
 
 
-state 105
+state 104
 
-   51 Statement: ProcedureCall .
+   51 Statement: WriteStatement .
 
     $default  reduce using rule 51 (Statement)
 
 
-state 106
+state 105
 
-   52 Statement: NullStatement .
+   52 Statement: ProcedureCall .
 
     $default  reduce using rule 52 (Statement)
 
 
+state 106
+
+   53 Statement: NullStatement .
+
+    $default  reduce using rule 53 (Statement)
+
+
 state 107
 
-   53 Assignment: LValue . ASSIGN_SYMBOL ConstExpression
-   93 LValue: LValue . DOT_SYMBOL LValue
-   94       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+   54 Assignment: LValue . ASSIGN_SYMBOL ConstExpression
+   94 LValue: LValue . DOT_SYMBOL LValue
+   95       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
 
     ASSIGN_SYMBOL       shift, and go to state 145
     DOT_SYMBOL          shift, and go to state 146
@@ -1815,7 +1818,7 @@ state 108
 
 state 109
 
-    6 subConstantDecl: SEMI_COLON_SYMBOL EQUAL_SYMBOL . ConstExpression
+    7 subConstantDecl: ID_SYMBOL EQUAL_SYMBOL . ConstExpression SEMI_COLON_SYMBOL subConstantDecl
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -1830,20 +1833,20 @@ state 109
 
 state 110
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression . COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression . COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -1863,14 +1866,14 @@ state 110
 
 state 111
 
-   28 RecordType: RECORD_SYMBOL subRecordType END_SYMBOL .
+   29 RecordType: RECORD_SYMBOL subRecordType END_SYMBOL .
 
-    $default  reduce using rule 28 (RecordType)
+    $default  reduce using rule 29 (RecordType)
 
 
 state 112
 
-   29 subRecordType: IdentList COLON_SYMBOL . Type SEMI_COLON_SYMBOL subRecordType
+   30 subRecordType: IdentList COLON_SYMBOL . Type SEMI_COLON_SYMBOL subRecordType
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
@@ -1884,32 +1887,32 @@ state 112
 
 state 113
 
-   22 subTypeDecl: ID_SYMBOL . EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
+   23 subTypeDecl: ID_SYMBOL . EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl
 
     EQUAL_SYMBOL  shift, and go to state 151
 
 
 state 114
 
-   20 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl .
+   21 TypeDecl: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl .
 
-    $default  reduce using rule 20 (TypeDecl)
+    $default  reduce using rule 21 (TypeDecl)
 
 
 state 115
 
-   33 subIdentList: COMMA_SYMBOL ID_SYMBOL subIdentList .
+   34 subIdentList: COMMA_SYMBOL ID_SYMBOL subIdentList .
 
-    $default  reduce using rule 33 (subIdentList)
+    $default  reduce using rule 34 (subIdentList)
 
 
 state 116
 
-   35 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL . subVarDecl
+   36 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL . subVarDecl
 
     ID_SYMBOL  shift, and go to state 21
 
-    $default  reduce using rule 38 (subVarDecl)
+    $default  reduce using rule 39 (subVarDecl)
 
     IdentList   go to state 152
     subVarDecl  go to state 153
@@ -1917,7 +1920,7 @@ state 116
 
 state 117
 
-   13 FormalParameters: VAR_SYMBOL . IdentList COLON_SYMBOL Type subFormalParameters
+   14 FormalParameters: VAR_SYMBOL . IdentList COLON_SYMBOL Type subFormalParameters
 
     ID_SYMBOL  shift, and go to state 21
 
@@ -1926,31 +1929,31 @@ state 117
 
 state 118
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-    9              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   10              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     RIGHT_BRACE_SYMBOL  shift, and go to state 155
 
 
 state 119
 
-   14 FormalParameters: IdentList . COLON_SYMBOL Type subFormalParameters
+   15 FormalParameters: IdentList . COLON_SYMBOL Type subFormalParameters
 
     COLON_SYMBOL  shift, and go to state 156
 
 
 state 120
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters . RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
     RIGHT_BRACE_SYMBOL  shift, and go to state 157
 
 
 state 121
 
-   73 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL . RIGHT_BRACE_SYMBOL
-   74              | ID_SYMBOL LEFT_BRACE_SYMBOL . Expression subProcedureCall RIGHT_BRACE_SYMBOL
+   74 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL . RIGHT_BRACE_SYMBOL
+   75              | ID_SYMBOL LEFT_BRACE_SYMBOL . Expression subProcedureCall RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL           shift, and go to state 122
     CHARACTER_SYMBOL    shift, and go to state 123
@@ -1972,66 +1975,66 @@ state 121
 
 state 122
 
-   82 Expression: ID_SYMBOL . LEFT_BRACE_SYMBOL subExpressionIdent RIGHT_BRACE_SYMBOL
-   92 LValue: ID_SYMBOL .
+   83 Expression: ID_SYMBOL . LEFT_BRACE_SYMBOL subExpressionIdent RIGHT_BRACE_SYMBOL
+   93 LValue: ID_SYMBOL .
 
     LEFT_BRACE_SYMBOL  shift, and go to state 160
 
-    $default  reduce using rule 92 (LValue)
+    $default  reduce using rule 93 (LValue)
 
 
 state 123
 
-   90 subExpression: CHARACTER_SYMBOL .
-
-    $default  reduce using rule 90 (subExpression)
-
-
-state 124
-
-   89 subExpression: INTEGER_SYMBOL .
-
-    $default  reduce using rule 89 (subExpression)
-
-
-state 125
-
-   91 subExpression: STRING_SYMBOL .
+   91 subExpression: CHARACTER_SYMBOL .
 
     $default  reduce using rule 91 (subExpression)
 
 
+state 124
+
+   90 subExpression: INTEGER_SYMBOL .
+
+    $default  reduce using rule 90 (subExpression)
+
+
+state 125
+
+   92 subExpression: STRING_SYMBOL .
+
+    $default  reduce using rule 92 (subExpression)
+
+
 state 126
 
-   83 Expression: CHR_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   84 Expression: CHR_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 161
 
 
 state 127
 
-   84 Expression: ORD_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   85 Expression: ORD_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 162
 
 
 state 128
 
-   85 Expression: PRED_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   86 Expression: PRED_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 163
 
 
 state 129
 
-   86 Expression: SUCC_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+   87 Expression: SUCC_SYMBOL . LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 
     LEFT_BRACE_SYMBOL  shift, and go to state 164
 
 
 state 130
 
-   80 Expression: SUB_SYMBOL . Expression
+   81 Expression: SUB_SYMBOL . Expression
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2052,7 +2055,7 @@ state 130
 
 state 131
 
-   79 Expression: NOT_SYMBOL . Expression
+   80 Expression: NOT_SYMBOL . Expression
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2073,7 +2076,7 @@ state 131
 
 state 132
 
-   81 Expression: LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
+   82 Expression: LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2094,15 +2097,15 @@ state 132
 
 state 133
 
-   54 IfStatement: IF_SYMBOL Expression . THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL
+   55 IfStatement: IF_SYMBOL Expression . THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL
 
     THEN_SYMBOL  shift, and go to state 168
 
 
 state 134
 
-   78 Expression: subExpression . Operator subExpression
-   87           | subExpression .
+   79 Expression: subExpression . Operator subExpression
+   88           | subExpression .
 
     ADD_SYMBOL          shift, and go to state 169
     SUB_SYMBOL          shift, and go to state 170
@@ -2118,54 +2121,54 @@ state 134
     GREAT_EQUAL_SYMBOL  shift, and go to state 180
     PERCENT_SYMBOL      shift, and go to state 181
 
-    $default  reduce using rule 87 (Expression)
+    $default  reduce using rule 88 (Expression)
 
     Operator  go to state 182
 
 
 state 135
 
-   88 subExpression: LValue .
-   93 LValue: LValue . DOT_SYMBOL LValue
-   94       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+   89 subExpression: LValue .
+   94 LValue: LValue . DOT_SYMBOL LValue
+   95       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
 
     DOT_SYMBOL          shift, and go to state 146
     LEFT_SQUARE_SYMBOL  shift, and go to state 147
 
-    $default  reduce using rule 88 (subExpression)
+    $default  reduce using rule 89 (subExpression)
 
 
 state 136
 
-   60 RepeatStatment: REPEAT_SYMBOL StatementSequence . UNTIL_SYMBOL Expression
+   61 RepeatStatment: REPEAT_SYMBOL StatementSequence . UNTIL_SYMBOL Expression
 
     UNTIL_SYMBOL  shift, and go to state 183
 
 
 state 137
 
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL . ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL . ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
 
     ASSIGN_SYMBOL  shift, and go to state 184
 
 
 state 138
 
-   65 ReturnStatment: RETURN_SYMBOL Expression .
+   66 ReturnStatment: RETURN_SYMBOL Expression .
 
-    $default  reduce using rule 65 (ReturnStatment)
+    $default  reduce using rule 66 (ReturnStatment)
 
 
 state 139
 
-   59 WhileStatement: WHILE_SYMBOL Expression . DO_SYMBOL StatementSequence END_SYMBOL
+   60 WhileStatement: WHILE_SYMBOL Expression . DO_SYMBOL StatementSequence END_SYMBOL
 
     DO_SYMBOL  shift, and go to state 185
 
 
 state 140
 
-   67 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL . LValue subReadStatement RIGHT_BRACE_SYMBOL
+   68 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL . LValue subReadStatement RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL  shift, and go to state 186
 
@@ -2174,7 +2177,7 @@ state 140
 
 state 141
 
-   70 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL . Expression subWriteStatement RIGHT_BRACE_SYMBOL
+   71 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL . Expression subWriteStatement RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2195,14 +2198,14 @@ state 141
 
 state 142
 
-   19 Block: BEGIN_SYMBOL StatementSequence END_SYMBOL .
+   20 Block: BEGIN_SYMBOL StatementSequence END_SYMBOL .
 
-    $default  reduce using rule 19 (Block)
+    $default  reduce using rule 20 (Block)
 
 
 state 143
 
-   40 subStatementSequence: SEMI_COLON_SYMBOL . Statement subStatementSequence
+   41 subStatementSequence: SEMI_COLON_SYMBOL . Statement subStatementSequence
 
     ID_SYMBOL      shift, and go to state 85
     IF_SYMBOL      shift, and go to state 86
@@ -2214,7 +2217,7 @@ state 143
     READ_SYMBOL    shift, and go to state 92
     WRITE_SYMBOL   shift, and go to state 93
 
-    $default  reduce using rule 77 (NullStatement)
+    $default  reduce using rule 78 (NullStatement)
 
     Statement       go to state 189
     Assignment      go to state 96
@@ -2233,14 +2236,14 @@ state 143
 
 state 144
 
-   39 StatementSequence: Statement subStatementSequence .
+   40 StatementSequence: Statement subStatementSequence .
 
-    $default  reduce using rule 39 (StatementSequence)
+    $default  reduce using rule 40 (StatementSequence)
 
 
 state 145
 
-   53 Assignment: LValue ASSIGN_SYMBOL . ConstExpression
+   54 Assignment: LValue ASSIGN_SYMBOL . ConstExpression
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -2255,7 +2258,7 @@ state 145
 
 state 146
 
-   93 LValue: LValue DOT_SYMBOL . LValue
+   94 LValue: LValue DOT_SYMBOL . LValue
 
     ID_SYMBOL  shift, and go to state 186
 
@@ -2264,7 +2267,7 @@ state 146
 
 state 147
 
-   94 LValue: LValue LEFT_SQUARE_SYMBOL . Expression RIGHT_SQUARE_SYMBOL
+   95 LValue: LValue LEFT_SQUARE_SYMBOL . Expression RIGHT_SQUARE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2285,20 +2288,20 @@ state 147
 
 state 148
 
-    6 subConstantDecl: SEMI_COLON_SYMBOL EQUAL_SYMBOL ConstExpression .
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+    7 subConstantDecl: ID_SYMBOL EQUAL_SYMBOL ConstExpression . SEMI_COLON_SYMBOL subConstantDecl
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -2312,14 +2315,13 @@ state 148
     LESS_EQUAL_SYMBOL   shift, and go to state 40
     GREAT_SYMBOL        shift, and go to state 41
     GREAT_EQUAL_SYMBOL  shift, and go to state 42
+    SEMI_COLON_SYMBOL   shift, and go to state 193
     PERCENT_SYMBOL      shift, and go to state 44
-
-    $default  reduce using rule 6 (subConstantDecl)
 
 
 state 149
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL . ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL . ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
 
     ID_SYMBOL          shift, and go to state 12
     CHARACTER_SYMBOL   shift, and go to state 13
@@ -2329,25 +2331,25 @@ state 149
     NOT_SYMBOL         shift, and go to state 17
     LEFT_BRACE_SYMBOL  shift, and go to state 18
 
-    ConstExpression  go to state 193
+    ConstExpression  go to state 194
 
 
 state 150
 
-   29 subRecordType: IdentList COLON_SYMBOL Type . SEMI_COLON_SYMBOL subRecordType
+   30 subRecordType: IdentList COLON_SYMBOL Type . SEMI_COLON_SYMBOL subRecordType
 
-    SEMI_COLON_SYMBOL  shift, and go to state 194
+    SEMI_COLON_SYMBOL  shift, and go to state 195
 
 
 state 151
 
-   22 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL . Type SEMI_COLON_SYMBOL subTypeDecl
+   23 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL . Type SEMI_COLON_SYMBOL subTypeDecl
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
     RECORD_SYMBOL  shift, and go to state 47
 
-    Type        go to state 195
+    Type        go to state 196
     SimpleType  go to state 49
     RecordType  go to state 50
     ArrayType   go to state 51
@@ -2355,42 +2357,42 @@ state 151
 
 state 152
 
-   37 subVarDecl: IdentList . COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
-
-    COLON_SYMBOL  shift, and go to state 196
-
-
-state 153
-
-   35 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl .
-
-    $default  reduce using rule 35 (VarDecl)
-
-
-state 154
-
-   13 FormalParameters: VAR_SYMBOL IdentList . COLON_SYMBOL Type subFormalParameters
+   38 subVarDecl: IdentList . COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl
 
     COLON_SYMBOL  shift, and go to state 197
 
 
+state 153
+
+   36 VarDecl: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl .
+
+    $default  reduce using rule 36 (VarDecl)
+
+
+state 154
+
+   14 FormalParameters: VAR_SYMBOL IdentList . COLON_SYMBOL Type subFormalParameters
+
+    COLON_SYMBOL  shift, and go to state 198
+
+
 state 155
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-    9              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   10              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
-    SEMI_COLON_SYMBOL  shift, and go to state 198
+    SEMI_COLON_SYMBOL  shift, and go to state 199
 
 
 state 156
 
-   14 FormalParameters: IdentList COLON_SYMBOL . Type subFormalParameters
+   15 FormalParameters: IdentList COLON_SYMBOL . Type subFormalParameters
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
     RECORD_SYMBOL  shift, and go to state 47
 
-    Type        go to state 199
+    Type        go to state 200
     SimpleType  go to state 49
     RecordType  go to state 50
     ArrayType   go to state 51
@@ -2398,33 +2400,33 @@ state 156
 
 state 157
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL . COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
-    COLON_SYMBOL  shift, and go to state 200
+    COLON_SYMBOL  shift, and go to state 201
 
 
 state 158
 
-   73 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL .
+   74 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL .
 
-    $default  reduce using rule 73 (ProcedureCall)
+    $default  reduce using rule 74 (ProcedureCall)
 
 
 state 159
 
-   74 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL Expression . subProcedureCall RIGHT_BRACE_SYMBOL
+   75 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL Expression . subProcedureCall RIGHT_BRACE_SYMBOL
 
-    COMMA_SYMBOL  shift, and go to state 201
+    COMMA_SYMBOL  shift, and go to state 202
 
-    $default  reduce using rule 76 (subProcedureCall)
+    $default  reduce using rule 77 (subProcedureCall)
 
-    subProcedureCall  go to state 202
+    subProcedureCall  go to state 203
 
 
 state 160
 
-   82 Expression: ID_SYMBOL LEFT_BRACE_SYMBOL . subExpressionIdent RIGHT_BRACE_SYMBOL
+   83 Expression: ID_SYMBOL LEFT_BRACE_SYMBOL . subExpressionIdent RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2438,38 +2440,17 @@ state 160
     NOT_SYMBOL         shift, and go to state 131
     LEFT_BRACE_SYMBOL  shift, and go to state 132
 
-    $default  reduce using rule 109 (subExpressionIdent)
+    $default  reduce using rule 110 (subExpressionIdent)
 
-    Expression          go to state 203
+    Expression          go to state 204
     subExpression       go to state 134
     LValue              go to state 135
-    subExpressionIdent  go to state 204
+    subExpressionIdent  go to state 205
 
 
 state 161
 
-   83 Expression: CHR_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
-
-    ID_SYMBOL          shift, and go to state 122
-    CHARACTER_SYMBOL   shift, and go to state 123
-    INTEGER_SYMBOL     shift, and go to state 124
-    STRING_SYMBOL      shift, and go to state 125
-    CHR_SYMBOL         shift, and go to state 126
-    ORD_SYMBOL         shift, and go to state 127
-    PRED_SYMBOL        shift, and go to state 128
-    SUCC_SYMBOL        shift, and go to state 129
-    SUB_SYMBOL         shift, and go to state 130
-    NOT_SYMBOL         shift, and go to state 131
-    LEFT_BRACE_SYMBOL  shift, and go to state 132
-
-    Expression     go to state 205
-    subExpression  go to state 134
-    LValue         go to state 135
-
-
-state 162
-
-   84 Expression: ORD_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
+   84 Expression: CHR_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2488,9 +2469,9 @@ state 162
     LValue         go to state 135
 
 
-state 163
+state 162
 
-   85 Expression: PRED_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
+   85 Expression: ORD_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2509,9 +2490,9 @@ state 163
     LValue         go to state 135
 
 
-state 164
+state 163
 
-   86 Expression: SUCC_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
+   86 Expression: PRED_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2530,30 +2511,51 @@ state 164
     LValue         go to state 135
 
 
+state 164
+
+   87 Expression: SUCC_SYMBOL LEFT_BRACE_SYMBOL . Expression RIGHT_BRACE_SYMBOL
+
+    ID_SYMBOL          shift, and go to state 122
+    CHARACTER_SYMBOL   shift, and go to state 123
+    INTEGER_SYMBOL     shift, and go to state 124
+    STRING_SYMBOL      shift, and go to state 125
+    CHR_SYMBOL         shift, and go to state 126
+    ORD_SYMBOL         shift, and go to state 127
+    PRED_SYMBOL        shift, and go to state 128
+    SUCC_SYMBOL        shift, and go to state 129
+    SUB_SYMBOL         shift, and go to state 130
+    NOT_SYMBOL         shift, and go to state 131
+    LEFT_BRACE_SYMBOL  shift, and go to state 132
+
+    Expression     go to state 209
+    subExpression  go to state 134
+    LValue         go to state 135
+
+
 state 165
 
-   80 Expression: SUB_SYMBOL Expression .
+   81 Expression: SUB_SYMBOL Expression .
 
-    $default  reduce using rule 80 (Expression)
+    $default  reduce using rule 81 (Expression)
 
 
 state 166
 
-   79 Expression: NOT_SYMBOL Expression .
+   80 Expression: NOT_SYMBOL Expression .
 
-    $default  reduce using rule 79 (Expression)
+    $default  reduce using rule 80 (Expression)
 
 
 state 167
 
-   81 Expression: LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
+   82 Expression: LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
 
-    RIGHT_BRACE_SYMBOL  shift, and go to state 209
+    RIGHT_BRACE_SYMBOL  shift, and go to state 210
 
 
 state 168
 
-   54 IfStatement: IF_SYMBOL Expression THEN_SYMBOL . StatementSequence subIfStatment subElse END_SYMBOL
+   55 IfStatement: IF_SYMBOL Expression THEN_SYMBOL . StatementSequence subIfStatment subElse END_SYMBOL
 
     ID_SYMBOL      shift, and go to state 85
     IF_SYMBOL      shift, and go to state 86
@@ -2565,9 +2567,9 @@ state 168
     READ_SYMBOL    shift, and go to state 92
     WRITE_SYMBOL   shift, and go to state 93
 
-    $default  reduce using rule 77 (NullStatement)
+    $default  reduce using rule 78 (NullStatement)
 
-    StatementSequence  go to state 210
+    StatementSequence  go to state 211
     Statement          go to state 95
     Assignment         go to state 96
     IfStatement        go to state 97
@@ -2585,132 +2587,111 @@ state 168
 
 state 169
 
-  103 Operator: ADD_SYMBOL .
-
-    $default  reduce using rule 103 (Operator)
-
-
-state 170
-
-  104 Operator: SUB_SYMBOL .
+  104 Operator: ADD_SYMBOL .
 
     $default  reduce using rule 104 (Operator)
 
 
-state 171
+state 170
 
-  105 Operator: MULT_SYMBOL .
+  105 Operator: SUB_SYMBOL .
 
     $default  reduce using rule 105 (Operator)
 
 
-state 172
+state 171
 
-  106 Operator: DIV_SYMBOL .
+  106 Operator: MULT_SYMBOL .
 
     $default  reduce using rule 106 (Operator)
 
 
-state 173
+state 172
 
-   96 Operator: AND_SYMBOL .
-
-    $default  reduce using rule 96 (Operator)
-
-
-state 174
-
-   95 Operator: OR_SYMBOL .
-
-    $default  reduce using rule 95 (Operator)
-
-
-state 175
-
-   97 Operator: EQUAL_SYMBOL .
-
-    $default  reduce using rule 97 (Operator)
-
-
-state 176
-
-   98 Operator: NOT_EQUAL_SYMBOL .
-
-    $default  reduce using rule 98 (Operator)
-
-
-state 177
-
-  101 Operator: LESS_SYMBOL .
-
-    $default  reduce using rule 101 (Operator)
-
-
-state 178
-
-   99 Operator: LESS_EQUAL_SYMBOL .
-
-    $default  reduce using rule 99 (Operator)
-
-
-state 179
-
-  102 Operator: GREAT_SYMBOL .
-
-    $default  reduce using rule 102 (Operator)
-
-
-state 180
-
-  100 Operator: GREAT_EQUAL_SYMBOL .
-
-    $default  reduce using rule 100 (Operator)
-
-
-state 181
-
-  107 Operator: PERCENT_SYMBOL .
+  107 Operator: DIV_SYMBOL .
 
     $default  reduce using rule 107 (Operator)
 
 
+state 173
+
+   97 Operator: AND_SYMBOL .
+
+    $default  reduce using rule 97 (Operator)
+
+
+state 174
+
+   96 Operator: OR_SYMBOL .
+
+    $default  reduce using rule 96 (Operator)
+
+
+state 175
+
+   98 Operator: EQUAL_SYMBOL .
+
+    $default  reduce using rule 98 (Operator)
+
+
+state 176
+
+   99 Operator: NOT_EQUAL_SYMBOL .
+
+    $default  reduce using rule 99 (Operator)
+
+
+state 177
+
+  102 Operator: LESS_SYMBOL .
+
+    $default  reduce using rule 102 (Operator)
+
+
+state 178
+
+  100 Operator: LESS_EQUAL_SYMBOL .
+
+    $default  reduce using rule 100 (Operator)
+
+
+state 179
+
+  103 Operator: GREAT_SYMBOL .
+
+    $default  reduce using rule 103 (Operator)
+
+
+state 180
+
+  101 Operator: GREAT_EQUAL_SYMBOL .
+
+    $default  reduce using rule 101 (Operator)
+
+
+state 181
+
+  108 Operator: PERCENT_SYMBOL .
+
+    $default  reduce using rule 108 (Operator)
+
+
 state 182
 
-   78 Expression: subExpression Operator . subExpression
+   79 Expression: subExpression Operator . subExpression
 
     ID_SYMBOL         shift, and go to state 186
     CHARACTER_SYMBOL  shift, and go to state 123
     INTEGER_SYMBOL    shift, and go to state 124
     STRING_SYMBOL     shift, and go to state 125
 
-    subExpression  go to state 211
+    subExpression  go to state 212
     LValue         go to state 135
 
 
 state 183
 
-   60 RepeatStatment: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL . Expression
-
-    ID_SYMBOL          shift, and go to state 122
-    CHARACTER_SYMBOL   shift, and go to state 123
-    INTEGER_SYMBOL     shift, and go to state 124
-    STRING_SYMBOL      shift, and go to state 125
-    CHR_SYMBOL         shift, and go to state 126
-    ORD_SYMBOL         shift, and go to state 127
-    PRED_SYMBOL        shift, and go to state 128
-    SUCC_SYMBOL        shift, and go to state 129
-    SUB_SYMBOL         shift, and go to state 130
-    NOT_SYMBOL         shift, and go to state 131
-    LEFT_BRACE_SYMBOL  shift, and go to state 132
-
-    Expression     go to state 212
-    subExpression  go to state 134
-    LValue         go to state 135
-
-
-state 184
-
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL . Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
+   61 RepeatStatment: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL . Expression
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -2729,9 +2710,30 @@ state 184
     LValue         go to state 135
 
 
+state 184
+
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL . Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
+
+    ID_SYMBOL          shift, and go to state 122
+    CHARACTER_SYMBOL   shift, and go to state 123
+    INTEGER_SYMBOL     shift, and go to state 124
+    STRING_SYMBOL      shift, and go to state 125
+    CHR_SYMBOL         shift, and go to state 126
+    ORD_SYMBOL         shift, and go to state 127
+    PRED_SYMBOL        shift, and go to state 128
+    SUCC_SYMBOL        shift, and go to state 129
+    SUB_SYMBOL         shift, and go to state 130
+    NOT_SYMBOL         shift, and go to state 131
+    LEFT_BRACE_SYMBOL  shift, and go to state 132
+
+    Expression     go to state 214
+    subExpression  go to state 134
+    LValue         go to state 135
+
+
 state 185
 
-   59 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL . StatementSequence END_SYMBOL
+   60 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL . StatementSequence END_SYMBOL
 
     ID_SYMBOL      shift, and go to state 85
     IF_SYMBOL      shift, and go to state 86
@@ -2743,9 +2745,9 @@ state 185
     READ_SYMBOL    shift, and go to state 92
     WRITE_SYMBOL   shift, and go to state 93
 
-    $default  reduce using rule 77 (NullStatement)
+    $default  reduce using rule 78 (NullStatement)
 
-    StatementSequence  go to state 214
+    StatementSequence  go to state 215
     Statement          go to state 95
     Assignment         go to state 96
     IfStatement        go to state 97
@@ -2763,64 +2765,64 @@ state 185
 
 state 186
 
-   92 LValue: ID_SYMBOL .
+   93 LValue: ID_SYMBOL .
 
-    $default  reduce using rule 92 (LValue)
+    $default  reduce using rule 93 (LValue)
 
 
 state 187
 
-   67 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue . subReadStatement RIGHT_BRACE_SYMBOL
-   93 LValue: LValue . DOT_SYMBOL LValue
-   94       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+   68 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue . subReadStatement RIGHT_BRACE_SYMBOL
+   94 LValue: LValue . DOT_SYMBOL LValue
+   95       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
 
     DOT_SYMBOL          shift, and go to state 146
-    COMMA_SYMBOL        shift, and go to state 215
+    COMMA_SYMBOL        shift, and go to state 216
     LEFT_SQUARE_SYMBOL  shift, and go to state 147
 
-    $default  reduce using rule 69 (subReadStatement)
+    $default  reduce using rule 70 (subReadStatement)
 
-    subReadStatement  go to state 216
+    subReadStatement  go to state 217
 
 
 state 188
 
-   70 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression . subWriteStatement RIGHT_BRACE_SYMBOL
+   71 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression . subWriteStatement RIGHT_BRACE_SYMBOL
 
-    COMMA_SYMBOL  shift, and go to state 217
+    COMMA_SYMBOL  shift, and go to state 218
 
-    $default  reduce using rule 72 (subWriteStatement)
+    $default  reduce using rule 73 (subWriteStatement)
 
-    subWriteStatement  go to state 218
+    subWriteStatement  go to state 219
 
 
 state 189
 
-   40 subStatementSequence: SEMI_COLON_SYMBOL Statement . subStatementSequence
+   41 subStatementSequence: SEMI_COLON_SYMBOL Statement . subStatementSequence
 
     SEMI_COLON_SYMBOL  shift, and go to state 143
 
-    $default  reduce using rule 41 (subStatementSequence)
+    $default  reduce using rule 42 (subStatementSequence)
 
-    subStatementSequence  go to state 219
+    subStatementSequence  go to state 220
 
 
 state 190
 
-   53 Assignment: LValue ASSIGN_SYMBOL ConstExpression .
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+   54 Assignment: LValue ASSIGN_SYMBOL ConstExpression .
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL          shift, and go to state 31
     SUB_SYMBOL          shift, and go to state 32
@@ -2836,46 +2838,57 @@ state 190
     GREAT_EQUAL_SYMBOL  shift, and go to state 42
     PERCENT_SYMBOL      shift, and go to state 44
 
-    $default  reduce using rule 53 (Assignment)
+    $default  reduce using rule 54 (Assignment)
 
 
 state 191
 
-   93 LValue: LValue . DOT_SYMBOL LValue
-   93       | LValue DOT_SYMBOL LValue .
-   94       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+   94 LValue: LValue . DOT_SYMBOL LValue
+   94       | LValue DOT_SYMBOL LValue .
+   95       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
 
     DOT_SYMBOL          shift, and go to state 146
     LEFT_SQUARE_SYMBOL  shift, and go to state 147
 
-    DOT_SYMBOL          [reduce using rule 93 (LValue)]
-    LEFT_SQUARE_SYMBOL  [reduce using rule 93 (LValue)]
-    $default            reduce using rule 93 (LValue)
+    DOT_SYMBOL          [reduce using rule 94 (LValue)]
+    LEFT_SQUARE_SYMBOL  [reduce using rule 94 (LValue)]
+    $default            reduce using rule 94 (LValue)
 
 
 state 192
 
-   94 LValue: LValue LEFT_SQUARE_SYMBOL Expression . RIGHT_SQUARE_SYMBOL
+   95 LValue: LValue LEFT_SQUARE_SYMBOL Expression . RIGHT_SQUARE_SYMBOL
 
-    RIGHT_SQUARE_SYMBOL  shift, and go to state 220
+    RIGHT_SQUARE_SYMBOL  shift, and go to state 221
 
 
 state 193
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression . RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
-  112 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
-  113                | ConstExpression . AND_SYMBOL ConstExpression
-  114                | ConstExpression . EQUAL_SYMBOL ConstExpression
-  115                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
-  116                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
-  117                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
-  118                | ConstExpression . LESS_SYMBOL ConstExpression
-  119                | ConstExpression . GREAT_SYMBOL ConstExpression
-  120                | ConstExpression . ADD_SYMBOL ConstExpression
-  121                | ConstExpression . SUB_SYMBOL ConstExpression
-  122                | ConstExpression . MULT_SYMBOL ConstExpression
-  123                | ConstExpression . DIV_SYMBOL ConstExpression
-  124                | ConstExpression . PERCENT_SYMBOL ConstExpression
+    7 subConstantDecl: ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL . subConstantDecl
+
+    ID_SYMBOL  shift, and go to state 74
+
+    $default  reduce using rule 8 (subConstantDecl)
+
+    subConstantDecl  go to state 222
+
+
+state 194
+
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression . RIGHT_SQUARE_SYMBOL OF_SYMBOL Type
+  113 ConstExpression: ConstExpression . OR_SYMBOL ConstExpression
+  114                | ConstExpression . AND_SYMBOL ConstExpression
+  115                | ConstExpression . EQUAL_SYMBOL ConstExpression
+  116                | ConstExpression . NOT_EQUAL_SYMBOL ConstExpression
+  117                | ConstExpression . LESS_EQUAL_SYMBOL ConstExpression
+  118                | ConstExpression . GREAT_EQUAL_SYMBOL ConstExpression
+  119                | ConstExpression . LESS_SYMBOL ConstExpression
+  120                | ConstExpression . GREAT_SYMBOL ConstExpression
+  121                | ConstExpression . ADD_SYMBOL ConstExpression
+  122                | ConstExpression . SUB_SYMBOL ConstExpression
+  123                | ConstExpression . MULT_SYMBOL ConstExpression
+  124                | ConstExpression . DIV_SYMBOL ConstExpression
+  125                | ConstExpression . PERCENT_SYMBOL ConstExpression
 
     ADD_SYMBOL           shift, and go to state 31
     SUB_SYMBOL           shift, and go to state 32
@@ -2889,52 +2902,38 @@ state 193
     LESS_EQUAL_SYMBOL    shift, and go to state 40
     GREAT_SYMBOL         shift, and go to state 41
     GREAT_EQUAL_SYMBOL   shift, and go to state 42
-    RIGHT_SQUARE_SYMBOL  shift, and go to state 221
+    RIGHT_SQUARE_SYMBOL  shift, and go to state 223
     PERCENT_SYMBOL       shift, and go to state 44
-
-
-state 194
-
-   29 subRecordType: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL . subRecordType
-
-    ID_SYMBOL  shift, and go to state 21
-
-    $default  reduce using rule 30 (subRecordType)
-
-    subRecordType  go to state 222
-    IdentList      go to state 79
 
 
 state 195
 
-   22 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type . SEMI_COLON_SYMBOL subTypeDecl
+   30 subRecordType: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL . subRecordType
 
-    SEMI_COLON_SYMBOL  shift, and go to state 223
+    ID_SYMBOL  shift, and go to state 21
+
+    $default  reduce using rule 31 (subRecordType)
+
+    subRecordType  go to state 224
+    IdentList      go to state 79
 
 
 state 196
 
-   37 subVarDecl: IdentList COLON_SYMBOL . Type SEMI_COLON_SYMBOL subVarDecl
+   23 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type . SEMI_COLON_SYMBOL subTypeDecl
 
-    ID_SYMBOL      shift, and go to state 45
-    ARRAY_SYMBOL   shift, and go to state 46
-    RECORD_SYMBOL  shift, and go to state 47
-
-    Type        go to state 224
-    SimpleType  go to state 49
-    RecordType  go to state 50
-    ArrayType   go to state 51
+    SEMI_COLON_SYMBOL  shift, and go to state 225
 
 
 state 197
 
-   13 FormalParameters: VAR_SYMBOL IdentList COLON_SYMBOL . Type subFormalParameters
+   38 subVarDecl: IdentList COLON_SYMBOL . Type SEMI_COLON_SYMBOL subVarDecl
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
     RECORD_SYMBOL  shift, and go to state 47
 
-    Type        go to state 225
+    Type        go to state 226
     SimpleType  go to state 49
     RecordType  go to state 50
     ArrayType   go to state 51
@@ -2942,184 +2941,61 @@ state 197
 
 state 198
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL . FORWARD_SYMBOL SEMI_COLON_SYMBOL
-    9              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL . Body SEMI_COLON_SYMBOL
-
-    CONST_SYMBOL    shift, and go to state 1
-    FORWARD_SYMBOL  shift, and go to state 226
-
-    ConstantDecl  go to state 227
-    Body          go to state 228
-
-
-state 199
-
-   14 FormalParameters: IdentList COLON_SYMBOL Type . subFormalParameters
-
-    SEMI_COLON_SYMBOL  shift, and go to state 229
-
-    $default  reduce using rule 17 (subFormalParameters)
-
-    subFormalParameters  go to state 230
-
-
-state 200
-
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL . Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL . Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   14 FormalParameters: VAR_SYMBOL IdentList COLON_SYMBOL . Type subFormalParameters
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
     RECORD_SYMBOL  shift, and go to state 47
 
-    Type        go to state 231
+    Type        go to state 227
     SimpleType  go to state 49
     RecordType  go to state 50
     ArrayType   go to state 51
 
 
+state 199
+
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL . FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   10              | PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL . Body SEMI_COLON_SYMBOL
+
+    CONST_SYMBOL    shift, and go to state 1
+    FORWARD_SYMBOL  shift, and go to state 228
+
+    $default  reduce using rule 6 (ConstantDecl)
+
+    ConstantDecl  go to state 229
+    Body          go to state 230
+
+
+state 200
+
+   15 FormalParameters: IdentList COLON_SYMBOL Type . subFormalParameters
+
+    SEMI_COLON_SYMBOL  shift, and go to state 231
+
+    $default  reduce using rule 18 (subFormalParameters)
+
+    subFormalParameters  go to state 232
+
+
 state 201
 
-   75 subProcedureCall: COMMA_SYMBOL . Expression subProcedureCall
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL . Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL . Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
-    ID_SYMBOL          shift, and go to state 122
-    CHARACTER_SYMBOL   shift, and go to state 123
-    INTEGER_SYMBOL     shift, and go to state 124
-    STRING_SYMBOL      shift, and go to state 125
-    CHR_SYMBOL         shift, and go to state 126
-    ORD_SYMBOL         shift, and go to state 127
-    PRED_SYMBOL        shift, and go to state 128
-    SUCC_SYMBOL        shift, and go to state 129
-    SUB_SYMBOL         shift, and go to state 130
-    NOT_SYMBOL         shift, and go to state 131
-    LEFT_BRACE_SYMBOL  shift, and go to state 132
+    ID_SYMBOL      shift, and go to state 45
+    ARRAY_SYMBOL   shift, and go to state 46
+    RECORD_SYMBOL  shift, and go to state 47
 
-    Expression     go to state 232
-    subExpression  go to state 134
-    LValue         go to state 135
+    Type        go to state 233
+    SimpleType  go to state 49
+    RecordType  go to state 50
+    ArrayType   go to state 51
 
 
 state 202
 
-   74 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL Expression subProcedureCall . RIGHT_BRACE_SYMBOL
-
-    RIGHT_BRACE_SYMBOL  shift, and go to state 233
-
-
-state 203
-
-  108 subExpressionIdent: Expression . subSubExpressionIndent
-
-    COMMA_SYMBOL  shift, and go to state 234
-
-    $default  reduce using rule 111 (subSubExpressionIndent)
-
-    subSubExpressionIndent  go to state 235
-
-
-state 204
-
-   82 Expression: ID_SYMBOL LEFT_BRACE_SYMBOL subExpressionIdent . RIGHT_BRACE_SYMBOL
-
-    RIGHT_BRACE_SYMBOL  shift, and go to state 236
-
-
-state 205
-
-   83 Expression: CHR_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
-
-    RIGHT_BRACE_SYMBOL  shift, and go to state 237
-
-
-state 206
-
-   84 Expression: ORD_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
-
-    RIGHT_BRACE_SYMBOL  shift, and go to state 238
-
-
-state 207
-
-   85 Expression: PRED_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
-
-    RIGHT_BRACE_SYMBOL  shift, and go to state 239
-
-
-state 208
-
-   86 Expression: SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
-
-    RIGHT_BRACE_SYMBOL  shift, and go to state 240
-
-
-state 209
-
-   81 Expression: LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
-
-    $default  reduce using rule 81 (Expression)
-
-
-state 210
-
-   54 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence . subIfStatment subElse END_SYMBOL
-
-    ELSEIF_SYMBOL  shift, and go to state 241
-
-    $default  reduce using rule 56 (subIfStatment)
-
-    subIfStatment  go to state 242
-
-
-state 211
-
-   78 Expression: subExpression Operator subExpression .
-
-    $default  reduce using rule 78 (Expression)
-
-
-state 212
-
-   60 RepeatStatment: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL Expression .
-
-    $default  reduce using rule 60 (RepeatStatment)
-
-
-state 213
-
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression . subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
-
-    TO_SYMBOL      shift, and go to state 243
-    DOWNTO_SYMBOL  shift, and go to state 244
-
-    subForType  go to state 245
-
-
-state 214
-
-   59 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence . END_SYMBOL
-
-    END_SYMBOL  shift, and go to state 246
-
-
-state 215
-
-   68 subReadStatement: COMMA_SYMBOL . LValue subReadStatement
-
-    ID_SYMBOL  shift, and go to state 186
-
-    LValue  go to state 247
-
-
-state 216
-
-   67 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue subReadStatement . RIGHT_BRACE_SYMBOL
-
-    RIGHT_BRACE_SYMBOL  shift, and go to state 248
-
-
-state 217
-
-   71 subWriteStatement: COMMA_SYMBOL . Expression subWriteStatement
+   76 subProcedureCall: COMMA_SYMBOL . Expression subProcedureCall
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -3133,256 +3009,356 @@ state 217
     NOT_SYMBOL         shift, and go to state 131
     LEFT_BRACE_SYMBOL  shift, and go to state 132
 
-    Expression     go to state 249
+    Expression     go to state 234
     subExpression  go to state 134
     LValue         go to state 135
 
 
-state 218
+state 203
 
-   70 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression subWriteStatement . RIGHT_BRACE_SYMBOL
+   75 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL Expression subProcedureCall . RIGHT_BRACE_SYMBOL
+
+    RIGHT_BRACE_SYMBOL  shift, and go to state 235
+
+
+state 204
+
+  109 subExpressionIdent: Expression . subSubExpressionIndent
+
+    COMMA_SYMBOL  shift, and go to state 236
+
+    $default  reduce using rule 112 (subSubExpressionIndent)
+
+    subSubExpressionIndent  go to state 237
+
+
+state 205
+
+   83 Expression: ID_SYMBOL LEFT_BRACE_SYMBOL subExpressionIdent . RIGHT_BRACE_SYMBOL
+
+    RIGHT_BRACE_SYMBOL  shift, and go to state 238
+
+
+state 206
+
+   84 Expression: CHR_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
+
+    RIGHT_BRACE_SYMBOL  shift, and go to state 239
+
+
+state 207
+
+   85 Expression: ORD_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
+
+    RIGHT_BRACE_SYMBOL  shift, and go to state 240
+
+
+state 208
+
+   86 Expression: PRED_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
+
+    RIGHT_BRACE_SYMBOL  shift, and go to state 241
+
+
+state 209
+
+   87 Expression: SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression . RIGHT_BRACE_SYMBOL
+
+    RIGHT_BRACE_SYMBOL  shift, and go to state 242
+
+
+state 210
+
+   82 Expression: LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
+
+    $default  reduce using rule 82 (Expression)
+
+
+state 211
+
+   55 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence . subIfStatment subElse END_SYMBOL
+
+    ELSEIF_SYMBOL  shift, and go to state 243
+
+    $default  reduce using rule 57 (subIfStatment)
+
+    subIfStatment  go to state 244
+
+
+state 212
+
+   79 Expression: subExpression Operator subExpression .
+
+    $default  reduce using rule 79 (Expression)
+
+
+state 213
+
+   61 RepeatStatment: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL Expression .
+
+    $default  reduce using rule 61 (RepeatStatment)
+
+
+state 214
+
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression . subForType Expression DO_SYMBOL StatementSequence END_SYMBOL
+
+    TO_SYMBOL      shift, and go to state 245
+    DOWNTO_SYMBOL  shift, and go to state 246
+
+    subForType  go to state 247
+
+
+state 215
+
+   60 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence . END_SYMBOL
+
+    END_SYMBOL  shift, and go to state 248
+
+
+state 216
+
+   69 subReadStatement: COMMA_SYMBOL . LValue subReadStatement
+
+    ID_SYMBOL  shift, and go to state 186
+
+    LValue  go to state 249
+
+
+state 217
+
+   68 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue subReadStatement . RIGHT_BRACE_SYMBOL
 
     RIGHT_BRACE_SYMBOL  shift, and go to state 250
 
 
+state 218
+
+   72 subWriteStatement: COMMA_SYMBOL . Expression subWriteStatement
+
+    ID_SYMBOL          shift, and go to state 122
+    CHARACTER_SYMBOL   shift, and go to state 123
+    INTEGER_SYMBOL     shift, and go to state 124
+    STRING_SYMBOL      shift, and go to state 125
+    CHR_SYMBOL         shift, and go to state 126
+    ORD_SYMBOL         shift, and go to state 127
+    PRED_SYMBOL        shift, and go to state 128
+    SUCC_SYMBOL        shift, and go to state 129
+    SUB_SYMBOL         shift, and go to state 130
+    NOT_SYMBOL         shift, and go to state 131
+    LEFT_BRACE_SYMBOL  shift, and go to state 132
+
+    Expression     go to state 251
+    subExpression  go to state 134
+    LValue         go to state 135
+
+
 state 219
 
-   40 subStatementSequence: SEMI_COLON_SYMBOL Statement subStatementSequence .
+   71 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression subWriteStatement . RIGHT_BRACE_SYMBOL
 
-    $default  reduce using rule 40 (subStatementSequence)
+    RIGHT_BRACE_SYMBOL  shift, and go to state 252
 
 
 state 220
 
-   94 LValue: LValue LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL .
+   41 subStatementSequence: SEMI_COLON_SYMBOL Statement subStatementSequence .
 
-    $default  reduce using rule 94 (LValue)
+    $default  reduce using rule 41 (subStatementSequence)
 
 
 state 221
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL . OF_SYMBOL Type
+   95 LValue: LValue LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL .
 
-    OF_SYMBOL  shift, and go to state 251
+    $default  reduce using rule 95 (LValue)
 
 
 state 222
 
-   29 subRecordType: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subRecordType .
+    7 subConstantDecl: ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl .
 
-    $default  reduce using rule 29 (subRecordType)
+    $default  reduce using rule 7 (subConstantDecl)
 
 
 state 223
 
-   22 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL . subTypeDecl
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL . OF_SYMBOL Type
 
-    ID_SYMBOL  shift, and go to state 113
-
-    $default  reduce using rule 23 (subTypeDecl)
-
-    subTypeDecl  go to state 252
+    OF_SYMBOL  shift, and go to state 253
 
 
 state 224
 
-   37 subVarDecl: IdentList COLON_SYMBOL Type . SEMI_COLON_SYMBOL subVarDecl
+   30 subRecordType: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subRecordType .
 
-    SEMI_COLON_SYMBOL  shift, and go to state 253
+    $default  reduce using rule 30 (subRecordType)
 
 
 state 225
 
-   13 FormalParameters: VAR_SYMBOL IdentList COLON_SYMBOL Type . subFormalParameters
+   23 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL . subTypeDecl
 
-    SEMI_COLON_SYMBOL  shift, and go to state 229
+    ID_SYMBOL  shift, and go to state 113
 
-    $default  reduce using rule 17 (subFormalParameters)
+    $default  reduce using rule 24 (subTypeDecl)
 
-    subFormalParameters  go to state 254
+    subTypeDecl  go to state 254
 
 
 state 226
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL . SEMI_COLON_SYMBOL
+   38 subVarDecl: IdentList COLON_SYMBOL Type . SEMI_COLON_SYMBOL subVarDecl
 
     SEMI_COLON_SYMBOL  shift, and go to state 255
 
 
 state 227
 
-   18 Body: ConstantDecl . TypeDecl VarDecl Block
+   14 FormalParameters: VAR_SYMBOL IdentList COLON_SYMBOL Type . subFormalParameters
 
-    TYPE_SYMBOL  shift, and go to state 6
+    SEMI_COLON_SYMBOL  shift, and go to state 231
 
-    $default  reduce using rule 21 (TypeDecl)
+    $default  reduce using rule 18 (subFormalParameters)
 
-    TypeDecl  go to state 256
+    subFormalParameters  go to state 256
 
 
 state 228
 
-    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body . SEMI_COLON_SYMBOL
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL . SEMI_COLON_SYMBOL
 
     SEMI_COLON_SYMBOL  shift, and go to state 257
 
 
 state 229
 
-   15 subFormalParameters: SEMI_COLON_SYMBOL . VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
-   16                    | SEMI_COLON_SYMBOL . IdentList COLON_SYMBOL Type subFormalParameters
+   19 Body: ConstantDecl . TypeDecl VarDecl Block
 
-    ID_SYMBOL   shift, and go to state 21
-    VAR_SYMBOL  shift, and go to state 258
+    TYPE_SYMBOL  shift, and go to state 6
 
-    IdentList  go to state 259
+    $default  reduce using rule 22 (TypeDecl)
+
+    TypeDecl  go to state 258
 
 
 state 230
 
-   14 FormalParameters: IdentList COLON_SYMBOL Type subFormalParameters .
+   10 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body . SEMI_COLON_SYMBOL
 
-    $default  reduce using rule 14 (FormalParameters)
+    SEMI_COLON_SYMBOL  shift, and go to state 259
 
 
 state 231
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type . SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type . SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
+   16 subFormalParameters: SEMI_COLON_SYMBOL . VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters
+   17                    | SEMI_COLON_SYMBOL . IdentList COLON_SYMBOL Type subFormalParameters
 
-    SEMI_COLON_SYMBOL  shift, and go to state 260
+    ID_SYMBOL   shift, and go to state 21
+    VAR_SYMBOL  shift, and go to state 260
+
+    IdentList  go to state 261
 
 
 state 232
 
-   75 subProcedureCall: COMMA_SYMBOL Expression . subProcedureCall
+   15 FormalParameters: IdentList COLON_SYMBOL Type subFormalParameters .
 
-    COMMA_SYMBOL  shift, and go to state 201
-
-    $default  reduce using rule 76 (subProcedureCall)
-
-    subProcedureCall  go to state 261
+    $default  reduce using rule 15 (FormalParameters)
 
 
 state 233
 
-   74 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL Expression subProcedureCall RIGHT_BRACE_SYMBOL .
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type . SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type . SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL
 
-    $default  reduce using rule 74 (ProcedureCall)
+    SEMI_COLON_SYMBOL  shift, and go to state 262
 
 
 state 234
 
-  110 subSubExpressionIndent: COMMA_SYMBOL . Expression subSubExpressionIndent
+   76 subProcedureCall: COMMA_SYMBOL Expression . subProcedureCall
 
-    ID_SYMBOL          shift, and go to state 122
-    CHARACTER_SYMBOL   shift, and go to state 123
-    INTEGER_SYMBOL     shift, and go to state 124
-    STRING_SYMBOL      shift, and go to state 125
-    CHR_SYMBOL         shift, and go to state 126
-    ORD_SYMBOL         shift, and go to state 127
-    PRED_SYMBOL        shift, and go to state 128
-    SUCC_SYMBOL        shift, and go to state 129
-    SUB_SYMBOL         shift, and go to state 130
-    NOT_SYMBOL         shift, and go to state 131
-    LEFT_BRACE_SYMBOL  shift, and go to state 132
+    COMMA_SYMBOL  shift, and go to state 202
 
-    Expression     go to state 262
-    subExpression  go to state 134
-    LValue         go to state 135
+    $default  reduce using rule 77 (subProcedureCall)
+
+    subProcedureCall  go to state 263
 
 
 state 235
 
-  108 subExpressionIdent: Expression subSubExpressionIndent .
+   75 ProcedureCall: ID_SYMBOL LEFT_BRACE_SYMBOL Expression subProcedureCall RIGHT_BRACE_SYMBOL .
 
-    $default  reduce using rule 108 (subExpressionIdent)
+    $default  reduce using rule 75 (ProcedureCall)
 
 
 state 236
 
-   82 Expression: ID_SYMBOL LEFT_BRACE_SYMBOL subExpressionIdent RIGHT_BRACE_SYMBOL .
+  111 subSubExpressionIndent: COMMA_SYMBOL . Expression subSubExpressionIndent
 
-    $default  reduce using rule 82 (Expression)
+    ID_SYMBOL          shift, and go to state 122
+    CHARACTER_SYMBOL   shift, and go to state 123
+    INTEGER_SYMBOL     shift, and go to state 124
+    STRING_SYMBOL      shift, and go to state 125
+    CHR_SYMBOL         shift, and go to state 126
+    ORD_SYMBOL         shift, and go to state 127
+    PRED_SYMBOL        shift, and go to state 128
+    SUCC_SYMBOL        shift, and go to state 129
+    SUB_SYMBOL         shift, and go to state 130
+    NOT_SYMBOL         shift, and go to state 131
+    LEFT_BRACE_SYMBOL  shift, and go to state 132
+
+    Expression     go to state 264
+    subExpression  go to state 134
+    LValue         go to state 135
 
 
 state 237
 
-   83 Expression: CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
+  109 subExpressionIdent: Expression subSubExpressionIndent .
 
-    $default  reduce using rule 83 (Expression)
+    $default  reduce using rule 109 (subExpressionIdent)
 
 
 state 238
 
-   84 Expression: ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
+   83 Expression: ID_SYMBOL LEFT_BRACE_SYMBOL subExpressionIdent RIGHT_BRACE_SYMBOL .
 
-    $default  reduce using rule 84 (Expression)
+    $default  reduce using rule 83 (Expression)
 
 
 state 239
 
-   85 Expression: PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
+   84 Expression: CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
 
-    $default  reduce using rule 85 (Expression)
+    $default  reduce using rule 84 (Expression)
 
 
 state 240
 
-   86 Expression: SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
+   85 Expression: ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
 
-    $default  reduce using rule 86 (Expression)
+    $default  reduce using rule 85 (Expression)
 
 
 state 241
 
-   55 subIfStatment: ELSEIF_SYMBOL . Expression THEN_SYMBOL StatementSequence subIfStatment
+   86 Expression: PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
 
-    ID_SYMBOL          shift, and go to state 122
-    CHARACTER_SYMBOL   shift, and go to state 123
-    INTEGER_SYMBOL     shift, and go to state 124
-    STRING_SYMBOL      shift, and go to state 125
-    CHR_SYMBOL         shift, and go to state 126
-    ORD_SYMBOL         shift, and go to state 127
-    PRED_SYMBOL        shift, and go to state 128
-    SUCC_SYMBOL        shift, and go to state 129
-    SUB_SYMBOL         shift, and go to state 130
-    NOT_SYMBOL         shift, and go to state 131
-    LEFT_BRACE_SYMBOL  shift, and go to state 132
-
-    Expression     go to state 263
-    subExpression  go to state 134
-    LValue         go to state 135
+    $default  reduce using rule 86 (Expression)
 
 
 state 242
 
-   54 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment . subElse END_SYMBOL
+   87 Expression: SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL .
 
-    ELSE_SYMBOL  shift, and go to state 264
-
-    $default  reduce using rule 58 (subElse)
-
-    subElse  go to state 265
+    $default  reduce using rule 87 (Expression)
 
 
 state 243
 
-   63 subForType: TO_SYMBOL .
-
-    $default  reduce using rule 63 (subForType)
-
-
-state 244
-
-   62 subForType: DOWNTO_SYMBOL .
-
-    $default  reduce using rule 62 (subForType)
-
-
-state 245
-
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType . Expression DO_SYMBOL StatementSequence END_SYMBOL
+   56 subIfStatment: ELSEIF_SYMBOL . Expression THEN_SYMBOL StatementSequence subIfStatment
 
     ID_SYMBOL          shift, and go to state 122
     CHARACTER_SYMBOL   shift, and go to state 123
@@ -3396,477 +3372,525 @@ state 245
     NOT_SYMBOL         shift, and go to state 131
     LEFT_BRACE_SYMBOL  shift, and go to state 132
 
-    Expression     go to state 266
+    Expression     go to state 265
     subExpression  go to state 134
     LValue         go to state 135
 
 
+state 244
+
+   55 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment . subElse END_SYMBOL
+
+    ELSE_SYMBOL  shift, and go to state 266
+
+    $default  reduce using rule 59 (subElse)
+
+    subElse  go to state 267
+
+
+state 245
+
+   64 subForType: TO_SYMBOL .
+
+    $default  reduce using rule 64 (subForType)
+
+
 state 246
 
-   59 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL .
+   63 subForType: DOWNTO_SYMBOL .
 
-    $default  reduce using rule 59 (WhileStatement)
+    $default  reduce using rule 63 (subForType)
 
 
 state 247
 
-   68 subReadStatement: COMMA_SYMBOL LValue . subReadStatement
-   93 LValue: LValue . DOT_SYMBOL LValue
-   94       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType . Expression DO_SYMBOL StatementSequence END_SYMBOL
 
-    DOT_SYMBOL          shift, and go to state 146
-    COMMA_SYMBOL        shift, and go to state 215
-    LEFT_SQUARE_SYMBOL  shift, and go to state 147
+    ID_SYMBOL          shift, and go to state 122
+    CHARACTER_SYMBOL   shift, and go to state 123
+    INTEGER_SYMBOL     shift, and go to state 124
+    STRING_SYMBOL      shift, and go to state 125
+    CHR_SYMBOL         shift, and go to state 126
+    ORD_SYMBOL         shift, and go to state 127
+    PRED_SYMBOL        shift, and go to state 128
+    SUCC_SYMBOL        shift, and go to state 129
+    SUB_SYMBOL         shift, and go to state 130
+    NOT_SYMBOL         shift, and go to state 131
+    LEFT_BRACE_SYMBOL  shift, and go to state 132
 
-    $default  reduce using rule 69 (subReadStatement)
-
-    subReadStatement  go to state 267
+    Expression     go to state 268
+    subExpression  go to state 134
+    LValue         go to state 135
 
 
 state 248
 
-   67 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue subReadStatement RIGHT_BRACE_SYMBOL .
+   60 WhileStatement: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL .
 
-    $default  reduce using rule 67 (ReadStatement)
+    $default  reduce using rule 60 (WhileStatement)
 
 
 state 249
 
-   71 subWriteStatement: COMMA_SYMBOL Expression . subWriteStatement
+   69 subReadStatement: COMMA_SYMBOL LValue . subReadStatement
+   94 LValue: LValue . DOT_SYMBOL LValue
+   95       | LValue . LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
 
-    COMMA_SYMBOL  shift, and go to state 217
+    DOT_SYMBOL          shift, and go to state 146
+    COMMA_SYMBOL        shift, and go to state 216
+    LEFT_SQUARE_SYMBOL  shift, and go to state 147
 
-    $default  reduce using rule 72 (subWriteStatement)
+    $default  reduce using rule 70 (subReadStatement)
 
-    subWriteStatement  go to state 268
+    subReadStatement  go to state 269
 
 
 state 250
 
-   70 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression subWriteStatement RIGHT_BRACE_SYMBOL .
+   68 ReadStatement: READ_SYMBOL LEFT_BRACE_SYMBOL LValue subReadStatement RIGHT_BRACE_SYMBOL .
 
-    $default  reduce using rule 70 (WriteStatement)
+    $default  reduce using rule 68 (ReadStatement)
 
 
 state 251
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL . Type
+   72 subWriteStatement: COMMA_SYMBOL Expression . subWriteStatement
+
+    COMMA_SYMBOL  shift, and go to state 218
+
+    $default  reduce using rule 73 (subWriteStatement)
+
+    subWriteStatement  go to state 270
+
+
+state 252
+
+   71 WriteStatement: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression subWriteStatement RIGHT_BRACE_SYMBOL .
+
+    $default  reduce using rule 71 (WriteStatement)
+
+
+state 253
+
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL . Type
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
     RECORD_SYMBOL  shift, and go to state 47
 
-    Type        go to state 269
+    Type        go to state 271
     SimpleType  go to state 49
     RecordType  go to state 50
     ArrayType   go to state 51
 
 
-state 252
-
-   22 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl .
-
-    $default  reduce using rule 22 (subTypeDecl)
-
-
-state 253
-
-   37 subVarDecl: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL . subVarDecl
-
-    ID_SYMBOL  shift, and go to state 21
-
-    $default  reduce using rule 38 (subVarDecl)
-
-    IdentList   go to state 152
-    subVarDecl  go to state 270
-
-
 state 254
 
-   13 FormalParameters: VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters .
+   23 subTypeDecl: ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL subTypeDecl .
 
-    $default  reduce using rule 13 (FormalParameters)
+    $default  reduce using rule 23 (subTypeDecl)
 
 
 state 255
 
-    8 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL .
+   38 subVarDecl: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL . subVarDecl
 
-    $default  reduce using rule 8 (ProcedureDecl)
+    ID_SYMBOL  shift, and go to state 21
+
+    $default  reduce using rule 39 (subVarDecl)
+
+    IdentList   go to state 152
+    subVarDecl  go to state 272
 
 
 state 256
 
-   18 Body: ConstantDecl TypeDecl . VarDecl Block
+   14 FormalParameters: VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters .
 
-    VAR_SYMBOL  shift, and go to state 10
-
-    $default  reduce using rule 36 (VarDecl)
-
-    VarDecl  go to state 271
+    $default  reduce using rule 14 (FormalParameters)
 
 
 state 257
 
-    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL .
+    9 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL .
 
     $default  reduce using rule 9 (ProcedureDecl)
 
 
 state 258
 
-   15 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL . IdentList COLON_SYMBOL Type subFormalParameters
+   19 Body: ConstantDecl TypeDecl . VarDecl Block
 
-    ID_SYMBOL  shift, and go to state 21
+    VAR_SYMBOL  shift, and go to state 10
 
-    IdentList  go to state 272
+    $default  reduce using rule 37 (VarDecl)
+
+    VarDecl  go to state 273
 
 
 state 259
 
-   16 subFormalParameters: SEMI_COLON_SYMBOL IdentList . COLON_SYMBOL Type subFormalParameters
+   10 ProcedureDecl: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL .
 
-    COLON_SYMBOL  shift, and go to state 273
+    $default  reduce using rule 10 (ProcedureDecl)
 
 
 state 260
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL . FORWARD_SYMBOL SEMI_COLON_SYMBOL
-   11             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL . Body SEMI_COLON_SYMBOL
+   16 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL . IdentList COLON_SYMBOL Type subFormalParameters
 
-    CONST_SYMBOL    shift, and go to state 1
-    FORWARD_SYMBOL  shift, and go to state 274
+    ID_SYMBOL  shift, and go to state 21
 
-    ConstantDecl  go to state 227
-    Body          go to state 275
+    IdentList  go to state 274
 
 
 state 261
 
-   75 subProcedureCall: COMMA_SYMBOL Expression subProcedureCall .
+   17 subFormalParameters: SEMI_COLON_SYMBOL IdentList . COLON_SYMBOL Type subFormalParameters
 
-    $default  reduce using rule 75 (subProcedureCall)
+    COLON_SYMBOL  shift, and go to state 275
 
 
 state 262
 
-  110 subSubExpressionIndent: COMMA_SYMBOL Expression . subSubExpressionIndent
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL . FORWARD_SYMBOL SEMI_COLON_SYMBOL
+   12             | FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL . Body SEMI_COLON_SYMBOL
 
-    COMMA_SYMBOL  shift, and go to state 234
+    CONST_SYMBOL    shift, and go to state 1
+    FORWARD_SYMBOL  shift, and go to state 276
 
-    $default  reduce using rule 111 (subSubExpressionIndent)
+    $default  reduce using rule 6 (ConstantDecl)
 
-    subSubExpressionIndent  go to state 276
+    ConstantDecl  go to state 229
+    Body          go to state 277
 
 
 state 263
 
-   55 subIfStatment: ELSEIF_SYMBOL Expression . THEN_SYMBOL StatementSequence subIfStatment
+   76 subProcedureCall: COMMA_SYMBOL Expression subProcedureCall .
 
-    THEN_SYMBOL  shift, and go to state 277
+    $default  reduce using rule 76 (subProcedureCall)
 
 
 state 264
 
-   57 subElse: ELSE_SYMBOL . StatementSequence
+  111 subSubExpressionIndent: COMMA_SYMBOL Expression . subSubExpressionIndent
 
-    ID_SYMBOL      shift, and go to state 85
-    IF_SYMBOL      shift, and go to state 86
-    REPEAT_SYMBOL  shift, and go to state 87
-    FOR_SYMBOL     shift, and go to state 88
-    RETURN_SYMBOL  shift, and go to state 89
-    STOP_SYMBOL    shift, and go to state 90
-    WHILE_SYMBOL   shift, and go to state 91
-    READ_SYMBOL    shift, and go to state 92
-    WRITE_SYMBOL   shift, and go to state 93
+    COMMA_SYMBOL  shift, and go to state 236
 
-    $default  reduce using rule 77 (NullStatement)
+    $default  reduce using rule 112 (subSubExpressionIndent)
 
-    StatementSequence  go to state 278
-    Statement          go to state 95
-    Assignment         go to state 96
-    IfStatement        go to state 97
-    WhileStatement     go to state 98
-    RepeatStatment     go to state 99
-    ForStatement       go to state 100
-    StopStatement      go to state 101
-    ReturnStatment     go to state 102
-    ReadStatement      go to state 103
-    WriteStatement     go to state 104
-    ProcedureCall      go to state 105
-    NullStatement      go to state 106
-    LValue             go to state 107
+    subSubExpressionIndent  go to state 278
 
 
 state 265
 
-   54 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment subElse . END_SYMBOL
+   56 subIfStatment: ELSEIF_SYMBOL Expression . THEN_SYMBOL StatementSequence subIfStatment
 
-    END_SYMBOL  shift, and go to state 279
+    THEN_SYMBOL  shift, and go to state 279
 
 
 state 266
 
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression . DO_SYMBOL StatementSequence END_SYMBOL
+   58 subElse: ELSE_SYMBOL . StatementSequence
 
-    DO_SYMBOL  shift, and go to state 280
+    ID_SYMBOL      shift, and go to state 85
+    IF_SYMBOL      shift, and go to state 86
+    REPEAT_SYMBOL  shift, and go to state 87
+    FOR_SYMBOL     shift, and go to state 88
+    RETURN_SYMBOL  shift, and go to state 89
+    STOP_SYMBOL    shift, and go to state 90
+    WHILE_SYMBOL   shift, and go to state 91
+    READ_SYMBOL    shift, and go to state 92
+    WRITE_SYMBOL   shift, and go to state 93
+
+    $default  reduce using rule 78 (NullStatement)
+
+    StatementSequence  go to state 280
+    Statement          go to state 95
+    Assignment         go to state 96
+    IfStatement        go to state 97
+    WhileStatement     go to state 98
+    RepeatStatment     go to state 99
+    ForStatement       go to state 100
+    StopStatement      go to state 101
+    ReturnStatment     go to state 102
+    ReadStatement      go to state 103
+    WriteStatement     go to state 104
+    ProcedureCall      go to state 105
+    NullStatement      go to state 106
+    LValue             go to state 107
 
 
 state 267
 
-   68 subReadStatement: COMMA_SYMBOL LValue subReadStatement .
+   55 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment subElse . END_SYMBOL
 
-    $default  reduce using rule 68 (subReadStatement)
+    END_SYMBOL  shift, and go to state 281
 
 
 state 268
 
-   71 subWriteStatement: COMMA_SYMBOL Expression subWriteStatement .
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression . DO_SYMBOL StatementSequence END_SYMBOL
 
-    $default  reduce using rule 71 (subWriteStatement)
+    DO_SYMBOL  shift, and go to state 282
 
 
 state 269
 
-   31 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type .
+   69 subReadStatement: COMMA_SYMBOL LValue subReadStatement .
 
-    $default  reduce using rule 31 (ArrayType)
+    $default  reduce using rule 69 (subReadStatement)
 
 
 state 270
 
-   37 subVarDecl: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl .
+   72 subWriteStatement: COMMA_SYMBOL Expression subWriteStatement .
 
-    $default  reduce using rule 37 (subVarDecl)
+    $default  reduce using rule 72 (subWriteStatement)
 
 
 state 271
 
-   18 Body: ConstantDecl TypeDecl VarDecl . Block
+   32 ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type .
 
-    BEGIN_SYMBOL  shift, and go to state 57
-
-    Block  go to state 281
+    $default  reduce using rule 32 (ArrayType)
 
 
 state 272
 
-   15 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList . COLON_SYMBOL Type subFormalParameters
+   38 subVarDecl: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL subVarDecl .
 
-    COLON_SYMBOL  shift, and go to state 282
+    $default  reduce using rule 38 (subVarDecl)
 
 
 state 273
 
-   16 subFormalParameters: SEMI_COLON_SYMBOL IdentList COLON_SYMBOL . Type subFormalParameters
+   19 Body: ConstantDecl TypeDecl VarDecl . Block
 
-    ID_SYMBOL      shift, and go to state 45
-    ARRAY_SYMBOL   shift, and go to state 46
-    RECORD_SYMBOL  shift, and go to state 47
+    BEGIN_SYMBOL  shift, and go to state 57
 
-    Type        go to state 283
-    SimpleType  go to state 49
-    RecordType  go to state 50
-    ArrayType   go to state 51
+    Block  go to state 283
 
 
 state 274
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL . SEMI_COLON_SYMBOL
+   16 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList . COLON_SYMBOL Type subFormalParameters
 
-    SEMI_COLON_SYMBOL  shift, and go to state 284
+    COLON_SYMBOL  shift, and go to state 284
 
 
 state 275
 
-   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body . SEMI_COLON_SYMBOL
-
-    SEMI_COLON_SYMBOL  shift, and go to state 285
-
-
-state 276
-
-  110 subSubExpressionIndent: COMMA_SYMBOL Expression subSubExpressionIndent .
-
-    $default  reduce using rule 110 (subSubExpressionIndent)
-
-
-state 277
-
-   55 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL . StatementSequence subIfStatment
-
-    ID_SYMBOL      shift, and go to state 85
-    IF_SYMBOL      shift, and go to state 86
-    REPEAT_SYMBOL  shift, and go to state 87
-    FOR_SYMBOL     shift, and go to state 88
-    RETURN_SYMBOL  shift, and go to state 89
-    STOP_SYMBOL    shift, and go to state 90
-    WHILE_SYMBOL   shift, and go to state 91
-    READ_SYMBOL    shift, and go to state 92
-    WRITE_SYMBOL   shift, and go to state 93
-
-    $default  reduce using rule 77 (NullStatement)
-
-    StatementSequence  go to state 286
-    Statement          go to state 95
-    Assignment         go to state 96
-    IfStatement        go to state 97
-    WhileStatement     go to state 98
-    RepeatStatment     go to state 99
-    ForStatement       go to state 100
-    StopStatement      go to state 101
-    ReturnStatment     go to state 102
-    ReadStatement      go to state 103
-    WriteStatement     go to state 104
-    ProcedureCall      go to state 105
-    NullStatement      go to state 106
-    LValue             go to state 107
-
-
-state 278
-
-   57 subElse: ELSE_SYMBOL StatementSequence .
-
-    $default  reduce using rule 57 (subElse)
-
-
-state 279
-
-   54 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL .
-
-    $default  reduce using rule 54 (IfStatement)
-
-
-state 280
-
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL . StatementSequence END_SYMBOL
-
-    ID_SYMBOL      shift, and go to state 85
-    IF_SYMBOL      shift, and go to state 86
-    REPEAT_SYMBOL  shift, and go to state 87
-    FOR_SYMBOL     shift, and go to state 88
-    RETURN_SYMBOL  shift, and go to state 89
-    STOP_SYMBOL    shift, and go to state 90
-    WHILE_SYMBOL   shift, and go to state 91
-    READ_SYMBOL    shift, and go to state 92
-    WRITE_SYMBOL   shift, and go to state 93
-
-    $default  reduce using rule 77 (NullStatement)
-
-    StatementSequence  go to state 287
-    Statement          go to state 95
-    Assignment         go to state 96
-    IfStatement        go to state 97
-    WhileStatement     go to state 98
-    RepeatStatment     go to state 99
-    ForStatement       go to state 100
-    StopStatement      go to state 101
-    ReturnStatment     go to state 102
-    ReadStatement      go to state 103
-    WriteStatement     go to state 104
-    ProcedureCall      go to state 105
-    NullStatement      go to state 106
-    LValue             go to state 107
-
-
-state 281
-
-   18 Body: ConstantDecl TypeDecl VarDecl Block .
-
-    $default  reduce using rule 18 (Body)
-
-
-state 282
-
-   15 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL . Type subFormalParameters
+   17 subFormalParameters: SEMI_COLON_SYMBOL IdentList COLON_SYMBOL . Type subFormalParameters
 
     ID_SYMBOL      shift, and go to state 45
     ARRAY_SYMBOL   shift, and go to state 46
     RECORD_SYMBOL  shift, and go to state 47
 
-    Type        go to state 288
+    Type        go to state 285
     SimpleType  go to state 49
     RecordType  go to state 50
     ArrayType   go to state 51
 
 
+state 276
+
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL . SEMI_COLON_SYMBOL
+
+    SEMI_COLON_SYMBOL  shift, and go to state 286
+
+
+state 277
+
+   12 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body . SEMI_COLON_SYMBOL
+
+    SEMI_COLON_SYMBOL  shift, and go to state 287
+
+
+state 278
+
+  111 subSubExpressionIndent: COMMA_SYMBOL Expression subSubExpressionIndent .
+
+    $default  reduce using rule 111 (subSubExpressionIndent)
+
+
+state 279
+
+   56 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL . StatementSequence subIfStatment
+
+    ID_SYMBOL      shift, and go to state 85
+    IF_SYMBOL      shift, and go to state 86
+    REPEAT_SYMBOL  shift, and go to state 87
+    FOR_SYMBOL     shift, and go to state 88
+    RETURN_SYMBOL  shift, and go to state 89
+    STOP_SYMBOL    shift, and go to state 90
+    WHILE_SYMBOL   shift, and go to state 91
+    READ_SYMBOL    shift, and go to state 92
+    WRITE_SYMBOL   shift, and go to state 93
+
+    $default  reduce using rule 78 (NullStatement)
+
+    StatementSequence  go to state 288
+    Statement          go to state 95
+    Assignment         go to state 96
+    IfStatement        go to state 97
+    WhileStatement     go to state 98
+    RepeatStatment     go to state 99
+    ForStatement       go to state 100
+    StopStatement      go to state 101
+    ReturnStatment     go to state 102
+    ReadStatement      go to state 103
+    WriteStatement     go to state 104
+    ProcedureCall      go to state 105
+    NullStatement      go to state 106
+    LValue             go to state 107
+
+
+state 280
+
+   58 subElse: ELSE_SYMBOL StatementSequence .
+
+    $default  reduce using rule 58 (subElse)
+
+
+state 281
+
+   55 IfStatement: IF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment subElse END_SYMBOL .
+
+    $default  reduce using rule 55 (IfStatement)
+
+
+state 282
+
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL . StatementSequence END_SYMBOL
+
+    ID_SYMBOL      shift, and go to state 85
+    IF_SYMBOL      shift, and go to state 86
+    REPEAT_SYMBOL  shift, and go to state 87
+    FOR_SYMBOL     shift, and go to state 88
+    RETURN_SYMBOL  shift, and go to state 89
+    STOP_SYMBOL    shift, and go to state 90
+    WHILE_SYMBOL   shift, and go to state 91
+    READ_SYMBOL    shift, and go to state 92
+    WRITE_SYMBOL   shift, and go to state 93
+
+    $default  reduce using rule 78 (NullStatement)
+
+    StatementSequence  go to state 289
+    Statement          go to state 95
+    Assignment         go to state 96
+    IfStatement        go to state 97
+    WhileStatement     go to state 98
+    RepeatStatment     go to state 99
+    ForStatement       go to state 100
+    StopStatement      go to state 101
+    ReturnStatment     go to state 102
+    ReadStatement      go to state 103
+    WriteStatement     go to state 104
+    ProcedureCall      go to state 105
+    NullStatement      go to state 106
+    LValue             go to state 107
+
+
 state 283
 
-   16 subFormalParameters: SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type . subFormalParameters
+   19 Body: ConstantDecl TypeDecl VarDecl Block .
 
-    SEMI_COLON_SYMBOL  shift, and go to state 229
-
-    $default  reduce using rule 17 (subFormalParameters)
-
-    subFormalParameters  go to state 289
+    $default  reduce using rule 19 (Body)
 
 
 state 284
 
-   10 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL .
+   16 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL . Type subFormalParameters
 
-    $default  reduce using rule 10 (FunctionDecl)
+    ID_SYMBOL      shift, and go to state 45
+    ARRAY_SYMBOL   shift, and go to state 46
+    RECORD_SYMBOL  shift, and go to state 47
+
+    Type        go to state 290
+    SimpleType  go to state 49
+    RecordType  go to state 50
+    ArrayType   go to state 51
 
 
 state 285
 
-   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL .
+   17 subFormalParameters: SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type . subFormalParameters
 
-    $default  reduce using rule 11 (FunctionDecl)
+    SEMI_COLON_SYMBOL  shift, and go to state 231
+
+    $default  reduce using rule 18 (subFormalParameters)
+
+    subFormalParameters  go to state 291
 
 
 state 286
 
-   55 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence . subIfStatment
+   11 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL .
 
-    ELSEIF_SYMBOL  shift, and go to state 241
-
-    $default  reduce using rule 56 (subIfStatment)
-
-    subIfStatment  go to state 290
+    $default  reduce using rule 11 (FunctionDecl)
 
 
 state 287
 
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence . END_SYMBOL
+   12 FunctionDecl: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL Body SEMI_COLON_SYMBOL .
 
-    END_SYMBOL  shift, and go to state 291
+    $default  reduce using rule 12 (FunctionDecl)
 
 
 state 288
 
-   15 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type . subFormalParameters
+   56 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence . subIfStatment
 
-    SEMI_COLON_SYMBOL  shift, and go to state 229
+    ELSEIF_SYMBOL  shift, and go to state 243
 
-    $default  reduce using rule 17 (subFormalParameters)
+    $default  reduce using rule 57 (subIfStatment)
 
-    subFormalParameters  go to state 292
+    subIfStatment  go to state 292
 
 
 state 289
 
-   16 subFormalParameters: SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters .
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence . END_SYMBOL
 
-    $default  reduce using rule 16 (subFormalParameters)
+    END_SYMBOL  shift, and go to state 293
 
 
 state 290
 
-   55 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment .
+   16 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type . subFormalParameters
 
-    $default  reduce using rule 55 (subIfStatment)
+    SEMI_COLON_SYMBOL  shift, and go to state 231
+
+    $default  reduce using rule 18 (subFormalParameters)
+
+    subFormalParameters  go to state 294
 
 
 state 291
 
-   61 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL .
+   17 subFormalParameters: SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters .
 
-    $default  reduce using rule 61 (ForStatement)
+    $default  reduce using rule 17 (subFormalParameters)
 
 
 state 292
 
-   15 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters .
+   56 subIfStatment: ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence subIfStatment .
 
-    $default  reduce using rule 15 (subFormalParameters)
+    $default  reduce using rule 56 (subIfStatment)
+
+
+state 293
+
+   62 ForStatement: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression subForType Expression DO_SYMBOL StatementSequence END_SYMBOL .
+
+    $default  reduce using rule 62 (ForStatement)
+
+
+state 294
+
+   16 subFormalParameters: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type subFormalParameters .
+
+    $default  reduce using rule 16 (subFormalParameters)

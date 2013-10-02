@@ -105,7 +105,7 @@ typedef union YYSTYPE
 {
 
 /* Line 2068 of yacc.c  */
-#line 83 "cpsl.y"
+#line 84 "cpsl.y"
 	
 	int int_val;
 	char *name_ptr;

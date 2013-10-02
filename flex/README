@@ -1,0 +1,1 @@
+To run in verbose mode after you specify the input file add '-v' so ./cpsl testfile.cpsl -v will cause all output to be displayed to the console
