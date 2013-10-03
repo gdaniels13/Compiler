@@ -1,6 +1,5 @@
 %{
 #include <iostream>
-#include "Symbol_Table.hpp"
 #define YYERROR_VERBOSE 1
 extern int yylex();
 extern int yyparse();
