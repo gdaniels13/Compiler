@@ -1,0 +1,878 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"syb",
+				"symbolTables"
+			],
+			[
+				"t",
+				"t"
+			],
+			[
+				"CHAR",
+				"CHAR"
+			],
+			[
+				"const",
+				"ConstExpression"
+			],
+			[
+				"to",
+				"toReturn"
+			],
+			[
+				"look",
+				"lookupSymbol"
+			],
+			[
+				"add",
+				"addSymbol"
+			],
+			[
+				"ma",
+				"makeVarList"
+			],
+			[
+				"symbol",
+				"Symbol"
+			],
+			[
+				"type",
+				"Type"
+			],
+			[
+				"sy",
+				"SymbolTable"
+			],
+			[
+				"f",
+				"forv	Vector For Loop"
+			],
+			[
+				"new-req",
+				"new-request-submit-btn"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"usersd",
+				"users_db"
+			],
+			[
+				"defal",
+				"default_users"
+			],
+			[
+				"user",
+				"username"
+			],
+			[
+				"w",
+				"wordtype"
+			],
+			[
+				"questions",
+				"Questions"
+			],
+			[
+				"create",
+				"create_questions"
+			],
+			[
+				"get",
+				"get_question"
+			],
+			[
+				"rea",
+				"read_rules_from_file"
+			],
+			[
+				"respons",
+				"response_str_list"
+			],
+			[
+				"logg",
+				"Logger"
+			],
+			[
+				"oth",
+				"set_other_name"
+			],
+			[
+				"rul",
+				"Rule"
+			],
+			[
+				"ru",
+				"Rules"
+			],
+			[
+				"typ",
+				"Type"
+			],
+			[
+				"left",
+				"LEFT_SQUARE_SYMBOL"
+			],
+			[
+				"str",
+				"STRING_SYMBOL"
+			],
+			[
+				"less",
+				"LESS_SYMBOL"
+			],
+			[
+				"End",
+				"END_SYMBOL"
+			],
+			[
+				"var",
+				"VarDecl"
+			],
+			[
+				"rece",
+				"recent_topics"
+			],
+			[
+				"respon",
+				"response_index"
+			],
+			[
+				"response",
+				"response_list"
+			],
+			[
+				"respos",
+				"response_list"
+			],
+			[
+				"char",
+				"CHARACTER_SYMBOL"
+			],
+			[
+				"int",
+				"INTEGER_SYMBOL"
+			],
+			[
+				"UN",
+				"UNARY_MINUS_SYMBOL"
+			],
+			[
+				"not",
+				"NOT_SYMBOL"
+			],
+			[
+				"gre",
+				"GREAT_SYMBOL"
+			],
+			[
+				"les",
+				"LESS_EQUAL_SYMBOL"
+			],
+			[
+				"id",
+				"ID_SYMBOl"
+			],
+			[
+				"stat",
+				"StatementSequence"
+			],
+			[
+				"Statement",
+				"StatementSequence"
+			],
+			[
+				"assi",
+				"ASSIGN_SYMBOL"
+			],
+			[
+				"righ",
+				"RIGHT_SQUARE_SYMBOL"
+			],
+			[
+				"ri",
+				"RIGHT_SQUARE_SYMBOL"
+			],
+			[
+				"arra",
+				"ARRAY_SYMBOL"
+			],
+			[
+				"record",
+				"RECORD_SYMBOL"
+			],
+			[
+				"colo",
+				"COLON_SYMBOL"
+			],
+			[
+				"Sem",
+				"SEMI_COLON_SYMBOL"
+			],
+			[
+				"cons",
+				"ConstantDecl"
+			],
+			[
+				"semicolonsy",
+				"SEMI_COLON_SYMBOL"
+			],
+			[
+				"co",
+				"ConstantDecl"
+			],
+			[
+				"ID",
+				"ID_SYMBOl"
+			],
+			[
+				"mu",
+				"MULT_SYMBOL"
+			],
+			[
+				"ana",
+				"analogWrite	Arduino analogWrite"
+			],
+			[
+				"digit",
+				"digitalWrite	Arduino digitalWrite"
+			],
+			[
+				"Log",
+				"LogMessage"
+			],
+			[
+				"line",
+				"numLines"
+			],
+			[
+				"inpu",
+				"input_str"
+			],
+			[
+				"respo",
+				"response_str"
+			],
+			[
+				"pat",
+				"pattern_str"
+			],
+			[
+				"in",
+				"input_tenderizer"
+			],
+			[
+				"db",
+				"dbName"
+			],
+			[
+				"da",
+				"Database"
+			],
+			[
+				"YY",
+				"yytext"
+			],
+			[
+				"public",
+				"publicFolder"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Symbols.h",
+			"settings":
+			{
+				"buffer_size": 3165,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Table.h",
+			"settings":
+			{
+				"buffer_size": 861,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "cpsl.y",
+			"settings":
+			{
+				"buffer_size": 11189,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "TestFiles/myTest.cpsl",
+			"settings":
+			{
+				"buffer_size": 49,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"command_palette":
+	{
+		"height": 306.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"bis	",
+				"Set Syntax: Bison"
+			],
+			[
+				"bison",
+				"Set Syntax: Bison"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"packa",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 492.0,
+		"history":
+		[
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/gregor/git/Compiler/greg/TestFiles/personnel.cpsl",
+		"/home/gregor/git/Compiler/greg/TestFiles/myTest.cpsl",
+		"/home/gregor/git/Compiler/greg/SymbolTable.cpp",
+		"/home/gregor/git/Compiler/greg/cpsl.y",
+		"/home/gregor/git/Compiler/greg/cpsl.tab.c",
+		"/home/gregor/git/Compiler/greg/SymbolTable.h",
+		"/home/gregor/.config/sublime-text-2/Packages/SublimeGDB/Default.sublime-keymap",
+		"/home/gregor/git/Compiler/greg/compiler.sublime-project",
+		"/home/gregor/.config/sublime-text-2/Packages/SublimeGDB/SublimeGDB.sublime-settings",
+		"/home/gregor/git/Compiler/greg/test.cpp",
+		"/home/gregor/git/Compiler/greg/Table.h",
+		"/home/gregor/git/Compiler/greg/Symbols.h",
+		"/home/gregor/git/Compiler/greg/TestFiles/factorial.cpsl",
+		"/home/gregor/git/Compiler/greg/Makefile",
+		"/home/gregor/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/gregor/git/Compiler/greg/cpsl.output",
+		"/usr/include/c++/4.8/iostream",
+		"/home/gregor/git/Compiler/greg/cpsl.l",
+		"/home/gregor/.config/sublime-text-3/Packages/SublimeGDB/Default.sublime-keymap",
+		"/home/gregor/.config/sublime-text-3/Packages/User/SublimeGDB.sublime-settings",
+		"/home/gregor/git/Compiler/greg/SymbolTable/SymbolTable.h",
+		"/home/gregor/git/Compiler/greg/logger.h",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Symbols.h",
+		"/home/gregor/git/Compiler/greg/SymbolTable/SymbolTable.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Symbols.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/test.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Table.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Table.h",
+		"/home/gregor/git/Compiler/greg/logger.cpp",
+		"/home/gregor/git/Compiler/greg/expressions.y",
+		"/home/gregor/git/Compiler/tyson/cpsl.y",
+		"/home/gregor/Sandbox/temp.cpp",
+		"/etc/fstab",
+		"/home/gregor/git/AI/tsp/gnuplot/bbgreedy",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to13GreedybranchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to13branchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to13testrun",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to99branchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to12branchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to12testrun",
+		"/home/gregor/.bash_aliases",
+		"/home/gregor/git/AI/tsp/travelingSalesman/test.txt",
+		"/home/gregor/Copy/.bash_aliases",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/startup.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/usefulscripts/adduser.js",
+		"/home/gregor/Downloads/main.cpp",
+		"/home/gregor/git/chatbot/code/madfibs.py",
+		"/home/gregor/git/chatbot/code/theBrain.py",
+		"/home/gregor/git/Compiler/flex/logTester.cpp",
+		"/home/gregor/git/Compiler/flex/logger2.cpp",
+		"/home/gregor/git/Compiler/flex/cpsl.l",
+		"/home/gregor/git/Compiler/flex/logger.h",
+		"/home/gregor/git/Compiler/flex/logger2.h",
+		"/home/gregor/git/Compiler/flex/logger.cpp",
+		"/home/gregor/git/Compiler/flex/expressions.cpsl",
+		"/home/gregor/Downloads/logger.zip",
+		"/home/gregor/git/Compiler/flex/cpsl.output",
+		"/home/gregor/git/Compiler/flex/factorial.cpsl",
+		"/home/gregor/git/Compiler/flex/cpsl.tab.h",
+		"/home/gregor/git/Compiler/flex/main.cpp",
+		"/home/gregor/git/Compiler/flex/testFile.cpsl",
+		"/home/gregor/git/Compiler/flex/Makefile",
+		"/home/gregor/git/Compiler/flex/cpsl.tab.c",
+		"/home/gregor/git/Compiler/flex/out.txt",
+		"/home/gregor/git/Compiler/flex/cpsl.y",
+		"/home/gregor/.config/sublime-text-3/Packages/BisonPackage/package-metadata.json",
+		"/home/gregor/.config/sublime-text-3/Packages/BisonPackage/Bison.tmLanguage.cache",
+		"/home/gregor/.config/sublime-text-3/Packages/BisonPackage/Bison.tmLanguage",
+		"/home/gregor/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
+		"/etc/grub.d/30_os-prober",
+		"/home/gregor/git/Compiler/FLEX/logger.h",
+		"/home/gregor/git/Compiler/FLEX/testFile.cpsl",
+		"/home/gregor/git/Compiler/FLEX/logger.cpp",
+		"/home/gregor/git/Compiler/FLEX/cpsl.tab.h",
+		"/home/gregor/git/Compiler/FLEX/Makefile",
+		"/home/gregor/.config/sublime-text-3/Packages/User/Package Control.sublime-settings",
+		"/home/gregor/git/Compiler/FLEX/cpsl.l",
+		"/home/gregor/git/Compiler/FLEX/out.txt",
+		"/home/gregor/git/Compiler/FLEX/._cpsl.tab.h",
+		"/home/gregor/git/Compiler/analyzer.lex",
+		"/home/gregor/git/ZombieAttack/zombieAttack/private/mapbuilderdiv.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/javascripts/login.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/private/userinfo.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/index.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/mapBuilder.html",
+		"/home/gregor/git/chatbot/code/memory.sqlite",
+		"/home/gregor/git/chatbot/code/database.pyc",
+		"/home/gregor/Downloads/trunk/sqlitebrowser/Makefile",
+		"/home/gregor/git/chatbot/code/hello.db",
+		"/home/gregor/git/Compiler/lex.yy.c",
+		"/home/gregor/.config/sublime-text-3/Packages/User/nodestart.sublime-build",
+		"/home/gregor/git/ZombieAttack/zombieAttack/node_modules/bcrypt-nodejs/test-async.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/node_modules/bcrypt-nodejs/README.md",
+		"/home/gregor/git/Compiler/settings.html",
+		"/home/gregor/Audio/generalconference/blah",
+		"/home/gregor/Audio/generalconference/041971.im",
+		"/home/gregor/Audio/generalconference/april.links",
+		"/home/gregor/git/ZombieAttack/README.md",
+		"/home/gregor/Audio/generalconference/downloadall.sh",
+		"/home/gregor/Audio/generalconference/AllConferences.html",
+		"/home/gregor/Downloads/downloadall.sh",
+		"/home/gregor/git/ZombieAttack/zombieAttack/views/index.ejs",
+		"/home/gregor/git/ZombieAttack/zombieAttack/routes/user.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/routes/index.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/bob.txt",
+		"/home/gregor/git/ZombieAttack/zombieAttack/run",
+		"/home/gregor/Sandbox/dumb/lex.yy.c",
+		"/home/gregor/Sandbox/dumb/lexfun.lex",
+		"/home/gregor/Sandbox/boosttemp.cpp",
+		"/home/gregor/Downloads/links.txt"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"makearr",
+			"key",
+			"print",
+			"cout",
+			"cast",
+			"str",
+			"c_str",
+			"cout",
+			" 	\n",
+			"ERROR",
+			" \"<<\"",
+			"  ",
+			"f5",
+			" \n",
+			"instance",
+			"));",
+			"string",
+			"none_type",
+			"integer\\.",
+			"vtable",
+			"\n		",
+			"DStatementSequence",
+			"token",
+			"integer",
+			"	\n",
+			"();\n",
+			"int",
+			"String",
+			"Symbol",
+			"]",
+			"\\]",
+			"0c",
+			"\\n",
+			"\\[",
+			"[",
+			"Cost",
+			"]\n",
+			"cos",
+			"[0-9]+\\.[0-9]+",
+			"details",
+			"Show",
+			"Show details",
+			"details",
+			"\n Show details",
+			" Show details",
+			"[0123456789]+\\.[0123456789][0123456789]",
+			"[0123456789][0123456789]/[0123456789][0123456789] ",
+			" [0123456789][0123456789] ",
+			" [123456789] ",
+			" ",
+			": ",
+			"warning",
+			"users_db",
+			"adduser",
+			"bcrypt",
+			"=",
+			"db",
+			"die_func",
+			"nouns",
+			"    ",
+			"mood",
+			"length",
+			"())\n",
+			"how do you feel",
+			"topic",
+			"\",",
+			"))\n",
+			"self",
+			"self.Questions.append(Question(\"",
+			"Question",
+			"self.Questions.append(Question",
+			"self.Questions.append(",
+			"'):\n",
+			"nojust wondering",
+			"no",
+			"self",
+			"q",
+			"'",
+			",",
+			"]",
+			",None))",
+			"'",
+			"[",
+			"self.Rules.append( Rule(",
+			" ['",
+			"self.Rules.append( Rule( ",
+			"self.Rules.append( Rule(",
+			"readline()",
+			"TypeDecl",
+			"write",
+			"numLines",
+			"endif",
+			"void",
+			"to_sym",
+			"vardecl",
+			"array",
+			"const",
+			"constex",
+			" ",
+			"GREAT_EQUAL_SYMBOL",
+			"GREAT_SYMBOL GREAT_EQUAL_SYMBOL",
+			" ",
+			"TypeDecl",
+			"cons",
+			"state 157",
+			"state 0",
+			"ConstExpression",
+			"assign_symbol",
+			"constExpr",
+			"State 89",
+			"state 154",
+			"statementSeq",
+			"begin_symbol",
+			"vardecl",
+			"statementseq",
+			"for_symbol",
+			"for",
+			"TypeDecl",
+			"SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type",
+			"sub",
+			"id_symbol",
+			"rule 12",
+			"Block",
+			"UNMINUSSY",
+			"\"",
+			"\"{",
+			"'\n",
+			"'"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Symbols.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3165,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								426,
+								426
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Table.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 861,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								601,
+								601
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "cpsl.y",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11189,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4739,
+								4739
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2490.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "TestFiles/myTest.cpsl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 49,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								49,
+								49
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.MotorSketch":
+	{
+		"height": 112.0
+	},
+	"output.exec":
+	{
+		"height": 155.0
+	},
+	"output.pwmplay":
+	{
+		"height": 100.0
+	},
+	"output.stino_log":
+	{
+		"height": 112.0
+	},
+	"output.test":
+	{
+		"height": 112.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 256.0
+	},
+	"project": "compiler.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"symb",
+				"Symbols.h"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 160.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

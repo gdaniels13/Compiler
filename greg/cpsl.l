@@ -1,11 +1,13 @@
 %{
+#include <vector>
 #include <string>
 #include <utility>
 #include <iostream>
+#include <memory>
+#include "SymbolTable.h"
 #include "cpsl.tab.h"
 #include "logger.h"	
 #include "stdlib.h"
-
 
 int numLines = 1;
 
@@ -22,6 +24,11 @@ int octToInt(char * text)
 	int newValue = (int)strtol(text, &text, 8);
 	return newValue;
 }
+
+
+
+
+
 %}
 
 %%	
@@ -57,7 +64,7 @@ function|FUNCTION 	{Logger::logMessage( yytext,numLines); return(FUNCTION_SYMBOL
 read|READ 			{Logger::logMessage( yytext,numLines); return(READ_SYMBOL);}
 then|THEN 			{Logger::logMessage( yytext,numLines); return(THEN_SYMBOL);}
 write|WRITE 		{Logger::logMessage( yytext,numLines); return(WRITE_SYMBOL);}
-[a-zA-Z][_a-zA-Z0-9]*	{Logger::logMessage( yytext, numLines); return(ID_SYMBOL);}
+[a-zA-Z][_a-zA-Z0-9]*	{Logger::logMessage( yytext, numLines); yylval.name_ptr = strdup(yytext); return(ID_SYMBOL);}
 \"[\x20-\x7e]*\" 	{Logger::logMessage(yytext,numLines); yylval.name_ptr = strdup(yytext); return(STRING_SYMBOL);}
 '[\x20-\x7e]+'		{Logger::logMessage(yytext,numLines); yylval.name_ptr = strdup(yytext); return(CHARACTER_SYMBOL);}
 0x[0-9a-fA-F]+		{Logger::logMessage(yytext,numLines); yylval.int_val = hexToInt(yytext); return(INTEGER_SYMBOL);}
