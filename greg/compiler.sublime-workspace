@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"get",
+				"getInstance"
+			],
+			[
 				"syb",
 				"symbolTables"
 			],
@@ -82,10 +86,6 @@
 			[
 				"create",
 				"create_questions"
-			],
-			[
-				"get",
-				"get_question"
 			],
 			[
 				"rea",
@@ -291,15 +291,7 @@
 			"file": "Symbols.h",
 			"settings":
 			{
-				"buffer_size": 3165,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Table.h",
-			"settings":
-			{
-				"buffer_size": 861,
+				"buffer_size": 3635,
 				"line_ending": "Unix"
 			}
 		},
@@ -307,15 +299,41 @@
 			"file": "cpsl.y",
 			"settings":
 			{
-				"buffer_size": 11189,
+				"buffer_size": 12134,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "TestFiles/myTest.cpsl",
+			"file": "SymbolTable.cpp",
 			"settings":
 			{
-				"buffer_size": 49,
+				"buffer_size": 10639,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Table.h",
+			"settings":
+			{
+				"buffer_size": 1134,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 25 files for \"***\"\n\n~/git/Compiler/greg/cpsl:\n    <binary>\n\n/home/gregor/git/Compiler/greg/cpsl.tab.c:\n 1883  /* Line 1806 of yacc.c  */\n 1884  #line 206 \"cpsl.y\"\n 1885:     {(yyval.name_ptr) = SymbolTable::makeArray((yyvsp[(3) - (8)].const_type),(yyvsp[(5) - (8)].const_type),(yyvsp[(8) - (8)].name_ptr));	std::cout<<\"***\"<<(yyval.name_ptr)<<\"***\\n\";}\n 1886      break;\n 1887  \n\n/home/gregor/git/Compiler/greg/cpsl.y:\n  204  \n  205  ArrayType: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type \n  206: 					{$$ = SymbolTable::makeArray($3,$5,$8);	std::cout<<\"***\"<<$$<<\"***\\n\";}\n  207  		;\n  208  \n\nUnable to open /home/gregor/git/Compiler/greg/TestFiles/myTest.cpsl~\n6 matches across 3 files\n\n\nSearching 25 files for \"printingTable\"\n\n/home/gregor/git/Compiler/greg/Table.h:\n   49  	void print()\n   50  	{\n   51: 		std::cout<<\"PrintingTable::\"<<name<<std::endl;\n   52  		std::for_each(symbolMap.begin(),symbolMap.end(), [](std::pair<std::string,std::shared_ptr<Symbol>> cur)\n   53  		{\n\n~/git/Compiler/greg/cpsl:\n    <binary>\n\nUnable to open /home/gregor/git/Compiler/greg/TestFiles/myTest.cpsl~\n2 matches across 2 files\n\n\nSearching 25 files for \"printing Table\"\n\n~/git/Compiler/greg/cpsl:\n    <binary>\n\n/home/gregor/git/Compiler/greg/cpsl.tab.c:\n 2389  	if(SymbolTable::isVerbose())\n 2390  	{\n 2391: 		std::cout<<\"printing table:\\n\";\n 2392  		SymbolTable::print();\n 2393  	}\n\n/home/gregor/git/Compiler/greg/cpsl.y:\n  407  	if(SymbolTable::isVerbose())\n  408  	{\n  409: 		std::cout<<\"printing table:\\n\";\n  410  		SymbolTable::print();\n  411  	}\n\nUnable to open /home/gregor/git/Compiler/greg/TestFiles/myTest.cpsl~\n3 matches across 3 files\n",
+			"settings":
+			{
+				"buffer_size": 1713,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "SymbolTable.h",
+			"settings":
+			{
+				"buffer_size": 1728,
 				"line_ending": "Unix"
 			}
 		}
@@ -323,15 +341,19 @@
 	"build_system": "Packages/Python/Python.sublime-build",
 	"command_palette":
 	{
-		"height": 306.0,
+		"height": 54.0,
 		"selected_items":
 		[
 			[
-				"Package Control: ",
+				"Package Control: insta",
 				"Package Control: Install Package"
 			],
 			[
-				"Package Control: insta",
+				"Package Control: l",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: ",
 				"Package Control: Install Package"
 			],
 			[
@@ -501,7 +523,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
 			""
@@ -512,6 +534,23 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"addconstant",
+			"{SymbolTable::popScope();}",
+			"SymbolTable::pushScope($2);",
+			"printing Table",
+			"printingTable",
+			"popScope",
+			"duplicate",
+			"callyyerror",
+			"yyerror",
+			"print",
+			"cout",
+			"***",
+			"**",
+			"getcurscope",
+			"**",
+			"std::cout<<\"***\"<<$1<<\"***\\n\";}",
+			"std::cout<<\"***\"<<$1<<\"***\\n\";",
 			"makearr",
 			"key",
 			"print",
@@ -622,29 +661,12 @@
 			"assign_symbol",
 			"constExpr",
 			"State 89",
-			"state 154",
-			"statementSeq",
-			"begin_symbol",
-			"vardecl",
-			"statementseq",
-			"for_symbol",
-			"for",
-			"TypeDecl",
-			"SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type",
-			"sub",
-			"id_symbol",
-			"rule 12",
-			"Block",
-			"UNMINUSSY",
-			"\"",
-			"\"{",
-			"'\n",
-			"'"
+			"state 154"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
 		],
@@ -657,7 +679,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -666,15 +688,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3165,
+						"buffer_size": 3635,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								426,
-								426
+								2816,
+								2816
 							]
 						],
 						"settings":
@@ -683,26 +705,82 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3374.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "Table.h",
+					"file": "cpsl.y",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 861,
+						"buffer_size": 12134,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								601,
-								601
+								3249,
+								3260
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2042.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "SymbolTable.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10639,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1263,
+								1263
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 832.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Table.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1134,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								512,
+								512
 							]
 						],
 						"settings":
@@ -717,53 +795,95 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "cpsl.y",
+					"buffer": 4,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11189,
+						"buffer_size": 1713,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										329,
+										332
+									],
+									[
+										354,
+										357
+									],
+									[
+										632,
+										635
+									],
+									[
+										643,
+										646
+									],
+									[
+										900,
+										913
+									],
+									[
+										1388,
+										1402
+									],
+									[
+										1557,
+										1571
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								1568,
+								1568
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 3,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 646.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "SymbolTable.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1728,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4739,
-								4739
+								1493,
+								1493
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2490.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "TestFiles/myTest.cpsl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 49,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								49,
-								49
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -776,7 +896,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 25.0
 	},
 	"input":
 	{
@@ -832,7 +952,7 @@
 	"project": "compiler.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":

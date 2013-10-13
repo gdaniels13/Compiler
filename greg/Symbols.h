@@ -31,6 +31,8 @@ public:
 	std::string name;
 	virtual void print(){std::cout<<"BIG FAT ERROR!!!!!!!!!!!\n";}
 
+	int location;
+
 };
 
 
@@ -51,7 +53,7 @@ public:
 
 	void print()
 	{
-		std::cout<<"Type: "<<name<<" Size: "<<size<<std::endl;
+		std::cout<<"Type:"<<name<<" Size:"<<size<<std::endl;
 	};
 };
 
@@ -71,7 +73,7 @@ public:
 	};
 	void print()
 	{
-		std::cout<<"Array: "<<name<<" Size:"<<size<<" Lower: " <<lower<<" Upper: " <<upper;
+		std::cout<<"Array: "<<name<<" Size:"<<size<<" Lower:" <<lower<<" Upper:" <<upper<<" ";
 		type->print();
 	};
 };
@@ -86,12 +88,11 @@ class Variable : public Symbol
 public:
 	std::shared_ptr<Type> type;
 	int size;
-	int location;
 
 	Variable(std::shared_ptr<Type> t, int loc, std::string n)
 	{
 		name =n;
-		loc = location;
+		location = loc;
 		type = t;
 		size = t->size;
 	}
@@ -155,7 +156,7 @@ public:
 	
 	Constant(std::string t, constantType ty)
 	{
-		s_value;
+		s_value = t;
 		type = ty;
 	}
 

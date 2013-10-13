@@ -15,9 +15,11 @@ private:
 	bool verbose;
 public:
 	std::string name;
+	int offset;
 	
 	Table(bool v, std::string n)
 	{
+		offset = 0;
 		name = n;
 		verbose = v;
 	}

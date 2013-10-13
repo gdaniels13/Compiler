@@ -51,6 +51,7 @@ void debug(std::string t)
 %token  END_SYMBOL
 %token  FOR_SYMBOL
 %token  FORWARD_SYMBOL 
+
 %token  ORD_SYMBOL
 %token  PRED_SYMBOL
 %token  PROCEDURE_SYMBOL
@@ -143,7 +144,7 @@ Program:  ConstantDecl TypeDecl VarDecl subProgram Block DOT_SYMBOL
 
 
 /* 3.1.1 */
-ConstantDecl: CONST_SYMBOL subConstantDecl {/*SymbolTable::addConstant($2,$4);*/}
+ConstantDecl: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl {SymbolTable::addConstant($2,$4);}
 					|{}
 					;
 		subConstantDecl:  ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL subConstantDecl {SymbolTable::addConstant($1,$3);}
@@ -371,26 +372,26 @@ Operator: 		OR_SYMBOL
 						;
 
 
-ConstExpression: ConstExpression OR_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression AND_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression NOT_EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression LESS_EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression GREAT_EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression LESS_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression GREAT_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression ADD_SYMBOL ConstExpression { $$ =SymbolTable::evaluateConstantExpression($1,$3,$2) ;     }
-			| ConstExpression SUB_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression MULT_SYMBOL ConstExpression  {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression DIV_SYMBOL ConstExpression  {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| ConstExpression PERCENT_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);      }
-			| NOT_SYMBOL ConstExpression {$$ = $2->makeBoolNot();      }
-			| SUB_SYMBOL ConstExpression %prec UMINUS {$$ = $2->makeNegative();      }
-			| LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL {$$ = $2;      }
-			| INTEGER_SYMBOL 			{$$ = new Constant($1);      }
-			| CHARACTER_SYMBOL			{$$ = new Constant($1);      }
-			| STRING_SYMBOL  			{$$ = new Constant($1, STR);}	
-			| ID_SYMBOL 	 			{$$ = new Constant($1, ID); }
+ConstExpression: ConstExpression OR_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison374\n";   }
+			| ConstExpression AND_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison375\n";   }
+			| ConstExpression EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison376\n";   }
+			| ConstExpression NOT_EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison377\n";   }
+			| ConstExpression LESS_EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison378\n";   }
+			| ConstExpression GREAT_EQUAL_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison379\n";   }
+			| ConstExpression LESS_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison380\n";   }
+			| ConstExpression GREAT_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison381\n";   }
+			| ConstExpression ADD_SYMBOL ConstExpression {std::cout<<"bison382a\n"; $$ = NULL;  std::cout<<"bison382\n";   }
+			| ConstExpression SUB_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison383\n";   }
+			| ConstExpression MULT_SYMBOL ConstExpression  {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison384\n";   }
+			| ConstExpression DIV_SYMBOL ConstExpression  {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison385\n";   }
+			| ConstExpression PERCENT_SYMBOL ConstExpression {$$ = SymbolTable::evaluateConstantExpression($1,$3,$2);   std::cout<<"bison386\n";   }
+			| NOT_SYMBOL ConstExpression {$$ = $2->makeBoolNot();   std::cout<<"bison387\n";   }
+			| SUB_SYMBOL ConstExpression %prec UMINUS {$$ = $2->makeNegative();   std::cout<<"bison388\n";   }
+			| LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL {$$ = $2;   std::cout<<"bison389\n";   }
+			| INTEGER_SYMBOL 			{$$ = new Constant($1);   std::cout<<"bison390\n";   }
+			| CHARACTER_SYMBOL			{$$ = new Constant($1);   std::cout<<"bison391\n";   }
+			| STRING_SYMBOL  			{$$ = new Constant($1, STR);std::cout<<"bison392\n";}	
+			| ID_SYMBOL 	 			{$$ = new Constant($1, ID); std::cout<<"bison393\n";}
 			;		
 %%
 
