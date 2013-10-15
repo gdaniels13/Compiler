@@ -24,6 +24,7 @@ void yyerror(const char *s);
 	char * name_ptr; 
 	void * none_type;
 	Const * const_type;
+	Expression * expr_type;
 	std::vector<std::shared_ptr<Var>> * formalParameter;
 	std::vector<std::string> * identList;
 	Type * type;
@@ -101,9 +102,9 @@ void yyerror(const char *s);
 */
 
 %type <const_type> ConstExpression
+%type <expr_type> Expression
 
 /*
-%type Expression
 %type ExpressionStuff
 */
 
@@ -121,8 +122,12 @@ void yyerror(const char *s);
 /*
 %type IfStatement
 %type IfStuff
-%type LValue
-%type LValueStuff
+*/
+
+%type <expr_type> LValue
+%type <expr_type> LValueStuff
+
+/*
 %type NullStatement
 */
 
@@ -365,7 +370,7 @@ Expression 			: Expression OR_SYMBOL Expression
 					| Expression GREAT_EQUAL_SYMBOL Expression
 					| Expression LESS_SYMBOL Expression
 					| Expression GREAT_SYMBOL Expression
-					| Expression ADD_SYMBOL Expression
+					| Expression ADD_SYMBOL Expression {std::cout << $1->m_value << " " << $3->m_value << std::endl;}
 					| Expression SUB_SYMBOL Expression
 					| Expression MULT_SYMBOL Expression
 					| Expression DIV_SYMBOL Expression
@@ -379,9 +384,9 @@ Expression 			: Expression OR_SYMBOL Expression
 					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
 					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| INTEGER_SYMBOL
-					| CHARACTER_SYMBOL
-					| STRING_SYMBOL
+					| INTEGER_SYMBOL 	{$$ = new Expression(std::to_string($1),INT);}				
+					| CHARACTER_SYMBOL 	{$$ = new Expression($1,CHAR);}				
+					| STRING_SYMBOL 	{$$ = new Expression($1,STRING);}
 					| LValue
 					;
 
@@ -389,7 +394,7 @@ ExpressionStuff 	: COMMA_SYMBOL Expression ExpressionStuff
 					|
 					;
 
-LValue 				: ID_SYMBOL
+LValue 				: ID_SYMBOL {$$ = new Expression($1,ID);}
 					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff
 					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
 					;
@@ -468,7 +473,7 @@ int main(int argc, char ** argv)
 	{
 		yyparse();
 	} while (!feof(yyin));
-	Table::PrintTable();
+	//Table::PrintTable();
 	return 0;
 };
 

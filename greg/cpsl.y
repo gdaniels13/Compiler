@@ -429,7 +429,7 @@ int main(int argc, char ** argv)
 {
 	argc--, argv++;
 	
-	Output::SetFilePath("bob.asm");
+	//Output::SetFilePath("bob.asm");
 	// Output::out("testing to see if it even works");
 
 

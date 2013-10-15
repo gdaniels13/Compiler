@@ -622,6 +622,22 @@ m_location(location)
 {
 }
 
+Expression::Expression():
+Symbol(),
+m_location(""),
+m_type(UNKNOWN),
+m_value("")
+{
+}
+
+Expression::Expression(std::string value, ConstType type):
+Symbol(),
+m_location(""),
+m_type(type),
+m_value(value)
+{
+}
+
 void Symbol::print()
 {
 	std::cout << "ERRORS" << std::endl;

@@ -127,6 +127,16 @@ public:
 	Function(std::string, std::vector<std::shared_ptr<Var>>, std::string, bool);
 };
 
+class Expression : Symbol
+{
+public:
+	std::string m_location;
+	std::string m_value;
+	ConstType m_type;
+	Expression();
+	Expression(std::string, ConstType);
+};
+
 typedef std::shared_ptr<Symbol> Element;
 
 class Table
