@@ -2,6 +2,7 @@
 #include <string>
 #include <utility>
 #include <iostream>
+#include "table.h"
 #include "cpsl.tab.h"
 #include "logger.h"	
 #include "stdlib.h"
@@ -57,7 +58,7 @@ function|FUNCTION 		{Logger::LogMessage(yytext, numLines); return(FUNCTION_SYMBO
 read|READ 				{Logger::LogMessage(yytext, numLines); return(READ_SYMBOL);}
 then|THEN 				{Logger::LogMessage(yytext, numLines); return(THEN_SYMBOL);}
 write|WRITE 			{Logger::LogMessage(yytext, numLines); return(WRITE_SYMBOL);}
-[a-zA-Z][_a-zA-Z0-9]*	{Logger::LogMessage(yytext, numLines); return(ID_SYMBOL);}
+[a-zA-Z][_a-zA-Z0-9]*	{Logger::LogMessage(yytext, numLines); yylval.name_ptr = strdup(yytext); return(ID_SYMBOL);}
 \"[\x20-\x7e]*\" 		{Logger::LogMessage(yytext, numLines); yylval.name_ptr = strdup(yytext); return(STRING_SYMBOL);}
 '[\x20-\x7e]+'			{Logger::LogMessage(yytext, numLines); yylval.name_ptr = strdup(yytext); return(CHARACTER_SYMBOL);}
 0x[0-9a-fA-F]+			{Logger::LogMessage(yytext, numLines); yylval.int_val = hexToInt(yytext); return(INTEGER_SYMBOL);}

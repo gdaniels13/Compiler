@@ -3,6 +3,8 @@ $ Program to sort personnel data
 const
   TABLEN = 20;
   NAMELEN = 24;
+  BLAH = 3 + 2;
+  JOY = "blah";
 
 type
   ntype = array[1:NAMELEN] of char;
@@ -14,6 +16,8 @@ type
 var
   table : array[1:TABLEN] of ptype;
   persons : integer;
+
+function exchname (var a,b:ntype) : boolean; forward;
 
 function exchname (var a,b:ntype) : boolean;
   var
