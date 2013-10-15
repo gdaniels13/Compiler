@@ -147,6 +147,9 @@ public:
 	static void RemoveScope();
 	static void PrintTable();
 	static void PrintScope();
+	static bool isVerbose();
+	static void setVerbose(bool);
+
 	~Table(){};
 private:
 	Table();
@@ -155,6 +158,7 @@ private:
 	std::mutex m_mutex;
 	std::vector<std::map<std::string, Element>> m_table;
 	int m_scope;
+	bool verbose;
 };
 
 #endif

@@ -57,6 +57,16 @@ std::shared_ptr<Table> Table::getInstance()
 }
 
 
+void Table::setVerbose(bool t)
+{
+	getInstance()->verbose = t;
+}
+
+bool Table::isVerbose()
+{
+	return getInstance()->verbose;
+}
+
 Element Table::GetElement(std::string id)
 {
 	std::map<std::string, Element>::iterator it;
@@ -98,6 +108,8 @@ void Table::InsertElement(std::string id, Element symbol)
 
 void Table::PrintTable()
 {
+	if(!getInstance()->verbose)
+		return;
 	std::cout << "PRINT TABLE RESULTS" << std::endl;
 	int count = 0;
 	int innerCount = 0;
@@ -152,7 +164,8 @@ void Table::RemoveScope()
 	if(getInstance()->m_scope > 0)
 	{
 		std::cout << "POP SCOPE" << std::endl;
-		PrintScope();
+		if(getInstance()->verbose)
+			PrintScope();
 		std::cout << std::endl;
 		getInstance()->m_scope--;
 		getInstance()->m_table.pop_back();

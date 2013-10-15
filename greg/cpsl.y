@@ -429,40 +429,30 @@ int main(int argc, char ** argv)
 {
 	argc--, argv++;
 	
-	//Output::SetFilePath("bob.asm");
-	// Output::out("testing to see if it even works");
+	Output::SetFilePath("bob.asm");
+	Output::out("testing to see if it even works\n");
+	Output::out("lets  to see if it even works\n");
+	Table::setVerbose(false);
+	std::cout<<Table::isVerbose()<<std::endl;
+	if(argc == 3)
+	{
+		std::cout<<argv[2];
+		if(argv[2][1] == 'v')
+		{
+			std::cout<<"setting verbose\n";
+			Table::setVerbose(true);
+		}
+	
+		std::string filePath = argv[1];
+		Output::SetFilePath(filePath);
+	}
 
 
-	/*
-	if(argc >= 3)
+	if(argc == 2)
 	{
 		std::string filePath = argv[1];
-		Logger::SetFilePath(filePath);
-		std::string logLevel = argv[2];
-		if(logLevel == "-v")
-			Logger::SetLevel(VERBOSE);
-		else if(logLevel == "-e")
-			Logger::SetLevel(ERROR);
-		else if(logLevel == "-s")
-			Logger::SetLevel(SILENT);
-		else if(logLevel == "-d")
-			Logger::SetLevel(DEBUG);
+		Output::SetFilePath(filePath);
 	}
-	else if(argc == 2)
-	{
-		std::string arg1 = argv[1];
-		if(arg1 == "-v")
-			Logger::SetLevel(VERBOSE);
-		else if(arg1 == "-e")
-			Logger::SetLevel(ERROR);
-		else if(arg1 == "-s")
-			Logger::SetLevel(SILENT);
-		else if(arg1 == "-d")
-			Logger::SetLevel(DEBUG);
-		else
-			Logger::SetFilePath(arg1);
-	}
-	*/
 
 	if(argc > 0)
 	{
@@ -476,7 +466,8 @@ int main(int argc, char ** argv)
 	{
 		yyparse();
 	} while (!feof(yyin));
-	Table::PrintTable();
+	if(Table::isVerbose());
+		Table::PrintTable();
 	return 0;
 };
 

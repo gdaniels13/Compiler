@@ -1,7 +1,8 @@
 default: clean output logger table cpsl
 
 run: default
-	./cpsl ../tyson/testFile.cpsl out.txt -v
+	./cpsl TestFile/expressions.cpsl default.asm
+	mars default.asm
 
 cpsl: bison lex
 	g++ -o cpsl -std=c++11 -g OutputFile.o table.o cpsl.tab.c logger.o  lex.yy.c  -ll

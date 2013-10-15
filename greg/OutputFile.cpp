@@ -14,6 +14,11 @@ void Output::setUpFile()
 	m_out<<"#header of the file needs to happen here";
 }
 
+void Output::endFile()
+{
+	out("li\t $v0, 10\n syscall\n\n");
+}
+
 std::shared_ptr<Output> Output::getInstance()
 {
 	if(!m_instance)

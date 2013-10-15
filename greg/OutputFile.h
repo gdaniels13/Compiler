@@ -11,7 +11,7 @@ class Output
 public:
 	static void SetFilePath(std::string path);
 	static void out(std::string);
-
+	static void endFile();
 private:
 	void setUpFile();
 	Output();
