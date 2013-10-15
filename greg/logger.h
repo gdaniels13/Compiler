@@ -4,30 +4,33 @@
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <fstream>
 
-enum LogLevel{
+enum LogLevel
+{
 	VERBOSE = 4,
-	DEBUG = 3,
-	ERROR = 2,
-	SILENT = 1
+	DEBUG 	= 3,
+	ERROR 	= 2,
+	SILENT	= 1
 };
 
 class Logger
 {
 public:
-    static void LogMesslineNumberage(std::string newString);
-    static void LogMessage(std::string newString, std::string token);
-    static void LogMessage(std::string newString, int token);
-	static void SetLevel(LogLevel);
-	static void logError(std::string newString, int lineNumber);
-	static void logDebug(std::string newString, int lineNumber);
-	static void logMessage(std::string newString, int lineNumber);
+	static void SetFilePath(std::string path);
+	static void SetLevel(LogLevel level);
+    static void LogMessage(std::string message, int lineNum);
+    static void LogError(std::string message, int lineNum);
+    static void LogDebug(std::string message, int lineNum);
+
 private:
-	static LogLevel getLevel();
 	Logger();
 	static std::shared_ptr<Logger> getInstance();
+	LogLevel getLogLevel();
 	static std::shared_ptr<Logger> m_instance;
+	LogLevel m_level;
 	std::mutex m_mutex;
-	static LogLevel m_level;
+	std::ofstream m_out;
+	bool m_toFile;
 };
 #endif

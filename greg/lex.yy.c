@@ -620,22 +620,20 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "cpsl.l"
 #line 2 "cpsl.l"
-#include <vector>
 #include <string>
 #include <utility>
 #include <iostream>
-#include <memory>
-#include "SymbolTable.h"
+#include "table.h"
 #include "cpsl.tab.h"
 #include "logger.h"	
 #include "stdlib.h"
-
-int numLines = 1;
-
+#define YY_DECL extern "C" int yylex()
+int numLines = 0;
 int hexToInt(char * text)
 {
 	text+=2;
 	int newValue = (int)strtol(text, &text, 16);
+	Logger::LogMessage("New value = ", newValue);
 	return newValue;
 }
 
@@ -643,14 +641,10 @@ int octToInt(char * text)
 {
 	text++;
 	int newValue = (int)strtol(text, &text, 8);
+	Logger::LogMessage("New value = ", newValue);
 	return newValue;
 }
-
-
-
-
-
-#line 654 "lex.yy.c"
+#line 648 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -837,9 +831,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 34 "cpsl.l"
+#line 28 "cpsl.l"
 
-#line 843 "lex.yy.c"
+#line 837 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -924,331 +918,331 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 35 "cpsl.l"
+#line 29 "cpsl.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 36 "cpsl.l"
+#line 30 "cpsl.l"
 ;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 37 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(ARRAY_SYMBOL);}
+#line 31 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(ARRAY_SYMBOL);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 38 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(BEGIN_SYMBOL);}
+#line 32 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(BEGIN_SYMBOL);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 39 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(ELSE_SYMBOL);}
+#line 33 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(ELSE_SYMBOL);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 40 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(ELSEIF_SYMBOL);}
+#line 34 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(ELSEIF_SYMBOL);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 41 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(IF_SYMBOL);}
+#line 35 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(IF_SYMBOL);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 42 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(OF_SYMBOL);}
+#line 36 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(OF_SYMBOL);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 43 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(RECORD_SYMBOL);}
+#line 37 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(RECORD_SYMBOL);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 44 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(REPEAT_SYMBOL);}
+#line 38 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(REPEAT_SYMBOL);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 45 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(TO_SYMBOL);}
+#line 39 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(TO_SYMBOL);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 46 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(TYPE_SYMBOL);}
+#line 40 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(TYPE_SYMBOL);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 47 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(CHR_SYMBOL);}
+#line 41 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(CHR_SYMBOL);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 48 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(CONST_SYMBOL);}
+#line 42 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(CONST_SYMBOL);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 49 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(DO_SYMBOL);}
+#line 43 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(DO_SYMBOL);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 50 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(END_SYMBOL);}
+#line 44 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(END_SYMBOL);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 51 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(FOR_SYMBOL);}
+#line 45 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(FOR_SYMBOL);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 52 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(FORWARD_SYMBOL);}
+#line 46 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(FORWARD_SYMBOL);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 53 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(ORD_SYMBOL);}
+#line 47 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(ORD_SYMBOL);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 54 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(PRED_SYMBOL);}
+#line 48 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(PRED_SYMBOL);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 55 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(PROCEDURE_SYMBOL);}
+#line 49 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(PROCEDURE_SYMBOL);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 56 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(RETURN_SYMBOL);}
+#line 50 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(RETURN_SYMBOL);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 57 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(STOP_SYMBOL);}
+#line 51 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(STOP_SYMBOL);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 58 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(SUCC_SYMBOL);}
+#line 52 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(SUCC_SYMBOL);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 59 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(UNTIL_SYMBOL);}
+#line 53 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(UNTIL_SYMBOL);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 60 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(VAR_SYMBOL);}
+#line 54 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(VAR_SYMBOL);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 61 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(WHILE_SYMBOL);}
+#line 55 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(WHILE_SYMBOL);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 62 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(DOWNTO_SYMBOL);}
+#line 56 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(DOWNTO_SYMBOL);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 63 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(FUNCTION_SYMBOL);}
+#line 57 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(FUNCTION_SYMBOL);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 64 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(READ_SYMBOL);}
+#line 58 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(READ_SYMBOL);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 65 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(THEN_SYMBOL);}
+#line 59 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(THEN_SYMBOL);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 66 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(WRITE_SYMBOL);}
+#line 60 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(WRITE_SYMBOL);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 67 "cpsl.l"
-{Logger::logMessage( yytext, numLines); yylval.name_ptr = strdup(yytext); return(ID_SYMBOL);}
+#line 61 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); yylval.name_ptr = strdup(yytext); return(ID_SYMBOL);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 68 "cpsl.l"
-{Logger::logMessage(yytext,numLines); yylval.name_ptr = strdup(yytext); return(STRING_SYMBOL);}
+#line 62 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); yylval.name_ptr = strdup(yytext); return(STRING_SYMBOL);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 69 "cpsl.l"
-{Logger::logMessage(yytext,numLines); yylval.name_ptr = strdup(yytext); return(CHARACTER_SYMBOL);}
+#line 63 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); yylval.name_ptr = strdup(yytext); return(CHARACTER_SYMBOL);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 70 "cpsl.l"
-{Logger::logMessage(yytext,numLines); yylval.int_val = hexToInt(yytext); return(INTEGER_SYMBOL);}
+#line 64 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); yylval.int_val = hexToInt(yytext); return(INTEGER_SYMBOL);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 71 "cpsl.l"
-{Logger::logMessage(yytext,numLines); yylval.int_val = octToInt(yytext); return(INTEGER_SYMBOL);}
+#line 65 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); yylval.int_val = octToInt(yytext); return(INTEGER_SYMBOL);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 72 "cpsl.l"
-{Logger::logMessage(yytext,numLines); yylval.int_val = atoi(yytext); return(INTEGER_SYMBOL);}
+#line 66 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); yylval.int_val = atoi(yytext); return(INTEGER_SYMBOL);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 73 "cpsl.l"
-{Logger::logMessage(yytext,numLines); yylval.int_val = atoi(yytext); return(INTEGER_SYMBOL);}
+#line 67 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); yylval.int_val = atoi(yytext); return(INTEGER_SYMBOL);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 74 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(ASSIGN_SYMBOL);}
+#line 68 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(ASSIGN_SYMBOL);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 75 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(ADD_SYMBOL);}
+#line 69 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(ADD_SYMBOL);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 76 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(SUB_SYMBOL);}
+#line 70 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(SUB_SYMBOL);}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 77 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(MULT_SYMBOL);}
+#line 71 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(MULT_SYMBOL);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 78 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(DIV_SYMBOL);}
+#line 72 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(DIV_SYMBOL);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 79 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(AND_SYMBOL);}
+#line 73 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(AND_SYMBOL);}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 80 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(OR_SYMBOL);}
+#line 74 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(OR_SYMBOL);}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 81 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(NOT_SYMBOL);}
+#line 75 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(NOT_SYMBOL);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 82 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(EQUAL_SYMBOL);}
+#line 76 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(EQUAL_SYMBOL);}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 83 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(NOT_EQUAL_SYMBOL);}
+#line 77 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(NOT_EQUAL_SYMBOL);}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 84 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(LESS_SYMBOL);}
+#line 78 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(LESS_SYMBOL);}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 85 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(LESS_EQUAL_SYMBOL);}
+#line 79 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(LESS_EQUAL_SYMBOL);}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 86 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(GREAT_SYMBOL);}
+#line 80 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(GREAT_SYMBOL);}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 87 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(GREAT_EQUAL_SYMBOL);}
+#line 81 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(GREAT_EQUAL_SYMBOL);}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 88 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(DOT_SYMBOL);}
+#line 82 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(DOT_SYMBOL);}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 89 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(COMMA_SYMBOL);}
+#line 83 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(COMMA_SYMBOL);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 90 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(COLON_SYMBOL);}
+#line 84 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(COLON_SYMBOL);}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 91 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(SEMI_COLON_SYMBOL);}
+#line 85 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(SEMI_COLON_SYMBOL);}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 92 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(LEFT_BRACE_SYMBOL);}
+#line 86 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(LEFT_BRACE_SYMBOL);}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 93 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(RIGHT_BRACE_SYMBOL);}
+#line 87 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(RIGHT_BRACE_SYMBOL);}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 94 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(LEFT_SQUARE_SYMBOL);}
+#line 88 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(LEFT_SQUARE_SYMBOL);}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 95 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(RIGHT_SQUARE_SYMBOL);}
+#line 89 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(RIGHT_SQUARE_SYMBOL);}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 96 "cpsl.l"
-{Logger::logMessage( yytext,numLines); return(PERCENT_SYMBOL);}	
+#line 90 "cpsl.l"
+{Logger::LogMessage(yytext, numLines); return(PERCENT_SYMBOL);}	
 	YY_BREAK
 case 63:
 /* rule 63 can match eol */
 YY_RULE_SETUP
-#line 97 "cpsl.l"
+#line 91 "cpsl.l"
 {++numLines;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 98 "cpsl.l"
-{Logger::logError(yytext,numLines);}
+#line 92 "cpsl.l"
+{Logger::LogMessage(yytext, numLines);}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 99 "cpsl.l"
+#line 93 "cpsl.l"
 ECHO;
 	YY_BREAK
-#line 1252 "lex.yy.c"
+#line 1246 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2246,8 +2240,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 99 "cpsl.l"
-
+#line 93 "cpsl.l"
 
 
 

@@ -1,11 +1,12 @@
 #include "logger.h"
 
 std::shared_ptr<Logger> Logger::m_instance;
-LogLevel Logger::m_level;
-
 
 Logger::Logger():
-m_mutex()
+m_level(ERROR),
+m_out(),
+m_mutex(),
+m_toFile(false)
 {
 }
 
@@ -15,51 +16,57 @@ std::shared_ptr<Logger> Logger::getInstance()
 	{
 		std::shared_ptr<Logger> logger(new Logger());
 		m_instance = logger;
-		m_level = ERROR;
 	}
 	return m_instance;
 	
 }
-
-void Logger::SetLevel(LogLevel t)
-{
-	getInstance()->m_level = t;
-}
-
-
-void Logger::logError(std::string newString, int lineNumber)
+void Logger::LogMessage(std::string message, int lineNum)
 {
 	getInstance()->m_mutex.lock();
-	if(getInstance()->getLevel() >= ERROR)
+	if(getInstance()->m_level >= VERBOSE)
 	{
-   		std::cout<<"ERROR Line "<<lineNumber<<": " << newString << std::endl;
+	    std::cout << "INFO Line: " << lineNum << " : " << message << std::endl;
+	    if(getInstance()->m_toFile)
+	    	getInstance()->m_out << "INFO Line: " << lineNum << " : " << message << std::endl;
 	}
     getInstance()->m_mutex.unlock();
 }
 
-void Logger::logDebug(std::string newString, int lineNumber)
+
+void Logger::SetFilePath(std::string path)
+{
+	getInstance()->m_out.open(path);
+	if(!getInstance()->m_out)
+		getInstance()->m_out.open("out.txt");
+	getInstance()->m_toFile = true;
+}
+
+void Logger::SetLevel(LogLevel level)
+{
+	getInstance()->m_level = level;
+}
+
+void Logger::LogError(std::string message, int lineNum)
 {
 	getInstance()->m_mutex.lock();
-	if(getInstance()->getLevel() >= DEBUG)
+	if(getInstance()->m_level >= ERROR)
 	{
-   		std::cout<<"DEBUG Line "<<lineNumber<<": " << newString << std::endl;
+	    std::cout << "ERROR Line: " << lineNum << " : " << message << std::endl;
+	    if(getInstance()->m_toFile)
+	    	getInstance()->m_out << "ERROR Line: " << lineNum << " : " << message << std::endl;
 	}
     getInstance()->m_mutex.unlock();
 }
 
-void Logger::logMessage(std::string newString, int lineNumber)
+void Logger::LogDebug(std::string message, int lineNum)
 {
 	getInstance()->m_mutex.lock();
-	if(getInstance()->getLevel() >= VERBOSE)
+	if(getInstance()->m_level >= DEBUG)
 	{
-   		std::cout<<"INFO Line "<<lineNumber<<": " << newString << std::endl;
+	    std::cout << "DEBUG Line: " << lineNum << " : " << message << std::endl;
+	    if(getInstance()->m_toFile)
+	    	getInstance()->m_out << "DEBUG Line: " << lineNum << " : " << message << std::endl;
 	}
     getInstance()->m_mutex.unlock();
 }
-
-LogLevel Logger::getLevel()
-{
-	return m_level;
-}
-
 

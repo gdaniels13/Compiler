@@ -1,55 +1,39 @@
-default: clear logger.o  cpsl
+default: clean output logger table cpsl
 
-clear:
-	clear
-	clear
+run: default
+	./cpsl testFile.cpsl out.txt -v
 
-# run: default
-# 	echo "factorial"
-# 	./cpsl factorial.cpsl
-# 	echo "personnel"
-# 	./cpsl personnel.cpsl
-# 	echo "expressions"
-# 	./cpsl expressions.cpsl
+cpsl: bison lex
+	g++ -o cpsl -std=c++11 -g table.o cpsl.tab.c logger.o  lex.yy.c  -ll
 
-
-cpsl: bison flex SymbolTable.o Table.o Symbols.o
-	g++ -o  cpsl -std=c++11 -g logger.o Symbols.o  Table.o SymbolTable.o lex.yy.c cpsl.tab.c -ll
-
-flex: cpsl.l
+lex:
 	flex cpsl.l
 
-logger.o: logger.cpp logger.h
-	g++  -g -std=c++11 logger.cpp -c
-
-
 bison:
-	bison -d -v -W'all' cpsl.y
-
-Symbols.o: Symbols.cpp Symbols.h
-	g++ -g -std=c++11 Symbols.cpp -c
-
-Table.o: Table.cpp Table.h
-	g++ -g -std=c++11 Table.cpp  -c
-
-SymbolTable.o: SymbolTable.cpp SymbolTable.h
-	g++ -g -std=c++11 SymbolTable.cpp -c
+	bison -vd cpsl.y
 
 
-smallTest: Symbols.o Table.o  SymbolTable.o test.cpp logger.o test.cpp
-	g++ -o cpsl -std=c++11 -g logger.o Symbols.o  Table.o SymbolTable.o test.cpp -ll
+logger: 
+	g++ -std=c++11 logger.cpp -c
+
+table:
+	g++ -std=c++11 table.cpp -c
+
+test: test.cpp
+	g++ -std=c++11 table.o test.cpp
+	./a.out
+
+output:
+	g++  -c -std=c++11 OutputFile.cpp
+
 
 clean:
-	-rm cpsl
-	-rm *.o
-	-rm lex.yy.c
-	-rm out.txt
-	-rm gregDaniels.tar
-	-rm cpsl.tab.*
-	-rm cpsl.output
+	-rm -rf out.txt
+	-rm -rf cpsl
+	-rm -rf cpsl.output
+	-rm -rf logger.o
+	-rm -rf lex.yy.c
+	-rm -rf cpsl.tab.h
+	-rm -rf cpsl.tab.c
+	-rm -rf table.o
 
-tar: clean
-	mkdir gregDaniels
-	-cp * gregDaniels
-	tar -cvf gregDaniels.tar *
-	rm -r gregDaniels
