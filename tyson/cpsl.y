@@ -8,6 +8,7 @@
 #include <vector>
 #include "logger.h"
 #include "table.h"
+#include "OutputFile.h"
 
 extern "C" int yylex();
 extern "C" int yyparse();
@@ -362,22 +363,22 @@ ProcedureStuff		:
 NullStatement		:
 					;
 
-Expression 			: Expression OR_SYMBOL Expression
-					| Expression AND_SYMBOL Expression
-					| Expression EQUAL_SYMBOL Expression
-					| Expression NOT_EQUAL_SYMBOL Expression
-					| Expression LESS_EQUAL_SYMBOL Expression
-					| Expression GREAT_EQUAL_SYMBOL Expression
-					| Expression LESS_SYMBOL Expression
-					| Expression GREAT_SYMBOL Expression
-					| Expression ADD_SYMBOL Expression {std::cout << $1->m_value << " " << $3->m_value << std::endl;}
-					| Expression SUB_SYMBOL Expression
-					| Expression MULT_SYMBOL Expression
-					| Expression DIV_SYMBOL Expression
-					| Expression PERCENT_SYMBOL Expression
-					| NOT_SYMBOL Expression
-					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL
-					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+Expression 			: Expression OR_SYMBOL Expression {$$ = Table::makeExpression($1, OR, $3);}
+					| Expression AND_SYMBOL Expression {$$ = Table::makeExpression($1, AND, $3);}
+					| Expression EQUAL_SYMBOL Expression {$$ = Table::makeExpression($1, EQUAL, $3);}
+					| Expression NOT_EQUAL_SYMBOL Expression {$$ = Table::makeExpression($1, NOT_EQUAL, $3);}
+					| Expression LESS_EQUAL_SYMBOL Expression {$$ = Table::makeExpression($1, LESS_EQUAL, $3);}
+					| Expression GREAT_EQUAL_SYMBOL Expression {$$ = Table::makeExpression($1, GREAT_EQUAL, $3);}
+					| Expression LESS_SYMBOL Expression {$$ = Table::makeExpression($1, LESS, $3);}
+					| Expression GREAT_SYMBOL Expression {$$ = Table::makeExpression($1, GREAT, $3);}
+					| Expression ADD_SYMBOL Expression  {$$ = Table::makeExpression($1, ADD, $3);}
+					| Expression SUB_SYMBOL Expression {$$ = Table::makeExpression($1, SUB, $3);}
+					| Expression MULT_SYMBOL Expression {$$ = Table::makeExpression($1, MULT, $3);}
+					| Expression DIV_SYMBOL Expression {$$ = Table::makeExpression($1, DIV, $3);}
+					| Expression PERCENT_SYMBOL Expression {$$ = Table::makeExpression($1, MOD, $3);}
+					| NOT_SYMBOL Expression {$$ = Table::makeExpression(new Expression("",UNKNOWN),NOT,$2);}
+					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL {$$ = Table::makeExpression(new Expression("",UNKNOWN),UNARY,$2);}
+					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = $2;}
 					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
 					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL
 					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
@@ -387,7 +388,7 @@ Expression 			: Expression OR_SYMBOL Expression
 					| INTEGER_SYMBOL 	{$$ = new Expression(std::to_string($1),INT);}				
 					| CHARACTER_SYMBOL 	{$$ = new Expression($1,CHAR);}				
 					| STRING_SYMBOL 	{$$ = new Expression($1,STRING);}
-					| LValue
+					| LValue 
 					;
 
 ExpressionStuff 	: COMMA_SYMBOL Expression ExpressionStuff
@@ -431,36 +432,29 @@ ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression {$$ = Table::makeCo
 int main(int argc, char ** argv)
 {
 	argc--, argv++;
-	/*
-	if(argc >= 3)
+	
+	Output::SetFilePath("cpsl.asm");
+	Table::setVerbose(false);
+	if(argc == 3)
+	{
+		std::cout<<argv[2];
+		if(argv[2][1] == 'v')
+		{
+			std::cout<<"setting verbose\n";
+			Table::setVerbose(true);
+		}
+	
+		std::string filePath = argv[1];
+		Output::SetFilePath(filePath);
+	}
+
+
+	if(argc == 2)
 	{
 		std::string filePath = argv[1];
-		Logger::SetFilePath(filePath);
-		std::string logLevel = argv[2];
-		if(logLevel == "-v")
-			Logger::SetLevel(VERBOSE);
-		else if(logLevel == "-e")
-			Logger::SetLevel(ERROR);
-		else if(logLevel == "-s")
-			Logger::SetLevel(SILENT);
-		else if(logLevel == "-d")
-			Logger::SetLevel(DEBUG);
+		Output::SetFilePath(filePath);
 	}
-	else if(argc == 2)
-	{
-		std::string arg1 = argv[1];
-		if(arg1 == "-v")
-			Logger::SetLevel(VERBOSE);
-		else if(arg1 == "-e")
-			Logger::SetLevel(ERROR);
-		else if(arg1 == "-s")
-			Logger::SetLevel(SILENT);
-		else if(arg1 == "-d")
-			Logger::SetLevel(DEBUG);
-		else
-			Logger::SetFilePath(arg1);
-	}
-	*/
+
 	if(argc > 0)
 	{
 		yyin = fopen( argv[0], "r" );
@@ -473,7 +467,8 @@ int main(int argc, char ** argv)
 	{
 		yyparse();
 	} while (!feof(yyin));
-	//Table::PrintTable();
+	if(Table::isVerbose());
+		Table::PrintTable();
 	return 0;
 };
 

@@ -56,6 +56,15 @@ std::shared_ptr<Table> Table::getInstance()
 	return m_instance;
 }
 
+void Table::setVerbose(bool t)
+{
+	getInstance()->verbose = t;
+}
+
+bool Table::isVerbose()
+{
+	return getInstance()->verbose;
+}
 
 Element Table::GetElement(std::string id)
 {
@@ -223,11 +232,15 @@ Const * Table::makeConst(Const * a,symbols sym,Const * b)
 	{
 		if(sym == NOT)
 		{
-
+			int size = (int)atoi(b->m_value.c_str());
+			size = ~size;
+			return new Const(std::to_string(size),b->m_type);
 		}
 		else if(sym == UNARY)
 		{
-
+			int size = (int)atoi(b->m_value.c_str());
+			size = -size;
+			return new Const(std::to_string(size),b->m_type);
 		}
 		else
 		{
@@ -240,7 +253,7 @@ Const * Table::makeConst(Const * a,symbols sym,Const * b)
 		std::cout << "CONST ERRORS TYPE MISMATCH" << std::endl;
 		exit(-1);
 	}
-	if(a->m_type == INT || a->m_type == CHAR)
+	else if(a->m_type == INT || a->m_type == CHAR)
 	{
 		switch(sym)
 		{
@@ -410,6 +423,12 @@ int Table::getArraySize(Const *a,Const *b, int size)
 	}
 }
 
+Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
+{
+	Expression * E;
+	std::cout << a->m_value << " " << sym << " " << b->m_value << std::endl;
+	return E;
+}
 
 void Table::MakeConst(std::string element, Const * type)
 {
@@ -603,7 +622,7 @@ Symbol(),
 m_type(type),
 m_value(value),
 m_location("")
-{
+{ 
 }
 
 Const::Const(std::string value, std::string location, std::string name):
@@ -691,7 +710,7 @@ void Var::print()
 
 void Const::print()
 {
-	std::cout << std::setw(SIZE) << "Const --- ID: " << std::left << std::setw(SIZE2) << m_name << std::right << " Location: " << std::left << std::setw(SIZE3) << m_location << std::right << " Value: " << m_value;
+	std::cout << std::setw(SIZE) << "Const --- ID: " << std::left << std::setw(SIZE2) << m_name << std::right << " Location: " << std::left << std::setw(SIZE3) << m_location << std::right << " Value: " << m_value << " Type: " << m_type;
 }
 void SimpleType::print()
 {

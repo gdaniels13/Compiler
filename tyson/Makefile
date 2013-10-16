@@ -1,10 +1,10 @@
-default: clean logger table cpsl
+default: clean output logger table cpsl
 
 run: default
 	./cpsl testFile.cpsl out.txt -v
 
 cpsl: bison lex
-	g++ -o cpsl -std=c++11 -g table.o cpsl.tab.c logger.o  lex.yy.c  -ll
+	g++ -o cpsl -std=c++11 -g OutputFile.o table.o cpsl.tab.c logger.o  lex.yy.c  -ll
 
 lex:
 	flex cpsl.l
@@ -23,6 +23,9 @@ test: test.cpp
 	g++ -std=c++11 table.o test.cpp
 	./a.out
 
+output:
+	g++  -c -std=c++11 OutputFile.cpp -c
+
 clean:
 	-rm -rf out.txt
 	-rm -rf cpsl
@@ -32,4 +35,5 @@ clean:
 	-rm -rf cpsl.tab.h
 	-rm -rf cpsl.tab.c
 	-rm -rf table.o
+	-rm -rf OutputFile.o
 

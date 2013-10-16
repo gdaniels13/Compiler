@@ -26,11 +26,11 @@ enum symbols
 
 enum ConstType
 {
-	UNKNOWN,
-	ID,
-	INT,
-	CHAR,
-	STRING
+	UNKNOWN, 	//0
+	ID,			//1
+	INT,		//2
+	CHAR,		//3
+	STRING		//4
 };
 
 class Symbol
@@ -150,6 +150,7 @@ public:
 	static Record * MakeRecord(std::vector<std::shared_ptr<Type>>*);
 	static void MakeVar(std::vector<std::string>*, Type *);
 	static Const * makeConst(Const *,symbols,Const *);
+	static Expression * makeExpression(Expression *, symbols, Expression *);
 	static void MakeConst(std::string, Const *);
 	static void InsertElement(std::string,Element);
 	static Element GetElement(std::string);
@@ -157,11 +158,14 @@ public:
 	static void RemoveScope();
 	static void PrintTable();
 	static void PrintScope();
+	static bool isVerbose();
+	static void setVerbose(bool);
 	~Table(){};
 private:
 	Table();
 	static std::shared_ptr<Table> getInstance();
 	static std::shared_ptr<Table> m_instance;
+	bool verbose;
 	std::mutex m_mutex;
 	std::vector<std::map<std::string, Element>> m_table;
 	int m_scope;
