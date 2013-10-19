@@ -4,6 +4,7 @@
 #include <vector>
 #include <mutex>
 #include <memory>
+#include <deque>
 
 enum symbols
 {
@@ -78,6 +79,21 @@ public:
 	Array(int,int,std::shared_ptr<Type>, int);
 };
 
+
+class Expression : Symbol
+{
+public:
+	std::string m_location;
+	std::string m_value;
+	ConstType m_type;
+	Expression();
+	Expression(ConstType, std::string);
+	Expression(std::string, ConstType);
+	void print();
+	void releaseRegister();
+};
+
+
 class Record : public Type
 {
 public:
@@ -149,7 +165,15 @@ public:
 	static void PrintScope();
 	static bool isVerbose();
 	static void setVerbose(bool);
-
+	static Expression * makeExpression(Expression *, symbols , Expression *);
+	static void makeWriteStatement(std::deque<Expression*>*);
+	static Expression* makeIntExpression(int);
+	static Expression* makeStringExpression(std::string);
+	static Expression* makeCharExpression(std::string);
+	static void writeExpression(Expression *);
+	static void readExpression(Expression *);
+	static void makeReadStatement(std::deque<Expression *>*);
+	static Expression* lookupExpression(Expression*);
 	~Table(){};
 private:
 	Table();

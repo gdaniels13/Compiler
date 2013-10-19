@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
+#include "OutputFile.h"
+
 #define SIZE 20
 #define SIZE2 10
 #define SIZE3 10
@@ -236,11 +239,15 @@ Const * Table::makeConst(Const * a,symbols sym,Const * b)
 	{
 		if(sym == NOT)
 		{
-
+			int size = (int)atoi(b->m_value.c_str());
+			size = ~size;
+			return new Const(std::to_string(size),b->m_type);
 		}
 		else if(sym == UNARY)
 		{
-
+			int size = (int)atoi(b->m_value.c_str());
+			size = -size;
+			return new Const(std::to_string(size),b->m_type);
 		}
 		else
 		{
@@ -690,7 +697,378 @@ void Const::print()
 {
 	std::cout << std::setw(SIZE) << "Const --- ID: " << std::left << std::setw(SIZE2) << m_name << std::right << " Location: " << std::left << std::setw(SIZE3) << m_location << std::right << " Value: " << m_value;
 }
+
 void SimpleType::print()
 {
     std::cout << std::setw(SIZE) << "Simple --- ID: " << std::left << std::setw(SIZE2) << m_name << std::right << " Size: " << m_size << " Type: " << m_type;
+}
+
+void Expression::print()
+{
+	std::cout<<"\n location:\t"<<m_location<<"Type: "<<m_type<<std::endl;
+	// // std::cout << std::setw(SIZE) << "Expression: " << std::left << std::setw(SIZE2) 
+	// 			<< m_location << std::right 
+	// 			<< " Size: " << m_value << " Type: " << m_type<<std::endl;
+}
+
+Expression::Expression():
+Symbol(),
+m_location(""),
+m_type(UNKNOWN),
+m_value("")
+{
+}
+
+Expression::Expression(ConstType type, std::string location)
+{
+	m_location = location;
+	m_type = type;
+}
+
+Expression::Expression(std::string value, ConstType type):
+Symbol(),
+m_location(""),
+m_type(type),
+m_value(value)
+{
+}
+
+void Expression::releaseRegister()
+{ 
+	int reg = std::stoi(m_location.substr(1,m_location.size()));
+	// std::cout<<"releasing :"<<reg<<std::endl;
+	Output::freeRegister(reg);
+}
+
+Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
+{
+	std::stringstream mst("");
+	int reg = Output::getRegister();
+	if(a->m_type == ID)
+	{
+		lookupExpression(a);
+	}
+	if(b->m_type == ID)
+	{
+		lookupExpression(b);
+	}
+
+
+
+	switch(sym)
+		{
+			case OR:
+			{
+
+				Output::comment("and expression");
+				mst <<"\t li \t$"<<reg<<",\t0"<<std::endl
+					<<"\t or \t"<<a->m_location<<",\t"<<a->m_location<<",\t$"<<reg<<std::endl
+					<<"\t sne \t$"<<reg<<",\t"<<a->m_location<<",\t$"<<reg<<std::endl;
+
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+
+			}
+			case AND:
+			{
+
+				Output::comment("and expression");
+
+				mst <<"\t li \t$"<<reg<<",\t0"<<std::endl
+					<<"\t seq \t"<<a->m_location<<",\t"<<a->m_location<<",\t$"<<reg<<std::endl
+					<<"\t seq \t"<<b->m_location<<",\t"<<b->m_location<<",\t$"<<reg<<std::endl
+					<<"\t seq \t$"<<reg<<",\t"<<b->m_location<<",\t"<<a->m_location<<std::endl;
+
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+
+			}
+			case NOT_EQUAL:
+			{
+				Output::comment("<> expressions");
+				mst <<"\t sne \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+			}
+			case EQUAL:
+			{
+				Output::comment("== expressions");
+				mst <<"\t seq \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+			}
+			case LESS_EQUAL:
+			{
+				Output::comment("<= expressions");
+				mst <<"\t sle \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+
+			}
+			case GREAT:
+			{
+				Output::comment("> expressions");
+				mst <<"\t sgt \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+
+			}
+			case GREAT_EQUAL:
+			{
+				Output::comment(">= expressions");
+				mst <<"\t sge \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+
+			}
+			case LESS:
+			{
+				Output::comment("< expressions");
+				mst <<"\t slt \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));				
+			}
+			case ADD:
+			{
+				Output::comment("Add two expressions");
+				mst <<"\t add \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+			}
+			case SUB:
+			{
+				Output::comment("subtract two expressions");
+				mst <<"\t sub \t$"
+					<<reg<<",\t" 
+					<<a->m_location
+					<<",\t"
+					<<b->m_location;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+			}
+			case DIV:
+			{
+				Output::comment("Divide two expressions");
+				mst <<"\t div \t"<<a->m_location
+					<<",\t"	<<b->m_location<<std::endl;
+				a->releaseRegister();
+				b->releaseRegister();
+				mst<<"\t mflo \t$"	<<reg;
+				Output::out(mst.str());
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+			}
+			case MOD:
+			{
+				Output::comment("Divide two expressions");
+				mst <<"\t div \t"<<a->m_location
+					<<",\t"	<<b->m_location<<std::endl;
+
+				mst<<"\t mfhi \t$"	<<reg;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+			}
+			case MULT:
+			{
+				Output::comment("multiply two expressions");
+				mst <<"\t mult \t"<<a->m_location
+					<<",\t"	<<b->m_location<<std::endl;
+
+				mst<<"\t mflo \t$"	<<reg;
+				Output::out(mst.str());
+				a->releaseRegister();
+				b->releaseRegister();
+				return new Expression(a->m_type, "$" + std::to_string(reg));
+			}
+			default:
+				std::cout << "ERRORS MAKE EXPRESSION" << std::endl;
+				exit(-1);
+		}
+
+}
+
+
+
+
+Expression* Table::makeIntExpression(int t)
+{
+	std::stringstream mst("");
+	int reg = Output::getRegister();
+	Output::comment("loading int into register");
+	mst<<"\tli $"<<reg<<",\t"<<t; 
+	Output::out(mst.str());
+	return new Expression(INT, "$" + std::to_string(reg) );
+}
+
+Expression* Table::makeStringExpression(std::string t)
+{
+	std::stringstream mst("");
+	std::string label = Output::addString(t);
+	return new Expression(STRING, label );
+}
+
+Expression* Table::makeCharExpression(std::string t)
+{
+	std::stringstream mst("");
+	int reg = Output::getRegister();
+	mst<<"\tli $"<<reg<<",\t"<<t; 
+	Output::comment("loading character into register");
+	Output::out(mst.str());
+	return new Expression(CHAR, "$" + std::to_string(reg) );
+}
+
+
+void Table::makeWriteStatement(std::deque<Expression*>* elist)
+{
+	for(Expression* ep : *elist)
+	{
+		writeExpression(ep);
+	}
+}
+
+Expression * Table::lookupExpression(Expression * ep)
+{
+		std::stringstream ss("");
+		int areg = Output::getRegister();
+		auto var = dynamic_cast<Var*>( Table::GetElement(ep->m_value).get());
+		
+		if(var->m_type->m_name=="integer" || var->m_type->m_name=="INTEGER")
+		{
+				int location = std::stoi(var->m_location);
+				ss<<"\t lw \t$"<<areg<<", \t" << location<<"($gp)\n";
+				ep->m_type = INT;
+				ep->m_location = "$" + std::to_string(areg);
+				Output::comment("looking up id ");
+				Output::out(ss.str());
+
+		}
+		return ep;
+}
+
+void Table::writeExpression(Expression * ep)
+{
+	Output::comment("Write Statement"+ std::to_string(ep->m_type));
+	std::stringstream mst("");
+
+	if(ep->m_type == ID)
+	{
+		lookupExpression(ep);
+	}
+
+
+	switch(ep->m_type)
+	{
+		case INT:
+		{
+			mst<<"\tli\t $v0, \t1 \n";
+			mst<<"\tmove\t $a0,\t "<<ep->m_location<<std::endl;
+			mst<<"\tsyscall";
+			ep->releaseRegister();
+			break;
+		}
+		case STRING:
+		{
+			mst<<"\tli\t $v0, \t4 \n";
+			mst<<"\tla\t $a0,\t "<<ep->m_location<<std::endl;
+			mst<<"\tsyscall";
+
+			break;
+		}
+		case CHAR:
+		{
+			mst<<"\tli\t $v0, \t11 \n";
+			mst<<"\tmove\t $a0,\t "<<ep->m_location<<std::endl;
+			mst<<"\tsyscall";
+			ep->releaseRegister();
+			break;
+		}
+	}
+
+	Output::out(mst.str());
+}
+
+
+void Table::makeReadStatement(std::deque<Expression*>* elist)
+{
+	for(Expression* ep : *elist)
+	{
+		readExpression(ep);
+	}
+}
+
+void Table::readExpression(Expression * ep)
+{
+	auto var = dynamic_cast<Var*>( Table::GetElement(ep->m_value).get());
+
+	int type;
+	int location = std::stoi(var->m_location);
+	if(var->m_type->m_name=="integer" || var->m_type->m_name=="INTEGER")
+	{
+		type = 5;
+	}
+	else 
+	{
+		//add checks for other types
+	}
+	std::stringstream mst("");
+
+	Output::comment("read expression");
+	mst <<"\t li \t $v0, \t "<<type<<std::endl;
+	mst <<"\tsyscall\n";
+
+	int reg = Output::getRegister();
+	mst<<"\t sw \t$v0, \t" << location<<"($gp)\n";
+
+
+	Output::out(mst.str());
+	Output::freeRegister(reg);
 }

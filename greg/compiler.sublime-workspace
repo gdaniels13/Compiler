@@ -1,0 +1,1425 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"out",
+				"outputfile"
+			],
+			[
+				"syb",
+				"symbolTables"
+			],
+			[
+				"t",
+				"t"
+			],
+			[
+				"CHAR",
+				"CHAR"
+			],
+			[
+				"const",
+				"ConstExpression"
+			],
+			[
+				"to",
+				"toReturn"
+			],
+			[
+				"look",
+				"lookupSymbol"
+			],
+			[
+				"add",
+				"addSymbol"
+			],
+			[
+				"ma",
+				"makeVarList"
+			],
+			[
+				"symbol",
+				"Symbol"
+			],
+			[
+				"type",
+				"Type"
+			],
+			[
+				"sy",
+				"SymbolTable"
+			],
+			[
+				"f",
+				"forv	Vector For Loop"
+			],
+			[
+				"new-req",
+				"new-request-submit-btn"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"usersd",
+				"users_db"
+			],
+			[
+				"defal",
+				"default_users"
+			],
+			[
+				"user",
+				"username"
+			],
+			[
+				"w",
+				"wordtype"
+			],
+			[
+				"questions",
+				"Questions"
+			],
+			[
+				"create",
+				"create_questions"
+			],
+			[
+				"get",
+				"get_question"
+			],
+			[
+				"rea",
+				"read_rules_from_file"
+			],
+			[
+				"respons",
+				"response_str_list"
+			],
+			[
+				"logg",
+				"Logger"
+			],
+			[
+				"oth",
+				"set_other_name"
+			],
+			[
+				"rul",
+				"Rule"
+			],
+			[
+				"ru",
+				"Rules"
+			],
+			[
+				"typ",
+				"Type"
+			],
+			[
+				"left",
+				"LEFT_SQUARE_SYMBOL"
+			],
+			[
+				"str",
+				"STRING_SYMBOL"
+			],
+			[
+				"less",
+				"LESS_SYMBOL"
+			],
+			[
+				"End",
+				"END_SYMBOL"
+			],
+			[
+				"var",
+				"VarDecl"
+			],
+			[
+				"rece",
+				"recent_topics"
+			],
+			[
+				"respon",
+				"response_index"
+			],
+			[
+				"response",
+				"response_list"
+			],
+			[
+				"respos",
+				"response_list"
+			],
+			[
+				"char",
+				"CHARACTER_SYMBOL"
+			],
+			[
+				"int",
+				"INTEGER_SYMBOL"
+			],
+			[
+				"UN",
+				"UNARY_MINUS_SYMBOL"
+			],
+			[
+				"not",
+				"NOT_SYMBOL"
+			],
+			[
+				"gre",
+				"GREAT_SYMBOL"
+			],
+			[
+				"les",
+				"LESS_EQUAL_SYMBOL"
+			],
+			[
+				"id",
+				"ID_SYMBOl"
+			],
+			[
+				"stat",
+				"StatementSequence"
+			],
+			[
+				"Statement",
+				"StatementSequence"
+			],
+			[
+				"assi",
+				"ASSIGN_SYMBOL"
+			],
+			[
+				"righ",
+				"RIGHT_SQUARE_SYMBOL"
+			],
+			[
+				"ri",
+				"RIGHT_SQUARE_SYMBOL"
+			],
+			[
+				"arra",
+				"ARRAY_SYMBOL"
+			],
+			[
+				"record",
+				"RECORD_SYMBOL"
+			],
+			[
+				"colo",
+				"COLON_SYMBOL"
+			],
+			[
+				"Sem",
+				"SEMI_COLON_SYMBOL"
+			],
+			[
+				"cons",
+				"ConstantDecl"
+			],
+			[
+				"semicolonsy",
+				"SEMI_COLON_SYMBOL"
+			],
+			[
+				"co",
+				"ConstantDecl"
+			],
+			[
+				"ID",
+				"ID_SYMBOl"
+			],
+			[
+				"mu",
+				"MULT_SYMBOL"
+			],
+			[
+				"ana",
+				"analogWrite	Arduino analogWrite"
+			],
+			[
+				"digit",
+				"digitalWrite	Arduino digitalWrite"
+			],
+			[
+				"Log",
+				"LogMessage"
+			],
+			[
+				"line",
+				"numLines"
+			],
+			[
+				"inpu",
+				"input_str"
+			],
+			[
+				"respo",
+				"response_str"
+			],
+			[
+				"pat",
+				"pattern_str"
+			],
+			[
+				"in",
+				"input_tenderizer"
+			],
+			[
+				"db",
+				"dbName"
+			],
+			[
+				"da",
+				"Database"
+			],
+			[
+				"YY",
+				"yytext"
+			],
+			[
+				"public",
+				"publicFolder"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "cpsl.y",
+			"settings":
+			{
+				"buffer_size": 14043,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "OutputFile.h",
+			"settings":
+			{
+				"buffer_size": 436,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "table.h",
+			"settings":
+			{
+				"buffer_size": 3453,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "\nSearching 18 files for \"print\" (regex)\n\n/home/gregor/git/Compiler/greg/cpsl.tab.c:\n  625  #endif\n  626  \n  627: # ifdef YYPRINT\n  628  /* YYTOKNUM[YYLEX-NUM] -- Internal token number corresponding to\n  629     token YYLEX-NUM.  */\n  ...\n 1136  /* This macro is provided for backward compatibility. */\n 1137  \n 1138: #ifndef YY_LOCATION_PRINT\n 1139: # define YY_LOCATION_PRINT(File, Loc) ((void) 0)\n 1140  #endif\n 1141  \n ....\n 1152  #if YYDEBUG\n 1153  \n 1154: # ifndef YYFPRINTF\n 1155  #  include <stdio.h> /* INFRINGES ON USER NAME SPACE */\n 1156: #  define YYFPRINTF fprintf\n 1157  # endif\n 1158  \n 1159: # define YYDPRINTF(Args)			\\\n 1160  do {						\\\n 1161    if (yydebug)					\\\n 1162:     YYFPRINTF Args;				\\\n 1163  } while (YYID (0))\n 1164  \n 1165: # define YY_SYMBOL_PRINT(Title, Type, Value, Location)			  \\\n 1166  do {									  \\\n 1167    if (yydebug)								  \\\n 1168      {									  \\\n 1169:       YYFPRINTF (stderr, \"%s \", Title);					  \\\n 1170:       yy_symbol_print (stderr,						  \\\n 1171  		  Type, Value); \\\n 1172:       YYFPRINTF (stderr, \"\\n\");						  \\\n 1173      }									  \\\n 1174  } while (YYID (0))\n ....\n 1176  \n 1177  /*--------------------------------.\n 1178: | Print this symbol on YYOUTPUT.  |\n 1179  `--------------------------------*/\n 1180  \n ....\n 1183       || defined __cplusplus || defined _MSC_VER)\n 1184  static void\n 1185: yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)\n 1186  #else\n 1187  static void\n 1188: yy_symbol_value_print (yyoutput, yytype, yyvaluep)\n 1189      FILE *yyoutput;\n 1190      int yytype;\n ....\n 1194    if (!yyvaluep)\n 1195      return;\n 1196: # ifdef YYPRINT\n 1197    if (yytype < YYNTOKENS)\n 1198:     YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);\n 1199  # else\n 1200    YYUSE (yyoutput);\n ....\n 1209  \n 1210  /*--------------------------------.\n 1211: | Print this symbol on YYOUTPUT.  |\n 1212  `--------------------------------*/\n 1213  \n ....\n 1215       || defined __cplusplus || defined _MSC_VER)\n 1216  static void\n 1217: yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)\n 1218  #else\n 1219  static void\n 1220: yy_symbol_print (yyoutput, yytype, yyvaluep)\n 1221      FILE *yyoutput;\n 1222      int yytype;\n ....\n 1225  {\n 1226    if (yytype < YYNTOKENS)\n 1227:     YYFPRINTF (yyoutput, \"token %s (\", yytname[yytype]);\n 1228    else\n 1229:     YYFPRINTF (yyoutput, \"nterm %s (\", yytname[yytype]);\n 1230  \n 1231:   yy_symbol_value_print (yyoutput, yytype, yyvaluep);\n 1232:   YYFPRINTF (yyoutput, \")\");\n 1233  }\n 1234  \n 1235  /*------------------------------------------------------------------.\n 1236: | yy_stack_print -- Print the state stack from its BOTTOM up to its |\n 1237  | TOP (included).                                                   |\n 1238  `------------------------------------------------------------------*/\n ....\n 1241       || defined __cplusplus || defined _MSC_VER)\n 1242  static void\n 1243: yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)\n 1244  #else\n 1245  static void\n 1246: yy_stack_print (yybottom, yytop)\n 1247      yytype_int16 *yybottom;\n 1248      yytype_int16 *yytop;\n 1249  #endif\n 1250  {\n 1251:   YYFPRINTF (stderr, \"Stack now\");\n 1252    for (; yybottom <= yytop; yybottom++)\n 1253      {\n 1254        int yybot = *yybottom;\n 1255:       YYFPRINTF (stderr, \" %d\", yybot);\n 1256      }\n 1257:   YYFPRINTF (stderr, \"\\n\");\n 1258  }\n 1259  \n 1260: # define YY_STACK_PRINT(Bottom, Top)				\\\n 1261  do {								\\\n 1262    if (yydebug)							\\\n 1263:     yy_stack_print ((Bottom), (Top));				\\\n 1264  } while (YYID (0))\n 1265  \n ....\n 1272       || defined __cplusplus || defined _MSC_VER)\n 1273  static void\n 1274: yy_reduce_print (YYSTYPE *yyvsp, int yyrule)\n 1275  #else\n 1276  static void\n 1277: yy_reduce_print (yyvsp, yyrule)\n 1278      YYSTYPE *yyvsp;\n 1279      int yyrule;\n ....\n 1283    int yyi;\n 1284    unsigned long int yylno = yyrline[yyrule];\n 1285:   YYFPRINTF (stderr, \"Reducing stack by rule %d (line %lu):\\n\",\n 1286  	     yyrule - 1, yylno);\n 1287    /* The symbols being reduced.  */\n 1288    for (yyi = 0; yyi < yynrhs; yyi++)\n 1289      {\n 1290:       YYFPRINTF (stderr, \"   $%d = \", yyi + 1);\n 1291:       yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],\n 1292  		       &(yyvsp[(yyi + 1) - (yynrhs)])\n 1293  		       		       );\n 1294:       YYFPRINTF (stderr, \"\\n\");\n 1295      }\n 1296  }\n 1297  \n 1298: # define YY_REDUCE_PRINT(Rule)		\\\n 1299  do {					\\\n 1300    if (yydebug)				\\\n 1301:     yy_reduce_print (yyvsp, Rule); \\\n 1302  } while (YYID (0))\n 1303  \n 1304: /* Nonzero means print parse trace.  It is left uninitialized so that\n 1305     multiple parsers can coexist.  */\n 1306  int yydebug;\n 1307  #else /* !YYDEBUG */\n 1308: # define YYDPRINTF(Args)\n 1309: # define YY_SYMBOL_PRINT(Title, Type, Value, Location)\n 1310: # define YY_STACK_PRINT(Bottom, Top)\n 1311: # define YY_REDUCE_PRINT(Rule)\n 1312  #endif /* !YYDEBUG */\n 1313  \n ....\n 1546      }\n 1547  \n 1548:   /* Avoid sprintf, as that infringes on the user's name space.\n 1549       Don't have undefined behavior even if the translation\n 1550       produced a string with the wrong number of \"%s\"s.  */\n ....\n 1589    if (!yymsg)\n 1590      yymsg = \"Deleting\";\n 1591:   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);\n 1592  \n 1593    switch (yytype)\n ....\n 1701    yystacksize = YYINITDEPTH;\n 1702  \n 1703:   YYDPRINTF ((stderr, \"Starting parse\\n\"));\n 1704  \n 1705    yystate = 0;\n ....\n 1782        yyvsp = yyvs + yysize - 1;\n 1783  \n 1784:       YYDPRINTF ((stderr, \"Stack size increased to %lu\\n\",\n 1785  		  (unsigned long int) yystacksize));\n 1786  \n ....\n 1789      }\n 1790  \n 1791:   YYDPRINTF ((stderr, \"Entering state %d\\n\", yystate));\n 1792  \n 1793    if (yystate == YYFINAL)\n ....\n 1814    if (yychar == YYEMPTY)\n 1815      {\n 1816:       YYDPRINTF ((stderr, \"Reading a token: \"));\n 1817        yychar = YYLEX;\n 1818      }\n ....\n 1821      {\n 1822        yychar = yytoken = YYEOF;\n 1823:       YYDPRINTF ((stderr, \"Now at end of input.\\n\"));\n 1824      }\n 1825    else\n 1826      {\n 1827        yytoken = YYTRANSLATE (yychar);\n 1828:       YY_SYMBOL_PRINT (\"Next token is\", yytoken, &yylval, &yylloc);\n 1829      }\n 1830  \n ....\n 1849  \n 1850    /* Shift the lookahead token.  */\n 1851:   YY_SYMBOL_PRINT (\"Shifting\", yytoken, &yylval, &yylloc);\n 1852  \n 1853    /* Discard the shifted token.  */\n ....\n 1888  \n 1889  \n 1890:   YY_REDUCE_PRINT (yyn);\n 1891    switch (yyn)\n 1892      {\n ....\n 2251       to an incorrect destructor call or verbose syntax error message\n 2252       before the lookahead is translated.  */\n 2253:   YY_SYMBOL_PRINT (\"-> $$ =\", yyr1[yyn], &yyval, &yyloc);\n 2254  \n 2255    YYPOPSTACK (yylen);\n 2256    yylen = 0;\n 2257:   YY_STACK_PRINT (yyss, yyssp);\n 2258  \n 2259    *++yyvsp = yyval;\n ....\n 2363    YYPOPSTACK (yylen);\n 2364    yylen = 0;\n 2365:   YY_STACK_PRINT (yyss, yyssp);\n 2366    yystate = *yyssp;\n 2367    goto yyerrlab1;\n ....\n 2397        YYPOPSTACK (1);\n 2398        yystate = *yyssp;\n 2399:       YY_STACK_PRINT (yyss, yyssp);\n 2400      }\n 2401  \n ....\n 2404  \n 2405    /* Shift the error token.  */\n 2406:   YY_SYMBOL_PRINT (\"Shifting\", yystos[yyn], yyvsp, yylsp);\n 2407  \n 2408    yystate = yyn;\n ....\n 2446       this YYABORT or YYACCEPT.  */\n 2447    YYPOPSTACK (yylen);\n 2448:   YY_STACK_PRINT (yyss, yyssp);\n 2449    while (yyssp != yyss)\n 2450      {\n ....\n 2471  \n 2472  \n 2473: //inputfile, outputfile, -v (print to console)\n 2474  int main(int argc, char ** argv)\n 2475  {\n ....\n 2514  	} while (!feof(yyin));\n 2515  	if(Table::isVerbose());\n 2516: 		Table::PrintTable();\n 2517  	return 0;\n 2518  };\n\n/home/gregor/git/Compiler/greg/cpsl.y:\n  425  %%\n  426  \n  427: //inputfile, outputfile, -v (print to console)\n  428  int main(int argc, char ** argv)\n  429  {\n  ...\n  468  	} while (!feof(yyin));\n  469  	if(Table::isVerbose());\n  470: 		Table::PrintTable();\n  471  	return 0;\n  472  };\n\n/home/gregor/git/Compiler/greg/lex.yy.c:\n 2042  static void yy_fatal_error (yyconst char* msg )\n 2043  {\n 2044:     	(void) fprintf( stderr, \"%s\\n\", msg );\n 2045  	exit( YY_EXIT_FAILURE );\n 2046  }\n\n/home/gregor/git/Compiler/greg/table.cpp:\n   96  		{\n   97  			std::cout << \"ERROR INSERT ELEMENT \";\n   98: 			symbol->print();\n   99  			std::cout << std::endl;\n  100  			exit(-1);\n  ...\n  107  }\n  108  \n  109: void Table::PrintTable()\n  110  {\n  111: 	std::cout << \"PRINT TABLE RESULTS\" << std::endl;\n  112  	int count = 0;\n  113  	int innerCount = 0;\n  ...\n  120  			std::cout << \"SCOPE: \" << count << \"  ELEMENT: \" << innerCount++ << \"|\" << std::endl;\n  121  			std::cout << \"------------------------------------------------------------\" << std::endl;\n  122: 			symbol.second->print();\n  123  			std::cout << std::endl << std::endl;\n  124  		});\n  ...\n  127  }\n  128  \n  129: void Table::PrintScope()\n  130  {\n  131: 	std::cout << \"PRINT SCOPE RESULTS\" << std::endl;\n  132  	int count = 0;\n  133  	std::for_each(getInstance()->m_table[getInstance()->m_scope].begin(), getInstance()->m_table[getInstance()->m_scope].end(), [&](std::pair<std::string, Element> symbol)\n  ...\n  136  		std::cout << \"Element: \" << count++ << \"|\" << std::endl;\n  137  		std::cout << \"------------------------------------------------------------\" << std::endl;\n  138: 		symbol.second->print();\n  139  		std::cout << std::endl;\n  140  	});\n  ...\n  164  		std::cout << \"POP SCOPE\" << std::endl;\n  165  		if(getInstance()->verbose)\n  166: 			PrintScope();\n  167  		std::cout << std::endl;\n  168  		getInstance()->m_scope--;\n  ...\n  634  }\n  635  \n  636: void Symbol::print()\n  637  {\n  638  	std::cout << \"ERRORS\" << std::endl;\n  639  }\n  640  \n  641: void Function::print()\n  642  {\n  643  	std::cout << std::setw(SIZE) << \"Function --- ID: \" << std::left << std::setw(SIZE2) << m_name << std::right << \" Location: \" << std::left << std::setw(SIZE3) << m_location << std::right;\n  ...\n  645  	{\n  646  		std::cout << \" ReturnType: \";\n  647: 		m_returnType->print();\n  648  	}\n  649  	std::cout << \" Parameters: \";\n  ...\n  651  	{\n  652  		std::cout << std::endl;\n  653: 		var->print();\n  654  	});\n  655  	if(m_parameters.size() == 0)\n  ...\n  657  }\n  658  \n  659: void Type::print()\n  660  {\n  661  	std::cout << \"\\t\" <<std::setw(SIZE) << \"Type --- ID: \" <<  std::left << std::setw(SIZE2) << m_name << std::right << \" Size: \" << m_size;\n  662  }\n  663  \n  664: void Array::print()\n  665  {\n  666  	std::cout << std::setw(SIZE) << \"Array --- ID: \" << std::left << std::setw(SIZE2) << m_name << std::right << \" Size: \" << m_size << \" Lower: \" << m_lower << \" Upper: \" << m_upper << \" Type: \";\n  667: 	m_type->print();\n  668  }\n  669  \n  670: void Record::print()\n  671  {\n  672  	std::cout << std::setw(SIZE) << \"Record --- ID: \" << std::left << std::setw(SIZE2) << m_name << std::right << \" Size: \" << m_size << \" Layout: \";\n  ...\n  674  	{\n  675  		std::cout << std::endl;\n  676: 		type->print();\n  677  	});\n  678  }\n  679  \n  680: void Var::print()\n  681  {\n  682  	std::cout << std::setw(SIZE) << \"Var --- ID: \" << std::left << std::setw(SIZE2) << m_name << std::right << \" Location: \" << std::left << std::setw(SIZE3) << m_location << std::right << \" Type: \" << m_type->m_name;\n  683  	std::cout << std::endl;\n  684: 	m_type->print();\n  685  }\n  686  \n  687: void Const::print()\n  688  {\n  689  	std::cout << std::setw(SIZE) << \"Const --- ID: \" << std::left << std::setw(SIZE2) << m_name << std::right << \" Location: \" << std::left << std::setw(SIZE3) << m_location << std::right << \" Value: \" << m_value;\n  690  }\n  691: void SimpleType::print()\n  692  {\n  693      std::cout << std::setw(SIZE) << \"Simple --- ID: \" << std::left << std::setw(SIZE2) << m_name << std::right << \" Size: \" << m_size << \" Type: \" << m_type;\n\n/home/gregor/git/Compiler/greg/table.h:\n   38  public:\n   39  	std::string m_name;\n   40: 	virtual void print();\n   41  	~Symbol(){};\n   42  	Symbol();\n   ..\n   49  public:\n   50  	int m_size;\n   51: 	virtual void print();\n   52  	~Type(){};\n   53  	Type();\n   ..\n   60  public:\n   61  	std::string m_type;\n   62: 	virtual void print();\n   63  	~SimpleType(){};\n   64  	SimpleType();\n   ..\n   71  	int m_upper;\n   72  	std::shared_ptr<Type> m_type;\n   73: 	virtual void print();\n   74  	~Array(){};\n   75  	Array();\n   ..\n   83  public:\n   84  	std::vector<std::shared_ptr<Type>> m_layout;\n   85: 	virtual void print();\n   86  	~Record(){};\n   87  	Record();\n   ..\n   94  	std::shared_ptr<Type> m_type;\n   95  	std::string m_location;\n   96: 	virtual void print();\n   97  	~Var(){};\n   98  	Var();\n   ..\n  106  	std::string m_location;\n  107  	ConstType m_type;\n  108: 	virtual void print();\n  109  	~Const(){};\n  110  	Const();\n  ...\n  121  	std::vector<std::shared_ptr<Var>> m_parameters;\n  122  	std::string m_location;\n  123: 	virtual void print();\n  124  	~Function(){};\n  125  	Function();\n  ...\n  146  	static void AddScope(std::vector<std::shared_ptr<Var>> *);\n  147  	static void RemoveScope();\n  148: 	static void PrintTable();\n  149: 	static void PrintScope();\n  150  	static bool isVerbose();\n  151  	static void setVerbose(bool);\n\n/home/gregor/git/Compiler/greg/TestFiles/personnel.cpsl:\n   80  end;\n   81  \n   82: procedure printtable();\n   83    var\n   84      i,n:integer;\n   ..\n  127    end;\n  128    tableread();\n  129:   printtable();\n  130    write(\"\\n\\tSorted by age:\\n\\n\");\n  131    agesort();\n  132:   printtable();\n  133    write(\"\\n\\tSorted by name:\\n\\n\");\n  134    namesort();\n  135:   printtable();\n  136  end.\n  137  \n\n102 matches across 6 files\n",
+			"settings":
+			{
+				"buffer_size": 13527,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "table.cpp",
+			"settings":
+			{
+				"buffer_size": 22188,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "TestFiles/myTest.cpsl",
+			"settings":
+			{
+				"buffer_size": 122,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Makefile",
+			"settings":
+			{
+				"buffer_size": 637,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"command_palette":
+	{
+		"height": 201.0,
+		"selected_items":
+		[
+			[
+				"Package Control: i",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: r",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"bis	",
+				"Set Syntax: Bison"
+			],
+			[
+				"bison",
+				"Set Syntax: Bison"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"packa",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 492.0,
+		"history":
+		[
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/gregor/git/Compiler/greg/cpsl.tab.c",
+		"/home/gregor/git/Compiler/greg/OutputFile.cpp",
+		"/home/gregor/git/Compiler/greg/logger.h",
+		"/home/gregor/git/Compiler/greg/logger.cpp",
+		"/home/gregor/git/Compiler/greg/table.cpp",
+		"/home/gregor/git/Compiler/greg/Symbols.h",
+		"/home/gregor/git/Compiler/greg/Table.h",
+		"/home/gregor/git/Compiler/greg/TestFiles/myTest.cpsl",
+		"/home/gregor/git/Compiler/greg/cpsl.y",
+		"/home/gregor/git/Compiler/greg/SymbolTable.h",
+		"/home/gregor/.config/sublime-text-2/Packages/SublimeGDB/Default.sublime-keymap",
+		"/home/gregor/git/Compiler/greg/compiler.sublime-project",
+		"/home/gregor/.config/sublime-text-2/Packages/SublimeGDB/SublimeGDB.sublime-settings",
+		"/home/gregor/git/Compiler/greg/test.cpp",
+		"/home/gregor/git/Compiler/greg/TestFiles/factorial.cpsl",
+		"/home/gregor/git/Compiler/greg/TestFiles/personnel.cpsl",
+		"/home/gregor/git/Compiler/greg/Makefile",
+		"/home/gregor/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/gregor/git/Compiler/greg/cpsl.output",
+		"/usr/include/c++/4.8/iostream",
+		"/home/gregor/git/Compiler/greg/cpsl.l",
+		"/home/gregor/.config/sublime-text-3/Packages/SublimeGDB/Default.sublime-keymap",
+		"/home/gregor/.config/sublime-text-3/Packages/User/SublimeGDB.sublime-settings",
+		"/home/gregor/git/Compiler/greg/SymbolTable/SymbolTable.h",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Symbols.h",
+		"/home/gregor/git/Compiler/greg/SymbolTable/SymbolTable.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Symbols.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/test.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Table.cpp",
+		"/home/gregor/git/Compiler/greg/SymbolTable/Table.h",
+		"/home/gregor/git/Compiler/greg/expressions.y",
+		"/home/gregor/git/Compiler/tyson/cpsl.y",
+		"/home/gregor/Sandbox/temp.cpp",
+		"/etc/fstab",
+		"/home/gregor/git/AI/tsp/gnuplot/bbgreedy",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to13GreedybranchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to13branchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to13testrun",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to99branchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to12branchBound",
+		"/home/gregor/git/AI/tsp/travelingSalesman/graphs/test5to12testrun",
+		"/home/gregor/.bash_aliases",
+		"/home/gregor/git/AI/tsp/travelingSalesman/test.txt",
+		"/home/gregor/Copy/.bash_aliases",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/startup.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/usefulscripts/adduser.js",
+		"/home/gregor/Downloads/main.cpp",
+		"/home/gregor/git/chatbot/code/madfibs.py",
+		"/home/gregor/git/chatbot/code/theBrain.py",
+		"/home/gregor/git/Compiler/flex/logTester.cpp",
+		"/home/gregor/git/Compiler/flex/logger2.cpp",
+		"/home/gregor/git/Compiler/flex/cpsl.l",
+		"/home/gregor/git/Compiler/flex/logger.h",
+		"/home/gregor/git/Compiler/flex/logger2.h",
+		"/home/gregor/git/Compiler/flex/logger.cpp",
+		"/home/gregor/git/Compiler/flex/expressions.cpsl",
+		"/home/gregor/Downloads/logger.zip",
+		"/home/gregor/git/Compiler/flex/cpsl.output",
+		"/home/gregor/git/Compiler/flex/factorial.cpsl",
+		"/home/gregor/git/Compiler/flex/cpsl.tab.h",
+		"/home/gregor/git/Compiler/flex/main.cpp",
+		"/home/gregor/git/Compiler/flex/testFile.cpsl",
+		"/home/gregor/git/Compiler/flex/Makefile",
+		"/home/gregor/git/Compiler/flex/cpsl.tab.c",
+		"/home/gregor/git/Compiler/flex/out.txt",
+		"/home/gregor/git/Compiler/flex/cpsl.y",
+		"/home/gregor/.config/sublime-text-3/Packages/BisonPackage/package-metadata.json",
+		"/home/gregor/.config/sublime-text-3/Packages/BisonPackage/Bison.tmLanguage.cache",
+		"/home/gregor/.config/sublime-text-3/Packages/BisonPackage/Bison.tmLanguage",
+		"/home/gregor/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
+		"/etc/grub.d/30_os-prober",
+		"/home/gregor/git/Compiler/FLEX/logger.h",
+		"/home/gregor/git/Compiler/FLEX/testFile.cpsl",
+		"/home/gregor/git/Compiler/FLEX/logger.cpp",
+		"/home/gregor/git/Compiler/FLEX/cpsl.tab.h",
+		"/home/gregor/git/Compiler/FLEX/Makefile",
+		"/home/gregor/.config/sublime-text-3/Packages/User/Package Control.sublime-settings",
+		"/home/gregor/git/Compiler/FLEX/cpsl.l",
+		"/home/gregor/git/Compiler/FLEX/out.txt",
+		"/home/gregor/git/Compiler/FLEX/._cpsl.tab.h",
+		"/home/gregor/git/Compiler/analyzer.lex",
+		"/home/gregor/git/ZombieAttack/zombieAttack/private/mapbuilderdiv.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/javascripts/login.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/private/userinfo.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/index.html",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/mapBuilder.html",
+		"/home/gregor/git/chatbot/code/memory.sqlite",
+		"/home/gregor/git/chatbot/code/database.pyc",
+		"/home/gregor/Downloads/trunk/sqlitebrowser/Makefile",
+		"/home/gregor/git/chatbot/code/hello.db",
+		"/home/gregor/git/Compiler/lex.yy.c",
+		"/home/gregor/.config/sublime-text-3/Packages/User/nodestart.sublime-build",
+		"/home/gregor/git/ZombieAttack/zombieAttack/node_modules/bcrypt-nodejs/test-async.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/node_modules/bcrypt-nodejs/README.md",
+		"/home/gregor/git/Compiler/settings.html",
+		"/home/gregor/Audio/generalconference/blah",
+		"/home/gregor/Audio/generalconference/041971.im",
+		"/home/gregor/Audio/generalconference/april.links",
+		"/home/gregor/git/ZombieAttack/README.md",
+		"/home/gregor/Audio/generalconference/downloadall.sh",
+		"/home/gregor/Audio/generalconference/AllConferences.html",
+		"/home/gregor/Downloads/downloadall.sh",
+		"/home/gregor/git/ZombieAttack/zombieAttack/views/index.ejs",
+		"/home/gregor/git/ZombieAttack/zombieAttack/routes/user.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/routes/index.js",
+		"/home/gregor/git/ZombieAttack/zombieAttack/public/bob.txt",
+		"/home/gregor/git/ZombieAttack/zombieAttack/run",
+		"/home/gregor/Sandbox/dumb/lex.yy.c",
+		"/home/gregor/Sandbox/dumb/lexfun.lex",
+		"/home/gregor/Sandbox/boosttemp.cpp",
+		"/home/gregor/Downloads/links.txt"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"print",
+			");\n",
+			";\n",
+			"print",
+			"cout",
+			"Logger",
+			"outputfile",
+			"Outputfile",
+			"Logger",
+			"logger",
+			"Logger",
+			";",
+			"debug",
+			"makearr",
+			"key",
+			"print",
+			"cout",
+			"cast",
+			"str",
+			"c_str",
+			"cout",
+			" 	\n",
+			"ERROR",
+			" \"<<\"",
+			"  ",
+			"f5",
+			" \n",
+			"instance",
+			"));",
+			"string",
+			"none_type",
+			"integer\\.",
+			"vtable",
+			"\n		",
+			"DStatementSequence",
+			"token",
+			"integer",
+			"	\n",
+			"();\n",
+			"int",
+			"String",
+			"Symbol",
+			"]",
+			"\\]",
+			"0c",
+			"\\n",
+			"\\[",
+			"[",
+			"Cost",
+			"]\n",
+			"cos",
+			"[0-9]+\\.[0-9]+",
+			"details",
+			"Show",
+			"Show details",
+			"details",
+			"\n Show details",
+			" Show details",
+			"[0123456789]+\\.[0123456789][0123456789]",
+			"[0123456789][0123456789]/[0123456789][0123456789] ",
+			" [0123456789][0123456789] ",
+			" [123456789] ",
+			" ",
+			": ",
+			"warning",
+			"users_db",
+			"adduser",
+			"bcrypt",
+			"=",
+			"db",
+			"die_func",
+			"nouns",
+			"    ",
+			"mood",
+			"length",
+			"())\n",
+			"how do you feel",
+			"topic",
+			"\",",
+			"))\n",
+			"self",
+			"self.Questions.append(Question(\"",
+			"Question",
+			"self.Questions.append(Question",
+			"self.Questions.append(",
+			"'):\n",
+			"nojust wondering",
+			"no",
+			"self",
+			"q",
+			"'",
+			",",
+			"]",
+			",None))",
+			"'",
+			"[",
+			"self.Rules.append( Rule(",
+			" ['",
+			"self.Rules.append( Rule( ",
+			"self.Rules.append( Rule(",
+			"readline()",
+			"TypeDecl",
+			"write",
+			"numLines",
+			"endif",
+			"void",
+			"to_sym",
+			"vardecl",
+			"array",
+			"const",
+			"constex",
+			" ",
+			"GREAT_EQUAL_SYMBOL",
+			"GREAT_SYMBOL GREAT_EQUAL_SYMBOL",
+			" ",
+			"TypeDecl",
+			"cons",
+			"state 157",
+			"state 0",
+			"ConstExpression",
+			"assign_symbol",
+			"constExpr",
+			"State 89",
+			"state 154",
+			"statementSeq",
+			"begin_symbol",
+			"vardecl",
+			"statementseq"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "cpsl.y",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14043,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6420.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "OutputFile.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 436,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "table.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3453,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 630.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13527,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										123,
+										128
+									],
+									[
+										337,
+										342
+									],
+									[
+										371,
+										376
+									],
+									[
+										473,
+										478
+									],
+									[
+										563,
+										568
+									],
+									[
+										571,
+										576
+									],
+									[
+										620,
+										625
+									],
+									[
+										698,
+										703
+									],
+									[
+										776,
+										781
+									],
+									[
+										916,
+										921
+									],
+									[
+										978,
+										983
+									],
+									[
+										1045,
+										1050
+									],
+									[
+										1194,
+										1199
+									],
+									[
+										1383,
+										1388
+									],
+									[
+										1505,
+										1510
+									],
+									[
+										1656,
+										1661
+									],
+									[
+										1708,
+										1713
+									],
+									[
+										1862,
+										1867
+									],
+									[
+										2045,
+										2050
+									],
+									[
+										2161,
+										2166
+									],
+									[
+										2308,
+										2313
+									],
+									[
+										2386,
+										2391
+									],
+									[
+										2469,
+										2474
+									],
+									[
+										2517,
+										2522
+									],
+									[
+										2653,
+										2658
+									],
+									[
+										2662,
+										2667
+									],
+									[
+										2963,
+										2968
+									],
+									[
+										3063,
+										3068
+									],
+									[
+										3189,
+										3194
+									],
+									[
+										3331,
+										3336
+									],
+									[
+										3387,
+										3392
+									],
+									[
+										3452,
+										3457
+									],
+									[
+										3547,
+										3552
+									],
+									[
+										3709,
+										3714
+									],
+									[
+										3793,
+										3798
+									],
+									[
+										3953,
+										3958
+									],
+									[
+										4161,
+										4166
+									],
+									[
+										4223,
+										4228
+									],
+									[
+										4358,
+										4363
+									],
+									[
+										4437,
+										4442
+									],
+									[
+										4518,
+										4523
+									],
+									[
+										4599,
+										4604
+									],
+									[
+										4763,
+										4768
+									],
+									[
+										4802,
+										4807
+									],
+									[
+										4863,
+										4868
+									],
+									[
+										4908,
+										4913
+									],
+									[
+										5003,
+										5008
+									],
+									[
+										5264,
+										5269
+									],
+									[
+										5405,
+										5410
+									],
+									[
+										5544,
+										5549
+									],
+									[
+										5687,
+										5692
+									],
+									[
+										5846,
+										5851
+									],
+									[
+										6002,
+										6007
+									],
+									[
+										6155,
+										6160
+									],
+									[
+										6304,
+										6309
+									],
+									[
+										6443,
+										6448
+									],
+									[
+										6644,
+										6649
+									],
+									[
+										6765,
+										6770
+									],
+									[
+										6894,
+										6899
+									],
+									[
+										7055,
+										7060
+									],
+									[
+										7169,
+										7174
+									],
+									[
+										7343,
+										7348
+									],
+									[
+										7466,
+										7471
+									],
+									[
+										7618,
+										7623
+									],
+									[
+										7754,
+										7759
+									],
+									[
+										7906,
+										7911
+									],
+									[
+										8074,
+										8079
+									],
+									[
+										8267,
+										8272
+									],
+									[
+										8372,
+										8377
+									],
+									[
+										8416,
+										8421
+									],
+									[
+										8729,
+										8734
+									],
+									[
+										8840,
+										8845
+									],
+									[
+										8884,
+										8889
+									],
+									[
+										9313,
+										9318
+									],
+									[
+										9467,
+										9472
+									],
+									[
+										9592,
+										9597
+									],
+									[
+										9692,
+										9697
+									],
+									[
+										9983,
+										9988
+									],
+									[
+										10103,
+										10108
+									],
+									[
+										10202,
+										10207
+									],
+									[
+										10400,
+										10405
+									],
+									[
+										10634,
+										10639
+									],
+									[
+										10680,
+										10685
+									],
+									[
+										10915,
+										10920
+									],
+									[
+										10970,
+										10975
+									],
+									[
+										11257,
+										11262
+									],
+									[
+										11302,
+										11307
+									],
+									[
+										11570,
+										11575
+									],
+									[
+										11857,
+										11862
+									],
+									[
+										11967,
+										11972
+									],
+									[
+										12081,
+										12086
+									],
+									[
+										12223,
+										12228
+									],
+									[
+										12364,
+										12369
+									],
+									[
+										12509,
+										12514
+									],
+									[
+										12636,
+										12641
+									],
+									[
+										12797,
+										12802
+									],
+									[
+										12977,
+										12982
+									],
+									[
+										13011,
+										13016
+									],
+									[
+										13191,
+										13196
+									],
+									[
+										13293,
+										13298
+									],
+									[
+										13378,
+										13383
+									],
+									[
+										13465,
+										13470
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								8423,
+								8423
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4185.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "table.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22188,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2427,
+								2427
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1145.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "TestFiles/myTest.cpsl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 122,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "Makefile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 637,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.MotorSketch":
+	{
+		"height": 112.0
+	},
+	"output.exec":
+	{
+		"height": 155.0
+	},
+	"output.pwmplay":
+	{
+		"height": 100.0
+	},
+	"output.stino_log":
+	{
+		"height": 112.0
+	},
+	"output.test":
+	{
+		"height": 112.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 256.0
+	},
+	"project": "compiler.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"symb",
+				"Symbols.h"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 160.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

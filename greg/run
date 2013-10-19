@@ -1,0 +1,7 @@
+#header of the file needs to happen here
+#loading int into register
+	li $8,	2
+#loading int into register
+	li $9,	2
+#Add two expressions
+	 add 	$10,	$8,	$9

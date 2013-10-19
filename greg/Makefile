@@ -1,11 +1,11 @@
-default: clean output logger table cpsl
+default: clean bison lex output logger table cpsl
 
 run: default
 	./cpsl TestFile/expressions.cpsl default.asm
-	mars default.asm
+	java -jar ~/otherprograms/Mars4_4.jar default.asm
 
-cpsl: bison lex
-	g++ -o cpsl -std=c++11 -g OutputFile.o table.o cpsl.tab.c logger.o  lex.yy.c  -ll
+cpsl: 
+	g++ -g -o cpsl -std=c++11 -g OutputFile.o table.o cpsl.tab.c logger.o  lex.yy.c  -ll
 
 lex:
 	flex cpsl.l
@@ -13,22 +13,23 @@ lex:
 bison:
 	bison -vd cpsl.y
 
-
 logger: 
-	g++ -std=c++11 logger.cpp -c
+	g++ -g -std=c++11 logger.cpp -c
 
 table:
-	g++ -std=c++11 table.cpp -c
+	g++ -g -std=c++11 table.cpp -c
 
-test: test.cpp
-	g++ -std=c++11 table.o test.cpp
-	./a.out
-
+test: 
+		./cpsl TestFiles/expressions.cpsl default.asm
+		java -jar ~/otherprograms/Mars4_4.jar default.asm
 output:
-	g++  -c -std=c++11 OutputFile.cpp -c
+	g++ -g -c -std=c++11 OutputFile.cpp -c
 
+debug:
+	gdb -tui --args ./cpsl TestFiles/expressions.cpsl run
 
 clean:
+	-rm -rf *.asm
 	-rm -rf out.txt
 	-rm -rf cpsl
 	-rm -rf cpsl.output
@@ -39,3 +40,8 @@ clean:
 	-rm -rf table.o
 	-rm -rf Outputfile.o
 
+tar: clean
+	mkdir gregDaniels
+	-cp * gregDaniels
+	tar -cvf gregDaniels.tar *
+	rm -r gregDaniels

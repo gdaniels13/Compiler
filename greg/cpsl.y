@@ -30,6 +30,8 @@ void yyerror(const char *s);
 	std::vector<std::string> * identList;
 	Type * type;
 	std::vector<std::shared_ptr<Type>> * typeList;
+	Expression * exp_type;
+	std::deque<Expression*> * exp_list_type;
 }
 
 %token <int_val> INTEGER_SYMBOL
@@ -94,84 +96,51 @@ void yyerror(const char *s);
 
 %type <type> ArrayType
 
-/*
-%type Assignment
-%type Block
-%type Body
-%type ConstantDecl
-%type ConstantStuff
-*/
 
+//%type Assignment
+//%type Block
+//%type Body
+//%type ConstantDecl
+//%type ConstantStuff
 %type <const_type> ConstExpression
-
-/*
-%type Expression
-%type ExpressionStuff
-*/
-
+%type <exp_list_type> ExpressionList
+%type <exp_type> Expression
 %type <formalParameter> FormalParameters
-
-/*
-%type ForStatement
-%type FunctionDecl
-*/
-
+//%type ForStatement
+//%type FunctionDecl
 //%type <formalParameter> FuncStuff
 %type <identList> IdentList
 %type <identList> IdentStuff
-
-/*
-%type IfStatement
-%type IfStuff
-%type LValue
-%type LValueStuff
-%type NullStatement
-*/
-
+//%type IfStatement
+//%type IfStuff
+%type <exp_type>LValue
+//%type LValueStuff
+//%type NullStatement
 %type <formalParameter> ParamStuff
-
-/*
-%type ProcedureCall
-%type ProcedureDecl
-%type ProcedureStuff
-%type ProcFunc
-%type Program
-%type ReadStatement
-%type ReadStuff
-*/
-
+//%type ProcedureCall
+//%type ProcedureDecl
+//%type ProcedureStuff
+//%type ProcFunc
+//%type Program
+%type <nonetype> ReadStatement
+%type <exp_list_type> ReadStuff
 %type <type> RecordType
 %type <typeList> RecordStuff
-
-/*
-%type RepeatStatement
-%type ReturnStatement
-*/
-
+//%type RepeatStatement
+//%type ReturnStatement
 %type <type> SimpleType
-
-/*
-%type Statement
-%type StatementSequence
-%type StatementStuff
-%type StopStatement
-*/
-
+//%type Statement
+//%type StatementSequence
+//%type StatementStuff
+//%type StopStatement
 %type <type> Type
-
-/*
-%type TypeDecl
-%type TypeStuff
-%type VarDecl
-%type VarStuff
-%type WhileStatement
-%type WriteStatement
-%type WriteStuff
-*/
-
-
-
-
+//%type TypeDecl
+//%type TypeStuff
+//%type VarDecl
+//%type VarStuff
+//%type WhileStatement
+%type <none_type> WriteStatement
+//%type WriteStuff
 %left OR_SYMBOL
 %left AND_SYMBOL
 %right NOT_SYMBOL
@@ -180,16 +149,17 @@ void yyerror(const char *s);
 %left MULT_SYMBOL DIV_SYMBOL PERCENT_SYMBOL
 %right UNARY_MINUS_SYMBOL
 
-
 %%
-Program			    : ConstantDecl TypeDecl VarDecl ProcFunc Block DOT_SYMBOL
-					| ConstantDecl TypeDecl ProcFunc Block DOT_SYMBOL
-					| ConstantDecl VarDecl ProcFunc Block DOT_SYMBOL
-					| ConstantDecl ProcFunc Block DOT_SYMBOL
-					| TypeDecl VarDecl ProcFunc Block DOT_SYMBOL
-					| TypeDecl ProcFunc Block DOT_SYMBOL
-					| VarDecl ProcFunc Block DOT_SYMBOL
-					| ProcFunc Block DOT_SYMBOL
+
+
+Program			    : ConstantDecl TypeDecl VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
+					| ConstantDecl TypeDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
+					| ConstantDecl VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
+					| ConstantDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
+					| TypeDecl VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
+					| TypeDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
+					| VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
+					| ProcFunc Block DOT_SYMBOL {Output::endFile();}
 					;
 
 ConstantDecl 		: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL ConstantStuff {Table::MakeConst($2,$4);}
@@ -334,72 +304,68 @@ ReturnStatement		: RETURN_SYMBOL Expression
 					| RETURN_SYMBOL
 					;
 
-ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL
+ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL 	{$4->push_front($3); Table::makeReadStatement($4);}
 					;
 
-ReadStuff			: COMMA_SYMBOL LValue ReadStuff
-					|
+ReadStuff			: COMMA_SYMBOL LValue ReadStuff 	{	$$ = $3; $3->push_front($2);	}
+					|  									{$$ = new std::deque<Expression*>();}
 					;
 
-WriteStatement		: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression WriteStuff RIGHT_BRACE_SYMBOL
+WriteStatement		: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL 
+							{$4->push_front($3); Table::makeWriteStatement($4);}
 					;
 
-WriteStuff			: 
-					| COMMA_SYMBOL Expression WriteStuff
-					;
 
-ProcedureCall		: ID_SYMBOL LEFT_BRACE_SYMBOL Expression ProcedureStuff RIGHT_BRACE_SYMBOL
+ProcedureCall		: ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL
 					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
-					;
-
-ProcedureStuff		:
-					| COMMA_SYMBOL Expression ProcedureStuff
 					;
 
 NullStatement		:
 					;
 
-Expression 			: Expression OR_SYMBOL Expression
-					| Expression AND_SYMBOL Expression
-					| Expression EQUAL_SYMBOL Expression
-					| Expression NOT_EQUAL_SYMBOL Expression
-					| Expression LESS_EQUAL_SYMBOL Expression
-					| Expression GREAT_EQUAL_SYMBOL Expression
-					| Expression LESS_SYMBOL Expression
-					| Expression GREAT_SYMBOL Expression
-					| Expression ADD_SYMBOL Expression
-					| Expression SUB_SYMBOL Expression
-					| Expression MULT_SYMBOL Expression
-					| Expression DIV_SYMBOL Expression
-					| Expression PERCENT_SYMBOL Expression
-					| NOT_SYMBOL Expression
-					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL
-					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
-					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL
-					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| INTEGER_SYMBOL
-					| CHARACTER_SYMBOL
-					| STRING_SYMBOL
-					| LValue
+ExpressionList		: COMMA_SYMBOL Expression ExpressionList 	{	$$ = $3; $3->push_front($2);	}
+					| 											{$$ = new std::deque<Expression*>();}
 					;
 
-ExpressionStuff 	: COMMA_SYMBOL Expression ExpressionStuff
-					|
+
+Expression 			: Expression OR_SYMBOL Expression 											{$$ = Table::makeExpression($1,OR,$3);}
+					| Expression AND_SYMBOL Expression 											{$$ = Table::makeExpression($1,AND,$3);}
+					| Expression EQUAL_SYMBOL Expression 										{$$ = Table::makeExpression($1,EQUAL,$3);}
+					| Expression NOT_EQUAL_SYMBOL Expression 									{$$ = Table::makeExpression($1,NOT_EQUAL,$3);}
+					| Expression LESS_EQUAL_SYMBOL Expression 									{$$ = Table::makeExpression($1,LESS_EQUAL,$3);}
+					| Expression GREAT_EQUAL_SYMBOL Expression 									{$$ = Table::makeExpression($1,GREAT_EQUAL,$3);}
+					| Expression LESS_SYMBOL Expression 										{$$ = Table::makeExpression($1,LESS,$3);}
+					| Expression GREAT_SYMBOL Expression 										{$$ = Table::makeExpression($1,GREAT,$3);}
+					| Expression ADD_SYMBOL Expression 											{$$ = Table::makeExpression($1,ADD,$3);}
+					| Expression SUB_SYMBOL Expression  										{$$ = Table::makeExpression($1,SUB,$3);}
+					| Expression MULT_SYMBOL Expression 										{$$ = Table::makeExpression($1,MULT,$3);}
+					| Expression DIV_SYMBOL Expression 											{$$ = Table::makeExpression($1,DIV,$3);}
+					| Expression PERCENT_SYMBOL Expression 										{$$ = Table::makeExpression($1,MOD,$3);}
+					| NOT_SYMBOL Expression 													{$$ = Table::makeExpression(new Expression("",UNKNOWN), NOT, $2);}
+					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL 							{$$ = Table::makeExpression(new Expression("",UNKNOWN), UNARY, $2);}
+					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL 							{$$ = $2;}
+					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL							{/*function call*/}
+					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL	{/*function call*/}
+					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*char cast*/}
+					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*something*/}
+					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*something*/}
+					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*something*/}
+					| INTEGER_SYMBOL															{$$ = Table::makeIntExpression($1);}				
+					| CHARACTER_SYMBOL 															{$$ = Table::makeCharExpression($1); }				
+					| STRING_SYMBOL 															{$$ = Table::makeStringExpression($1); }				
+					| LValue 																	{$$ = $1;}
 					;
 
-LValue 				: ID_SYMBOL
-					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff
-					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
+
+LValue 				: ID_SYMBOL  		{$$ = new Expression($1,ID);}
+				//	| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff
+				//	| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
 					;
 
-LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
-					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
-					|
-					;
+// LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
+// 					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
+// 					|
+				// ;
 
 ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression {$$ = Table::makeConst($1,OR,$3);}
 					| ConstExpression AND_SYMBOL ConstExpression {$$ = Table::makeConst($1,AND,$3);}
@@ -429,17 +395,13 @@ int main(int argc, char ** argv)
 {
 	argc--, argv++;
 	
-	Output::SetFilePath("bob.asm");
-	Output::out("testing to see if it even works\n");
-	Output::out("lets  to see if it even works\n");
 	Table::setVerbose(false);
-	std::cout<<Table::isVerbose()<<std::endl;
 	if(argc == 3)
 	{
 		std::cout<<argv[2];
 		if(argv[2][1] == 'v')
 		{
-			std::cout<<"setting verbose\n";
+			
 			Table::setVerbose(true);
 		}
 	
@@ -466,6 +428,7 @@ int main(int argc, char ** argv)
 	{
 		yyparse();
 	} while (!feof(yyin));
+	
 	if(Table::isVerbose());
 		Table::PrintTable();
 	return 0;
