@@ -97,12 +97,13 @@ void yyerror(const char *s);
 %type <type> ArrayType
 
 
-//%type Assignment
+%type <none_type> Assignment
 //%type Block
 //%type Body
 //%type ConstantDecl
 //%type ConstantStuff
 %type <const_type> ConstExpression
+%type <none_type> ElseStatement
 %type <exp_list_type> ExpressionList
 %type <exp_type> Expression
 %type <formalParameter> FormalParameters
@@ -111,12 +112,15 @@ void yyerror(const char *s);
 //%type <formalParameter> FuncStuff
 %type <identList> IdentList
 %type <identList> IdentStuff
-//%type IfStatement
-//%type IfStuff
+%type <none_type> IfStatement
+%type <none_type> IfStuff
+%type <none_type> BeginIfStuff
+%type <int_val> BeginIfStatement
 %type <exp_type>LValue
 //%type LValueStuff
 //%type NullStatement
 %type <formalParameter> ParamStuff
+%type <none_type> PreIfStuff
 //%type ProcedureCall
 //%type ProcedureDecl
 //%type ProcedureStuff
@@ -276,16 +280,31 @@ Statement 			: Assignment
 					| NullStatement
 					;
 
-Assignment			: LValue ASSIGN_SYMBOL Expression
+//done
+Assignment			: LValue ASSIGN_SYMBOL Expression {Table::makeAssignment($1,$3);}
 					;
 
-IfStatement			: IF_SYMBOL Expression THEN_SYMBOL StatementSequence IfStuff ELSE_SYMBOL StatementSequence END_SYMBOL
-					| IF_SYMBOL Expression THEN_SYMBOL StatementSequence IfStuff END_SYMBOL
+IfStatement			: BeginIfStatement StatementSequence IfStuff ElseStatement StatementSequence END_SYMBOL {Table::finishElseStatement();}
+					| BeginIfStatement StatementSequence IfStuff END_SYMBOL {Table::finishIfStatement($1);}
 					;
 
-IfStuff				: 
-					| ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence IfStuff
+ElseStatement		:	ELSE_SYMBOL {Table::finishSubIf();}
 					;
+
+BeginIfStatement	: IF_SYMBOL Expression THEN_SYMBOL {$$ =  Table::makeBeginIfStatement($2);}
+					;
+
+
+IfStuff				: {/*Empty*/}
+					| BeginIfStuff StatementSequence IfStuff {/*Table::makeIfStuff();*/}
+					;
+
+BeginIfStuff		: PreIfStuff ELSEIF_SYMBOL Expression THEN_SYMBOL { Table::makeIfStuff($3);}
+					;
+
+PreIfStuff			: {Table::finishSubIf();}
+					;
+
 
 WhileStatement		: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
 					;
@@ -307,7 +326,7 @@ ReturnStatement		: RETURN_SYMBOL Expression
 ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL 	{$4->push_front($3); Table::makeReadStatement($4);}
 					;
 
-ReadStuff			: COMMA_SYMBOL LValue ReadStuff 	{	$$ = $3; $3->push_front($2);	}
+ReadStuff			: COMMA_SYMBOL LValue ReadStuff 	{$$ = $3; $3->push_front($2);	}
 					|  									{$$ = new std::deque<Expression*>();}
 					;
 

@@ -20,13 +20,13 @@ table:
 	g++ -g -std=c++11 table.cpp -c
 
 test: 
-		./cpsl TestFiles/expressions.cpsl default.asm
+		./cpsl TestFiles/myTest.cpsl default.asm
 		java -jar ~/otherprograms/Mars4_4.jar default.asm
 output:
 	g++ -g -c -std=c++11 OutputFile.cpp -c
 
 debug:
-	gdb -tui --args ./cpsl TestFiles/expressions.cpsl run
+	gdb  --args ./cpsl TestFiles/expressions.cpsl run
 
 clean:
 	-rm -rf *.asm

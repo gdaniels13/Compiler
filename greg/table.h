@@ -31,7 +31,8 @@ enum ConstType
 	ID,
 	INT,
 	CHAR,
-	STRING
+	STRING,
+	BOOLEAN
 };
 
 class Symbol
@@ -174,6 +175,16 @@ public:
 	static void readExpression(Expression *);
 	static void makeReadStatement(std::deque<Expression *>*);
 	static Expression* lookupExpression(Expression*);
+	static void makeAssignment(Expression*, Expression*);
+
+	//If Statements
+	static void finishIfStatement(int);
+	static void makeIfStuff(Expression*);
+	static int makeBeginIfStatement(Expression*);
+	static void finishSubIf();
+	static void printElse();
+	static void finishElseStatement();
+
 	~Table(){};
 private:
 	Table();

@@ -8,6 +8,8 @@ std::shared_ptr<Output> Output::m_instance;
 Output::Output()
 {
 	// m_out.open(".asm");
+	ifCount = 0;
+	EndIfStatement = 0;
 	setUpFile();
 	for(int i = 0; i<18; ++i)
 		registers[i] = false;
@@ -44,7 +46,7 @@ int Output::getRegister()
 
 void Output::freeRegister(int t)
 {
-	comment("freeing Register " + std::to_string(t));
+	//comment("freeing Register " + std::to_string(t));
 	bool * array =  getInstance()->registers;
 	array[(t-8)] = false;
 }
@@ -95,4 +97,43 @@ void Output::out(std::string message )
 void Output::comment(std::string message )
 {
    	getInstance()->m_out <<'#'<< message << std::endl;
+}
+
+
+int Output::pushIfQueue()
+{
+	auto instance = getInstance();
+	int temp = instance->ifCount++;
+	instance->ifQueue.push_front(temp);
+	return temp;
+}
+
+int Output::popIfQueue()
+{
+	auto instance = getInstance();
+	int temp = instance->ifQueue.front();
+
+	instance->ifQueue.pop_front();
+	return temp;	
+}
+
+int Output::pushEndIfQueue()
+{
+	auto instance = getInstance();
+	int temp = instance->EndIfStatement++;
+	instance->endIfQueue.push_front(temp);
+	return temp;
+}
+
+int Output::getEndIfQueue()
+{
+	return getInstance()->endIfQueue.front();
+}
+
+int Output::popEndIfQueue()
+{
+	auto instance = getInstance();
+	int temp = instance->endIfQueue.front();
+	instance->endIfQueue.pop_front();
+	return temp;	
 }

@@ -983,14 +983,23 @@ Expression * Table::lookupExpression(Expression * ep)
 		
 		if(var->m_type->m_name=="integer" || var->m_type->m_name=="INTEGER")
 		{
-				int location = std::stoi(var->m_location);
+			ep->m_type = INT;
+		}
+		else if(var->m_type->m_name=="char" || var->m_type->m_name=="CHAR")
+		{
+			ep->m_type = CHAR;
+		}
+		else if(var->m_type->m_name=="boolean" || var->m_type->m_name=="BOOLEAN")
+		{
+			ep->m_type = BOOLEAN;
+		}
+
+			int location = std::stoi(var->m_location);
 				ss<<"\t lw \t$"<<areg<<", \t" << location<<"($gp)\n";
-				ep->m_type = INT;
 				ep->m_location = "$" + std::to_string(areg);
 				Output::comment("looking up id ");
 				Output::out(ss.str());
-
-		}
+		
 		return ep;
 }
 
@@ -1072,3 +1081,112 @@ void Table::readExpression(Expression * ep)
 	Output::out(mst.str());
 	Output::freeRegister(reg);
 }
+
+
+void Table::makeAssignment(Expression* left, Expression* right)
+{
+	std::stringstream ss("");
+	if(left->m_type != ID)
+	{
+		std::cout<<"ERROR NOT AN LVALUE"<<std::endl;
+		exit(-1);
+	}
+	if(right->m_type == ID)
+	{
+		lookupExpression(right);
+	}
+
+	auto var = dynamic_cast<Var*>( Table::GetElement(left->m_value).get());
+	int location = std::stoi(var->m_location);
+
+	ss<<"\t sw \t"<< right->m_location<<", \t"<<location<<"($gp)";
+	Output::out(ss.str());
+}
+
+int Table::makeBeginIfStatement(Expression * exp)
+{
+	std::stringstream ss("");
+	if(exp->m_type == ID)
+	{
+		lookupExpression(exp);
+	}
+	exp->releaseRegister();
+
+	Output::pushEndIfQueue();
+	int ifCount = Output::pushIfQueue();
+	
+	ss<<"\t BEQ \t $0"<<", \t"<<exp->m_location<<", ELSEIF"<<ifCount<<std::endl;
+	Output::out(ss.str());
+	return 999;
+
+}
+
+void Table::makeIfStuff(Expression * exp)
+{
+	std::stringstream ss("");
+	if(exp->m_type == ID)
+	{
+		lookupExpression(exp);
+	}
+	exp->releaseRegister();
+	int nextLabel = Output::pushIfQueue();
+
+	Output::comment(" nextLabel: " +std::to_string( nextLabel));
+
+
+
+	//finish off the last part of the la
+
+	ss<<"\t BEQ \t $0"<<", \t"<<exp->m_location<<", ELSEIF"<<nextLabel<<std::endl;
+	Output::out(ss.str());
+}
+
+void Table::finishIfStatement(int end)
+{
+	std::stringstream ss("");
+	ss<<"ELSEIF"<<Output::popIfQueue()<<":\n";
+	ss<<"ENDOFIFSTATEMENT"<<Output::popEndIfQueue()<<":\n";
+	Output::out(ss.str());
+}
+
+void Table::finishSubIf()
+{
+	std::stringstream ss("");
+	int curLabel = Output::popIfQueue();
+	ss<<"\tJ\t ENDOFIFSTATEMENT"<<Output::getEndIfQueue()<<std::endl;
+
+	//set up the label for this else if
+	ss<<"ELSEIF"<<curLabel<<":\n";
+
+	Output::out(ss.str());
+}
+
+void Table::finishElseStatement()
+{
+	std::stringstream ss("");
+	ss<<"ENDOFIFSTATEMENT"<<Output::popEndIfQueue()<<":\n";
+	Output::out(ss.str());
+}
+
+void Table::printElse()
+{
+	std::stringstream ss("");
+	ss<<"ELSEIF"<<Output::popIfQueue()<<":\n";
+	Output::out(ss.str());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

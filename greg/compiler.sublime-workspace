@@ -295,7 +295,7 @@
 			"file": "cpsl.y",
 			"settings":
 			{
-				"buffer_size": 14043,
+				"buffer_size": 14774,
 				"line_ending": "Unix"
 			}
 		},
@@ -303,7 +303,7 @@
 			"file": "OutputFile.h",
 			"settings":
 			{
-				"buffer_size": 436,
+				"buffer_size": 607,
 				"line_ending": "Unix"
 			}
 		},
@@ -311,7 +311,7 @@
 			"file": "table.h",
 			"settings":
 			{
-				"buffer_size": 3453,
+				"buffer_size": 4029,
 				"line_ending": "Unix"
 			}
 		},
@@ -329,7 +329,7 @@
 			"file": "table.cpp",
 			"settings":
 			{
-				"buffer_size": 22188,
+				"buffer_size": 25877,
 				"line_ending": "Unix"
 			}
 		},
@@ -345,7 +345,7 @@
 			"file": "Makefile",
 			"settings":
 			{
-				"buffer_size": 637,
+				"buffer_size": 889,
 				"line_ending": "Unix"
 			}
 		}
@@ -709,7 +709,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14043,
+						"buffer_size": 14774,
 						"regions":
 						{
 						},
@@ -737,7 +737,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 436,
+						"buffer_size": 607,
 						"regions":
 						{
 						},
@@ -765,7 +765,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3453,
+						"buffer_size": 4029,
 						"regions":
 						{
 						},
@@ -1241,15 +1241,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 22188,
+						"buffer_size": 25877,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2427,
-								2427
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1297,7 +1297,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 637,
+						"buffer_size": 889,
 						"regions":
 						{
 						},
