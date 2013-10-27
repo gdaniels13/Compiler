@@ -1,7 +1,8 @@
 default: clean output logger table cpsl
 
 run: default
-	./cpsl testFile.cpsl out.txt -v
+	./cpsl testFile.cpsl out.asm -v
+	java -jar Mars4_3.jar out.asm
 
 cpsl: bison lex
 	g++ -o cpsl -std=c++11 -g OutputFile.o table.o cpsl.tab.c logger.o  lex.yy.c  -ll
@@ -24,7 +25,7 @@ test: test.cpp
 	./a.out
 
 output:
-	g++  -c -std=c++11 OutputFile.cpp -c
+	g++ -std=c++11 OutputFile.cpp -c
 
 clean:
 	-rm -rf out.txt
@@ -36,4 +37,6 @@ clean:
 	-rm -rf cpsl.tab.c
 	-rm -rf table.o
 	-rm -rf OutputFile.o
+	-rm -rf cpsl.dSYM/
+	-rm -rf out.asm
 

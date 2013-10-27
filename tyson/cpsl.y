@@ -30,6 +30,7 @@ void yyerror(const char *s);
 	std::vector<std::string> * identList;
 	Type * type;
 	std::vector<std::shared_ptr<Type>> * typeList;
+	std::vector<Expression *> * exprList;
 }
 
 %token <int_val> INTEGER_SYMBOL
@@ -104,11 +105,7 @@ void yyerror(const char *s);
 
 %type <const_type> ConstExpression
 %type <expr_type> Expression
-
-/*
-%type ExpressionStuff
-*/
-
+%type <exprList> ExpressionStuff
 %type <formalParameter> FormalParameters
 
 /*
@@ -141,9 +138,9 @@ void yyerror(const char *s);
 %type ProcFunc
 %type Program
 %type ReadStatement
-%type ReadStuff
 */
 
+%type <exprList> ReadStuff
 %type <type> RecordType
 %type <typeList> RecordStuff
 
@@ -170,8 +167,8 @@ void yyerror(const char *s);
 %type VarStuff
 %type WhileStatement
 %type WriteStatement
-%type WriteStuff
 */
+%type <exprList> WriteStuff
 
 
 
@@ -297,34 +294,55 @@ StatementStuff		:
 					| SEMI_COLON_SYMBOL Statement StatementStuff
 					;
 
-Statement 			: Assignment
-					| IfStatement
-					| WhileStatement
-					| RepeatStatement
-					| ForStatement
-					| StopStatement
+Statement 			: Assignment //done
+					| IfStatement //done
+					| WhileStatement //done
+					| RepeatStatement //done
+					| ForStatement //implement today
+					| StopStatement 
 					| ReturnStatement
-					| ReadStatement
-					| WriteStatement
+					| ReadStatement //done
+					| WriteStatement //done
 					| ProcedureCall
 					| NullStatement
 					;
 
-Assignment			: LValue ASSIGN_SYMBOL Expression
+Assignment			: LValue ASSIGN_SYMBOL Expression {Table::Assign($1,$3);}
 					;
 
-IfStatement			: IF_SYMBOL Expression THEN_SYMBOL StatementSequence IfStuff ELSE_SYMBOL StatementSequence END_SYMBOL
-					| IF_SYMBOL Expression THEN_SYMBOL StatementSequence IfStuff END_SYMBOL
+IfStatement			: IfFirst StatementSequence IfStuff EndFirst StatementSequence END_SYMBOL {Table::MakeEndIf();}
+					| IfFirst StatementSequence IfStuff END_SYMBOL {Table::MakeEndIf2();}
 					;
 
-IfStuff				: 
-					| ELSEIF_SYMBOL Expression THEN_SYMBOL StatementSequence IfStuff
+IfFirst				: IF_SYMBOL Expression THEN_SYMBOL {Table::MakeFirstIf($2);}
 					;
 
-WhileStatement		: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
+EndFirst			: ELSE_SYMBOL {Table::MakeElse();}
 					;
 
-RepeatStatement		: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL Expression
+IfStuff				:
+					| IfEnd ElseIfFirst StatementSequence IfStuff
+					;
+
+IfEnd				: {Table::MakeElse();}
+					;
+
+ElseIfFirst			: ELSEIF_SYMBOL Expression THEN_SYMBOL {Table::MakeIf($2);}
+					;
+
+WhileStatement		: WhileStart StatementSequence END_SYMBOL {Table::MakeWhileEnd();}
+					;
+
+WhileStart			: WhilePre Expression DO_SYMBOL {Table::MakeWhileBegin($2);}
+					;
+
+WhilePre			: WHILE_SYMBOL	{Table::MakeWhilePre();}
+					;
+
+RepeatStatement		: RepeatPre StatementSequence UNTIL_SYMBOL Expression {Table::MakeRepeatEnd($4);}
+					;
+
+RepeatPre			: REPEAT_SYMBOL {Table::MakeRepeatPre();}
 					;
 
 ForStatement		: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression TO_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
@@ -338,18 +356,18 @@ ReturnStatement		: RETURN_SYMBOL Expression
 					| RETURN_SYMBOL
 					;
 
-ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL
+ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL {$4->push_back($3); Table::ReadCode($4);}
 					;
 
-ReadStuff			: COMMA_SYMBOL LValue ReadStuff
-					|
+ReadStuff			: COMMA_SYMBOL LValue ReadStuff {$3->push_back($2); $$ = $3;}
+					| {$$ = new std::vector<Expression *>;}
 					;
 
-WriteStatement		: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression WriteStuff RIGHT_BRACE_SYMBOL
+WriteStatement		: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression WriteStuff RIGHT_BRACE_SYMBOL {$4->push_back($3); Table::WriteCode($4);}
 					;
 
-WriteStuff			: 
-					| COMMA_SYMBOL Expression WriteStuff
+WriteStuff			: {$$ = new std::vector<Expression *>;}
+					| COMMA_SYMBOL Expression WriteStuff {$3->push_back($2); $$ = $3;}
 					;
 
 ProcedureCall		: ID_SYMBOL LEFT_BRACE_SYMBOL Expression ProcedureStuff RIGHT_BRACE_SYMBOL
@@ -379,25 +397,25 @@ Expression 			: Expression OR_SYMBOL Expression {$$ = Table::makeExpression($1, 
 					| NOT_SYMBOL Expression {$$ = Table::makeExpression(new Expression("",UNKNOWN),NOT,$2);}
 					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL {$$ = Table::makeExpression(new Expression("",UNKNOWN),UNARY,$2);}
 					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = $2;}
-					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
-					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL
-					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
-					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL
+					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL //function
+					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL //function
+					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //int to char
+					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //char to int
+					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //-- on chars only
+					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //++ on chars
 					| INTEGER_SYMBOL 	{$$ = new Expression(std::to_string($1),INT);}				
 					| CHARACTER_SYMBOL 	{$$ = new Expression($1,CHAR);}				
-					| STRING_SYMBOL 	{$$ = new Expression($1,STRING);}
-					| LValue 
+					| STRING_SYMBOL 	{$$ = new Expression($1,STRING,Table::getStringCount());}
+					| LValue {$$ = $1;}
 					;
 
-ExpressionStuff 	: COMMA_SYMBOL Expression ExpressionStuff
-					|
+ExpressionStuff 	: COMMA_SYMBOL Expression ExpressionStuff {$3->push_back($2); $$ = $3;}
+					| {$$ = new std::vector<Expression *>;}
 					;
 
 LValue 				: ID_SYMBOL {$$ = new Expression($1,ID);}
-					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff
-					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
+					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff  //record
+					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff //array
 					;
 
 LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
@@ -432,8 +450,7 @@ ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression {$$ = Table::makeCo
 int main(int argc, char ** argv)
 {
 	argc--, argv++;
-	
-	Output::SetFilePath("cpsl.asm");
+
 	Table::setVerbose(false);
 	if(argc == 3)
 	{
@@ -469,6 +486,8 @@ int main(int argc, char ** argv)
 	} while (!feof(yyin));
 	if(Table::isVerbose());
 		Table::PrintTable();
+	Output::endFile();
+	Table::printStrings();
 	return 0;
 };
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include <mutex>
 #include <memory>
+#include "OutputFile.h"
 
 enum symbols
 {
@@ -33,15 +34,31 @@ enum ConstType
 	STRING		//4
 };
 
+enum SymbolType
+{
+	_Symbol,
+	_Type,
+	_SimpleType,
+	_Array,
+	_Record,
+	_Var,
+	_Const,
+	_Function,
+	_Expression
+};
+
 class Symbol
 {
 public:
+	SymbolType m_symbolType;
 	std::string m_name;
 	virtual void print();
 	~Symbol(){};
-	Symbol();
+	Symbol(SymbolType);
 	Symbol(std::string);
-	Symbol(Symbol &);
+	Symbol();
+	Symbol(std::string, SymbolType);
+	Symbol(Symbol &, SymbolType);
 };
 
 class Type : public Symbol
@@ -50,9 +67,10 @@ public:
 	int m_size;
 	virtual void print();
 	~Type(){};
-	Type();
+	Type(SymbolType);
+	Type(int, std::string, SymbolType);
 	Type(int, std::string);
-	Type(int);
+	Type(int, SymbolType);
 };
 
 class SimpleType : public Type
@@ -133,8 +151,10 @@ public:
 	std::string m_location;
 	std::string m_value;
 	ConstType m_type;
+	virtual void print();
 	Expression();
 	Expression(std::string, ConstType);
+	Expression(std::string, ConstType, std::string);
 };
 
 typedef std::shared_ptr<Symbol> Element;
@@ -160,8 +180,24 @@ public:
 	static void PrintScope();
 	static bool isVerbose();
 	static void setVerbose(bool);
+	static void printStrings();
+	static void WriteCode(std::vector<Expression *> *);
+	static void ReadCode(std::vector<Expression *> *);
+	static std::string getStringCount();
+	static void Assign(Expression *, Expression *);
+	static void MakeFirstIf(Expression *);
+	static void MakeIf(Expression *);
+	static void MakeElse();
+	static void MakeEndIf();
+	static void MakeEndIf2();
+	static void MakeWhileBegin(Expression *);
+	static void MakeWhileEnd();
+	static void MakeWhilePre();
+	static void MakeRepeatPre();
+	static void MakeRepeatEnd(Expression *);
 	~Table(){};
 private:
+	static std::vector<std::string> m_strings;
 	Table();
 	static std::shared_ptr<Table> getInstance();
 	static std::shared_ptr<Table> m_instance;

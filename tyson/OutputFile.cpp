@@ -1,22 +1,30 @@
 #include "OutputFile.h"
+#include <iostream>
 
 std::shared_ptr<Output> Output::m_instance;
 
 
-Output::Output()
+Output::Output():
+m_out()
 {
-	//m_out.open("out.asm");
-	setUpFile();
+	for(int i = 0; i < 18; ++i)
+		m_registers[i] = false;
 }
 
 void Output::setUpFile()
 {
-	m_out<<"#header of the file needs to happen here";
+	m_out << "\t.text  \t\t\t#predefined header" << std::endl << 
+             "\t.globl main \t#predefined header" << std::endl << 
+             "main: la $gp, GA \t#predefined header" << std::endl <<
+             "\tb _begin" << std::endl <<
+             "_begin:" << std::endl;
 }
 
 void Output::endFile()
 {
-	out("li\t $v0, 10\n syscall\n\n");
+	out("\tli $v0, 10");
+	out("\tsyscall \t\t#exit");
+	out("\t.data");
 }
 
 std::shared_ptr<Output> Output::getInstance()
@@ -29,11 +37,35 @@ std::shared_ptr<Output> Output::getInstance()
 	return m_instance;
 }
 
+int Output::getRegister()
+{
+	int reg = 0;
+	for(int i = 0; i < 18; ++i)
+	{
+		if(getInstance()->m_registers[i] == false)
+		{
+			reg = i+8;
+			getInstance()->m_registers[i] = true;
+			break;
+		}
+	}
+	if(reg == 0)
+	{
+		std::cout << "HOLY FLIP! YOU SUCK AT REGISTER ALLOCATION" << std::endl;
+		exit(-1);
+	}
+	return reg;
+}
+
+void Output::freeRegister(int reg)
+{
+	getInstance()->m_registers[reg - 8] = false;
+}
+
 
 
 void Output::SetFilePath(std::string path)
 {
-	getInstance()->m_out.close();
 	getInstance()->m_out.open(path);
 	getInstance()->setUpFile();
 }
