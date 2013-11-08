@@ -145,7 +145,7 @@ public:
 	Function(std::string, std::vector<std::shared_ptr<Var>>, std::string, bool);
 };
 
-class Expression : Symbol
+class Expression : public Symbol
 {
 public:
 	std::string m_location;
@@ -195,6 +195,11 @@ public:
 	static void MakeWhilePre();
 	static void MakeRepeatPre();
 	static void MakeRepeatEnd(Expression *);
+	static char * MakeForBegin(char *,Expression *);
+	static void MakeForTo(char *, Expression *);
+	static void MakeForDownTo(char *, Expression *);
+	static void MakeForToEnd(char *);
+	static void MakeForDownToEnd(char *);
 	~Table(){};
 private:
 	static std::vector<std::string> m_strings;
@@ -205,6 +210,7 @@ private:
 	std::mutex m_mutex;
 	std::vector<std::map<std::string, Element>> m_table;
 	int m_scope;
+	std::string getScope(std::string);
 };
 
 #endif

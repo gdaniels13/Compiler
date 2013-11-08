@@ -107,6 +107,9 @@ void yyerror(const char *s);
 %type <expr_type> Expression
 %type <exprList> ExpressionStuff
 %type <formalParameter> FormalParameters
+%type <name_ptr> ForBegin
+%type <name_ptr> ForTo
+%type <name_ptr> ForDownTo
 
 /*
 %type ForStatement
@@ -183,15 +186,18 @@ void yyerror(const char *s);
 
 
 %%
-Program			    : ConstantDecl TypeDecl VarDecl ProcFunc Block DOT_SYMBOL
-					| ConstantDecl TypeDecl ProcFunc Block DOT_SYMBOL
-					| ConstantDecl VarDecl ProcFunc Block DOT_SYMBOL
-					| ConstantDecl ProcFunc Block DOT_SYMBOL
-					| TypeDecl VarDecl ProcFunc Block DOT_SYMBOL
-					| TypeDecl ProcFunc Block DOT_SYMBOL
-					| VarDecl ProcFunc Block DOT_SYMBOL
-					| ProcFunc Block DOT_SYMBOL
+Program			    : ConstantDecl TypeDecl VarDecl ProcFunc MainBlock DOT_SYMBOL
+					| ConstantDecl TypeDecl ProcFunc MainBlock DOT_SYMBOL
+					| ConstantDecl VarDecl ProcFunc MainBlock DOT_SYMBOL
+					| ConstantDecl ProcFunc MainBlock DOT_SYMBOL
+					| TypeDecl VarDecl ProcFunc MainBlock DOT_SYMBOL
+					| TypeDecl ProcFunc MainBlock DOT_SYMBOL
+					| VarDecl ProcFunc MainBlock DOT_SYMBOL
+					| ProcFunc MainBlock DOT_SYMBOL
 					;
+
+MainBlock			: WriteBegin StatementSequence END_SYMBOL
+	  				;
 
 ConstantDecl 		: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL ConstantStuff {Table::MakeConst($2,$4);}
 			 		;
@@ -242,8 +248,11 @@ BodyStuff			: ConstantDecl TypeDecl VarDecl
 					| VarDecl
 					;
 
-Block 				: BEGIN_SYMBOL StatementSequence END_SYMBOL
+Block 				: BEGIN_SYMBOL StatementSequence END_SYMBOL {Output::writeEnd();}
 	  				;
+
+WriteBegin			: BEGIN_SYMBOL {Output::writeBegin();}
+					;
 
 TypeDecl 			: TypeBlah TypeStuff 
 					;
@@ -298,7 +307,7 @@ Statement 			: Assignment //done
 					| IfStatement //done
 					| WhileStatement //done
 					| RepeatStatement //done
-					| ForStatement //implement today
+					| ForStatement //done
 					| StopStatement 
 					| ReturnStatement
 					| ReadStatement //done
@@ -345,8 +354,17 @@ RepeatStatement		: RepeatPre StatementSequence UNTIL_SYMBOL Expression {Table::M
 RepeatPre			: REPEAT_SYMBOL {Table::MakeRepeatPre();}
 					;
 
-ForStatement		: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression TO_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
-					| FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression DOWNTO_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
+ForStatement		: ForTo StatementSequence END_SYMBOL {Table::MakeForToEnd($1);}
+					| ForDownTo StatementSequence END_SYMBOL {Table::MakeForDownToEnd($1);}
+					;
+
+ForTo				: ForBegin TO_SYMBOL Expression DO_SYMBOL {Table::MakeForTo($1,$3);}
+					;
+
+ForDownTo			: ForBegin DOWNTO_SYMBOL Expression DO_SYMBOL {Table::MakeForDownTo($1,$3);}
+					;
+
+ForBegin			: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression {$$ = Table::MakeForBegin($2,$4);}
 					;
 
 StopStatement		: STOP_SYMBOL
@@ -397,12 +415,12 @@ Expression 			: Expression OR_SYMBOL Expression {$$ = Table::makeExpression($1, 
 					| NOT_SYMBOL Expression {$$ = Table::makeExpression(new Expression("",UNKNOWN),NOT,$2);}
 					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL {$$ = Table::makeExpression(new Expression("",UNKNOWN),UNARY,$2);}
 					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = $2;}
-					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL //function
-					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL //function
-					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //int to char
-					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //char to int
-					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //-- on chars only
-					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL //++ on chars
+					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL {$$ = 0;}//function
+					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL {$$ = 0;}//function
+					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//int to char
+					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//char to int
+					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//-- on chars only
+					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//++ on chars
 					| INTEGER_SYMBOL 	{$$ = new Expression(std::to_string($1),INT);}				
 					| CHARACTER_SYMBOL 	{$$ = new Expression($1,CHAR);}				
 					| STRING_SYMBOL 	{$$ = new Expression($1,STRING,Table::getStringCount());}
@@ -414,13 +432,13 @@ ExpressionStuff 	: COMMA_SYMBOL Expression ExpressionStuff {$3->push_back($2); $
 					;
 
 LValue 				: ID_SYMBOL {$$ = new Expression($1,ID);}
-					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff  //record
-					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff //array
+					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff  {$$ = 0;}//record
+					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff {$$ = 0;}//array
 					;
 
-LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
-					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
-					|
+LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff{$$ = 0;}
+					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff{$$ = 0;}
+					| {$$ = 0;}
 					;
 
 ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression {$$ = Table::makeConst($1,OR,$3);}

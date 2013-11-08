@@ -16,8 +16,17 @@ void Output::setUpFile()
 	m_out << "\t.text  \t\t\t#predefined header" << std::endl << 
              "\t.globl main \t#predefined header" << std::endl << 
              "main: la $gp, GA \t#predefined header" << std::endl <<
-             "\tb _begin" << std::endl <<
-             "_begin:" << std::endl;
+             "\tb _begin" << std::endl << std::endl;
+}
+
+void Output::writeBegin()
+{
+	getInstance()->m_out << "_begin:" << std::endl;
+}
+
+void Output::writeEnd()
+{
+	getInstance()->m_out << std::endl;
 }
 
 void Output::endFile()

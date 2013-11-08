@@ -1,13 +1,63 @@
-VAR a:integer;
+const
+  TABLEN = 20;
+  NAMELEN = 24;
 
-BEGIN
-  a := 0;
-  REPEAT
-    a := a + 1;
-    WRITE("outer", a , '\n');
-    REPEAT
-      WRITE("inner", a , '\n');
-      a := a + 1;
-      UNTIL a > 5
-  UNTIL a > 10
-END.
+var
+  a : integer;
+
+function sayHi() : boolean;
+begin
+  write("Hi\n");
+  return true;
+end;
+
+function print (var b,c:integer) : integer;
+var 
+ f : boolean;
+begin
+  write("The print function will say hi: ");
+  f := sayHi();
+  write("B: ", b, " C: ", c);
+  return 2;
+end;
+
+function add (a,b: integer) : integer;
+begin
+  return a + b;
+end;
+
+function factorial (n : integer) : integer;
+begin
+  if(n = 0) then
+    return 1;
+  end;
+
+  return factorial(n-1) * n;
+end;
+
+function lotsOfArgs(a,b,c,d,e,f,g,h : integer) : integer;
+begin
+  return a+b+c+d+f+g+h;
+end;
+
+begin
+  a := sayHi();
+
+  write(sayHi(), " was returned by sayHi().\n");
+
+  write("SayHi() returned: ", a, '\n');
+
+  a := print(20,13);
+  write("\na: ", a,'\n', "add(12,3)=", add(12,3), '\n');
+
+  write("\nfactorial(1) = ", factorial(1));
+  write("\nfactorial(2) = ", factorial(2));
+  write("\nfactorial(3) = ", factorial(3));
+  write("\nfactorial(4) = ", factorial(4));
+  write("\nfactorial(5) = ", factorial(5));
+
+  write('\n');
+
+  write("\nLots of args = ", lotsOfArgs(1,1,1,1,1,1,1,1));
+end.
+

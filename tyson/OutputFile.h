@@ -14,6 +14,8 @@ public:
 	static void endFile();
 	static int getRegister();
 	static void freeRegister(int);
+	static void writeBegin();
+	static void writeEnd();
 private:
 	bool m_registers[17];
 	void setUpFile();
