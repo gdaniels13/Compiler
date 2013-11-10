@@ -15,7 +15,9 @@ void Output::setUpFile()
 {
 	m_out << "\t.text  \t\t\t#predefined header" << std::endl << 
              "\t.globl main \t#predefined header" << std::endl << 
-             "main: la $gp, GA \t#predefined header" << std::endl <<
+             "main: " << std::endl << 
+             "\tla $gp, GA \t#predefined header" << std::endl <<
+             "\tmove $gp, $sp" << std::endl << 
              "\tb _begin" << std::endl << std::endl;
 }
 
@@ -55,6 +57,7 @@ int Output::getRegister()
 		{
 			reg = i+8;
 			getInstance()->m_registers[i] = true;
+			//std::cout << "reg " << reg << " is used :/" << std::endl;
 			break;
 		}
 	}
@@ -68,6 +71,7 @@ int Output::getRegister()
 
 void Output::freeRegister(int reg)
 {
+	//std::cout << "reg: " << reg << " was freed :)" << std::endl;
 	getInstance()->m_registers[reg - 8] = false;
 }
 
@@ -82,4 +86,11 @@ void Output::SetFilePath(std::string path)
 void Output::out(std::string message )
 {
    	getInstance()->m_out << message << std::endl;
+}
+
+void Output::CheckRegisters()
+{
+	for(int i = 0; i < 18; ++i)
+		if(getInstance()->m_registers[i] == true)
+			std::cout << "Register " << i+8 << " is not free :(" << std::endl;
 }
