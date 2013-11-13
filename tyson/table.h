@@ -138,6 +138,7 @@ public:
 	std::shared_ptr<Type> m_returnType;
 	std::vector<std::shared_ptr<Var>> m_parameters;
 	std::string m_location;
+	int m_size;
 	virtual void print();
 	~Function(){};
 	Function();
@@ -200,6 +201,12 @@ public:
 	static void MakeForDownTo(char *, Expression *);
 	static void MakeForToEnd(char *);
 	static void MakeForDownToEnd(char *);
+	static void MakeProcedureCall(std::vector<Expression *> *, char *);
+	static void MakeProcedureMain(char *);
+	static int GetFrameSize(std::vector<std::shared_ptr<Var>> vars);
+	static void MakeProcedureEnd(char *);
+	static void MakeReturn(Expression *);
+	static Expression * MakeFunctionCall(std::vector<Expression *> *, char *);
 	~Table(){};
 private:
 	static std::vector<std::string> m_strings;

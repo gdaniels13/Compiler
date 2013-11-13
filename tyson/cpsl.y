@@ -94,15 +94,6 @@ void yyerror(const char *s);
 %token WRITE_SYMBOL
 
 %type <type> ArrayType
-
-/*
-%type Assignment
-%type Block
-%type Body
-%type ConstantDecl
-%type ConstantStuff
-*/
-
 %type <const_type> ConstExpression
 %type <expr_type> Expression
 %type <exprList> ExpressionStuff
@@ -110,67 +101,21 @@ void yyerror(const char *s);
 %type <name_ptr> ForBegin
 %type <name_ptr> ForTo
 %type <name_ptr> ForDownTo
-
-/*
-%type ForStatement
-%type FunctionDecl
-*/
-
-//%type <formalParameter> FuncStuff
+%type <name_ptr> FuncStuff
 %type <identList> IdentList
 %type <identList> IdentStuff
-
-/*
-%type IfStatement
-%type IfStuff
-*/
-
 %type <expr_type> LValue
 %type <expr_type> LValueStuff
-
-/*
-%type NullStatement
-*/
-
 %type <formalParameter> ParamStuff
-
-/*
-%type ProcedureCall
-%type ProcedureDecl
-%type ProcedureStuff
-%type ProcFunc
-%type Program
-%type ReadStatement
-*/
-
+%type <name_ptr> PreFuncBody
+%type <name_ptr> PreProcBody
+%type <exprList> ProcedureStuff
+%type <name_ptr> ProcStuff
 %type <exprList> ReadStuff
 %type <type> RecordType
 %type <typeList> RecordStuff
-
-/*
-%type RepeatStatement
-%type ReturnStatement
-*/
-
 %type <type> SimpleType
-
-/*
-%type Statement
-%type StatementSequence
-%type StatementStuff
-%type StopStatement
-*/
-
 %type <type> Type
-
-/*
-%type TypeDecl
-%type TypeStuff
-%type VarDecl
-%type VarStuff
-%type WhileStatement
-%type WriteStatement
-*/
 %type <exprList> WriteStuff
 
 
@@ -212,17 +157,18 @@ ProcFunc 			: ProcedureDecl ProcFunc
 					;
 
 ProcedureDecl 		: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL {Element element(new Function($2,*$4,$2,true)); Table::InsertElement($2, element);}
-			  		| ProcStuff Body SEMI_COLON_SYMBOL {Table::RemoveScope();}
+			  		| PreProcBody Block SEMI_COLON_SYMBOL {Table::RemoveScope(); Table::MakeProcedureEnd($1); Output::writeEnd();}
 			  		;
 
-ProcStuff			: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL {Element element(new Function($2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4);}
+ProcStuff			: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL {Element element(new Function($2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4); $$ = $2;}
 					;
 
 FunctionDecl 		: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL  {Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,true)); Table::InsertElement($2, element);}
-			 		| FuncStuff Body SEMI_COLON_SYMBOL {Table::RemoveScope();}
+			 		| PreFuncBody Block SEMI_COLON_SYMBOL {Table::RemoveScope(); Table::MakeProcedureEnd($1); Output::writeEnd();}
 			 		;
 
-FuncStuff			: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL{Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4);}
+
+FuncStuff			: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL{Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4); $$ = $2;}
 					;
 
 FormalParameters 	: {$$ = new std::vector<std::shared_ptr<Var>>;}
@@ -235,9 +181,11 @@ ParamStuff 			: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type ParamSt
 		   			| {$$ = new std::vector<std::shared_ptr<Var>>;}
 		   			;
 
-Body 				: BodyStuff Block
-	 				| Block
-	 				;
+PreFuncBody			: FuncStuff BodyStuff {Table::MakeProcedureMain($1); $$ = $1;}
+					;
+
+PreProcBody			: ProcStuff BodyStuff {Table::MakeProcedureMain($1); $$ = $1;}
+					;
 
 BodyStuff			: ConstantDecl TypeDecl VarDecl
 					| ConstantDecl TypeDecl
@@ -246,9 +194,10 @@ BodyStuff			: ConstantDecl TypeDecl VarDecl
 					| TypeDecl VarDecl
 					| TypeDecl
 					| VarDecl
+					|
 					;
 
-Block 				: BEGIN_SYMBOL StatementSequence END_SYMBOL {Output::writeEnd();}
+Block 				: BEGIN_SYMBOL StatementSequence END_SYMBOL
 	  				;
 
 WriteBegin			: BEGIN_SYMBOL {Output::writeBegin();}
@@ -370,8 +319,8 @@ ForBegin			: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression {$$ = Table::MakeForB
 StopStatement		: STOP_SYMBOL
 					;
 
-ReturnStatement		: RETURN_SYMBOL Expression
-					| RETURN_SYMBOL
+ReturnStatement		: RETURN_SYMBOL Expression {Table::MakeReturn($2);}
+					| RETURN_SYMBOL  //does nothing?
 					;
 
 ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL {$4->push_back($3); Table::ReadCode($4);}
@@ -388,12 +337,12 @@ WriteStuff			: {$$ = new std::vector<Expression *>;}
 					| COMMA_SYMBOL Expression WriteStuff {$3->push_back($2); $$ = $3;}
 					;
 
-ProcedureCall		: ID_SYMBOL LEFT_BRACE_SYMBOL Expression ProcedureStuff RIGHT_BRACE_SYMBOL
-					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
+ProcedureCall		: ID_SYMBOL LEFT_BRACE_SYMBOL Expression ProcedureStuff RIGHT_BRACE_SYMBOL {$4->push_back($3); Table::MakeProcedureCall($4,$1);}
+					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL {Table::MakeProcedureCall(0,$1);}
 					;
 
-ProcedureStuff		:
-					| COMMA_SYMBOL Expression ProcedureStuff
+ProcedureStuff		:  {$$ = new std::vector<Expression *>;}
+					| COMMA_SYMBOL Expression ProcedureStuff {$3->push_back($2); $$ = $3;}
 					;
 
 NullStatement		:
@@ -415,8 +364,8 @@ Expression 			: Expression OR_SYMBOL Expression {$$ = Table::makeExpression($1, 
 					| NOT_SYMBOL Expression {$$ = Table::makeExpression(new Expression("",UNKNOWN),NOT,$2);}
 					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL {$$ = Table::makeExpression(new Expression("",UNKNOWN),UNARY,$2);}
 					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = $2;}
-					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL {$$ = 0;}//function
-					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL {$$ = 0;}//function
+					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL {$$ = Table::MakeFunctionCall(0,$1);}//function
+					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL {$4->push_back($3); $$ = Table::MakeFunctionCall($4, $1);}//function
 					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//int to char
 					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//char to int
 					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//-- on chars only
@@ -503,7 +452,10 @@ int main(int argc, char ** argv)
 		yyparse();
 	} while (!feof(yyin));
 	if(Table::isVerbose());
+	{
 		Table::PrintTable();
+		Output::CheckRegisters();
+	}
 	Output::endFile();
 	Table::printStrings();
 	return 0;

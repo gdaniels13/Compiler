@@ -60,4 +60,3 @@ begin
 
   write("\nLots of args = ", lotsOfArgs(1,1,1,1,1,1,1,1));
 end.
-
