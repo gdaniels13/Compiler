@@ -5,11 +5,17 @@
 #include <sstream>
 #include "OutputFile.h"
 
+
+//for output formatting
 #define SIZE 20
 #define SIZE2 10
 #define SIZE3 10
+
+
 int m_globalStackPointer = 0;
 int m_localStackPointer = 0;
+
+extern "C" void yyerror(const char *s);
 
 std::shared_ptr<Table> Table::m_instance;
 
@@ -65,6 +71,16 @@ void Table::setVerbose(bool t)
 	getInstance()->verbose = t;
 }
 
+
+std::string Table::getPointer(std::string id)
+{
+	int scope = whichScope(id);
+	if(scope ==1)
+		return "($gp)";
+	else
+		return "($sp)";
+}
+
 bool Table::isVerbose()
 {
 	return getInstance()->verbose;
@@ -84,8 +100,26 @@ Element Table::GetElement(std::string id)
 			break;
 		}
 	}
+	//std::cout<<id<<"NOT FOUND\n";
+	//exit(-1);
 	std::shared_ptr<Symbol> x(new Symbol("EMPTY"));
 	return x;
+}
+
+int Table::whichScope(std::string id)
+{
+	std::map<std::string, Element>::iterator it;
+
+	for(auto i = getInstance()->m_scope; i >= 0; --i)
+	{
+		std::map<std::string, Element> scope = getInstance()->m_table[i];
+		it = scope.find(id);
+		if(it != scope.end())
+		{
+			return i;
+		}
+	}
+	yyerror("ERRORS HAVE OCCURED");
 }
 
 void Table::InsertElement(std::string id, Element symbol)
@@ -146,6 +180,11 @@ void Table::PrintScope()
 	std::cout << std::endl << std::endl;
 }
 
+int Table::getScopeSize()
+{
+
+}
+
 void Table::AddScope(std::vector<std::shared_ptr<Var>> * vars)
 {
 	//std::cout << "PUSH SCOPE" << std::endl;
@@ -153,12 +192,21 @@ void Table::AddScope(std::vector<std::shared_ptr<Var>> * vars)
 	getInstance()->m_scope++;
 	std::map<std::string, Element> newElement = std::map<std::string, Element>();
 	getInstance()->m_table.push_back(newElement);
+
 	std::for_each(vars->begin(), vars->end(), [&] (std::shared_ptr<Var> element)
 	{
 		element->m_location = std::to_string(m_localStackPointer);
 		InsertElement(element->m_name, element);
 		m_localStackPointer += element->m_type->m_size;
 	});
+
+	// for(int i = vars->size() - 1; i >=0; --i)
+	// {
+	// 	auto element = vars->at(i);
+	// 	element->m_location = std::to_string(m_localStackPointer);
+	// 	InsertElement(element->m_name, element);
+	// 	m_localStackPointer += element->m_type->m_size;
+	// }
 }
 
 void Table::RemoveScope()
@@ -166,7 +214,7 @@ void Table::RemoveScope()
 	m_localStackPointer = m_globalStackPointer;
 	if(getInstance()->m_scope > 0)
 	{
-		std::cout << "POP SCOPE" << std::endl;
+		// std::cout << "POP SCOPE" << std::endl;
 		if(getInstance()->verbose)
 			PrintScope();
 		std::cout << std::endl;
@@ -231,6 +279,13 @@ void Table::MakeVar(std::vector<std::string>* identList, Type * type)
 			m_localStackPointer += type->m_size;
 		}
 	});
+	
+	std::stringstream ss("");
+		ss<<"\tADDI $sp,\t$sp,\t-"<<m_localStackPointer<<"\t# increment sp to make space for local variables";
+
+	Output::out(ss.str());
+
+
 }
 
 Const * Table::makeConst(Const * a,symbols sym,Const * b)
@@ -757,48 +812,70 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 
 	switch(sym)
 		{
+			case NOT:
+			{
+				Output::comment("NOT expression");
+				mst	<<"\t seq \t$"<<reg<<",\t$0,"<<b->m_location<<"\t#check if they not"<<std::endl;
+				Output::freeRegister(reg);
+				Output::out(mst.str());
+				b->releaseRegister();
+				auto temp =  new Expression(BOOLEAN, "$" + std::to_string(reg));;				
+				temp->m_size = 4;
+				return temp;
+			}
+			case UNARY:
+			{
+				Output::comment("unary minux expression");
+				mst	<<"\t SUB \t$"<<reg<<",\t$0,"<<b->m_location<<"\t#Unary MINUS"<<std::endl;
+				Output::freeRegister(reg);
+				Output::out(mst.str());
+				b->releaseRegister();
+				auto temp =  new Expression(b->m_type, '$' + std::to_string(reg));				
+				temp->m_size = 4;
+				return temp;
+			}
 			case OR:
 			{
 
-				Output::comment("and expression");
-				mst <<"\t li \t$"<<reg<<",\t0"<<std::endl
-					<<"\t or \t"<<a->m_location<<",\t"<<a->m_location<<",\t$"<<reg<<std::endl
-					<<"\t sne \t$"<<reg<<",\t"<<a->m_location<<",\t$"<<reg<<std::endl;
+				Output::comment("OR expression");
+				mst <<"\t li \t$"<<reg<<",\t0"<<"\t#OR"<<std::endl
+					<<"\t or \t"<<a->m_location<<",\t"<<a->m_location<<",\t$"<<"\t#OR"<<reg<<std::endl
+					<<"\t sne \t$"<<reg<<",\t"<<a->m_location<<",\t$"<<"\t#OR"<<reg<<std::endl;
 
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
-
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			case AND:
 			{
-
 				Output::comment("and expression");
 
-				mst <<"\t li \t$"<<reg<<",\t0"<<std::endl
-					<<"\t seq \t"<<a->m_location<<",\t"<<a->m_location<<",\t$"<<reg<<std::endl
-					<<"\t seq \t"<<b->m_location<<",\t"<<b->m_location<<",\t$"<<reg<<std::endl
-					<<"\t seq \t$"<<reg<<",\t"<<b->m_location<<",\t"<<a->m_location<<std::endl;
+				mst <<"\t li \t$"<<reg<<",\t0"<<"\t#AND"<<std::endl
+					<<"\t seq \t"<<a->m_location<<",\t"<<a->m_location<<",\t$"<<reg<<"\t#AND"<<std::endl
+					<<"\t seq \t"<<b->m_location<<",\t"<<b->m_location<<",\t$"<<reg<<"\t#AND"<<std::endl
+					<<"\t seq \t$"<<reg<<",\t"<<b->m_location<<",\t"<<a->m_location<<"\t#AND"<<std::endl;
 
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 
 			}
 			case NOT_EQUAL:
 			{
 				Output::comment("<> expressions");
-				mst <<"\t sne \t$"
-					<<reg<<",\t" 
-					<<a->m_location
-					<<",\t"
-					<<b->m_location;
+				mst <<"\t sne \t$"<<reg<<",\t" <<a->m_location<<",\t"<<b->m_location<<"\t#<> NOT EQUAL";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			case EQUAL:
 			{
@@ -807,11 +884,13 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 					<<reg<<",\t" 
 					<<a->m_location
 					<<",\t"
-					<<b->m_location;
+					<<b->m_location<<"\t# == Comparison";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			case LESS_EQUAL:
 			{
@@ -820,11 +899,13 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 					<<reg<<",\t" 
 					<<a->m_location
 					<<",\t"
-					<<b->m_location;
+					<<b->m_location<<"\t#LESS EQUAL";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 
 			}
 			case GREAT:
@@ -834,11 +915,13 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 					<<reg<<",\t" 
 					<<a->m_location
 					<<",\t"
-					<<b->m_location;
+					<<b->m_location<<"\t#GREATER THAN";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 
 			}
 			case GREAT_EQUAL:
@@ -848,11 +931,13 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 					<<reg<<",\t" 
 					<<a->m_location
 					<<",\t"
-					<<b->m_location;
+					<<b->m_location<<"\t#Greater than or EQUAL";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 
 			}
 			case LESS:
@@ -862,11 +947,13 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 					<<reg<<",\t" 
 					<<a->m_location
 					<<",\t"
-					<<b->m_location;
+					<<b->m_location<<"\t#LESS THAN";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));				
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));				
+				temp->m_size = 4;
+				return temp;
 			}
 			case ADD:
 			{
@@ -875,11 +962,13 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 					<<reg<<",\t" 
 					<<a->m_location
 					<<",\t"
-					<<b->m_location;
+					<<b->m_location<<"\t#ADDITION";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			case SUB:
 			{
@@ -888,22 +977,26 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 					<<reg<<",\t" 
 					<<a->m_location
 					<<",\t"
-					<<b->m_location;
+					<<b->m_location<<"\t#Subtraction";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			case DIV:
 			{
 				Output::comment("Divide two expressions");
 				mst <<"\t div \t"<<a->m_location
-					<<",\t"	<<b->m_location<<std::endl;
+					<<",\t"	<<b->m_location<<"\t#Division"<<std::endl;
 				a->releaseRegister();
 				b->releaseRegister();
 				mst<<"\t mflo \t$"	<<reg;
 				Output::out(mst.str());
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			case MOD:
 			{
@@ -915,7 +1008,9 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			case MULT:
 			{
@@ -923,11 +1018,13 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 				mst <<"\t mult \t"<<a->m_location
 					<<",\t"	<<b->m_location<<std::endl;
 
-				mst<<"\t mflo \t$"	<<reg;
+				mst<<"\t mflo \t$"	<<reg<<"\t#Muliplication";
 				Output::out(mst.str());
 				a->releaseRegister();
 				b->releaseRegister();
-				return new Expression(a->m_type, "$" + std::to_string(reg));
+				auto temp =  new Expression(a->m_type, "$" + std::to_string(reg));
+				temp->m_size = 4;
+				return temp;
 			}
 			default:
 				std::cout << "ERRORS MAKE EXPRESSION" << std::endl;
@@ -937,21 +1034,21 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 }
 
 
-
-
 Expression* Table::makeIntExpression(int t)
 {
 	std::stringstream mst("");
 	int reg = Output::getRegister();
-	Output::comment("loading int into register");
-	mst<<"\tli $"<<reg<<",\t"<<t; 
+	// Output::comment("loading int into register");
+	mst<<"\tli $"<<reg<<",\t"<<t<<"\t#New Integer Expression"; 
 	Output::out(mst.str());
-	return new Expression(INT, "$" + std::to_string(reg) );
+	auto temp =  new Expression(INT, "$" + std::to_string(reg) );
+	temp->m_size = 4;
+	return temp;
 }
 
 Expression* Table::makeStringExpression(std::string t)
 {
-	std::stringstream mst("");
+	// std::stringstream mst("");
 	std::string label = Output::addString(t);
 	return new Expression(STRING, label );
 }
@@ -960,10 +1057,12 @@ Expression* Table::makeCharExpression(std::string t)
 {
 	std::stringstream mst("");
 	int reg = Output::getRegister();
-	mst<<"\tli $"<<reg<<",\t"<<t; 
-	Output::comment("loading character into register");
+	mst<<"\tli $"<<reg<<",\t"<<t<<"\t#loading character into register"; 
+	// Output::comment();
 	Output::out(mst.str());
-	return new Expression(CHAR, "$" + std::to_string(reg) );
+	auto temp =  new Expression(CHAR, "$" + std::to_string(reg) );
+	temp->m_size = 4;
+	return temp;
 }
 
 
@@ -977,10 +1076,43 @@ void Table::makeWriteStatement(std::deque<Expression*>* elist)
 
 Expression * Table::lookupExpression(Expression * ep)
 {
-		std::stringstream ss("");
-		int areg = Output::getRegister();
-		auto var = dynamic_cast<Var*>( Table::GetElement(ep->m_value).get());
-		
+	if(ep == NULL)
+	{
+		yyerror("Invalid Expression");
+	}
+
+	std::stringstream ss("");
+	int areg = Output::getRegister();
+	auto var = dynamic_cast<Var*>( Table::GetElement(ep->m_value).get());
+	bool boolean = false;
+	SimpleType * tp;
+	if(var == NULL)
+	{
+		tp = dynamic_cast<SimpleType*>( Table::GetElement(ep->m_value).get());
+		if(tp == NULL)
+		{
+			yyerror("UNKNOWN SYMBOL " );
+		}
+		else
+		{
+			if(tp->m_type=="true" || tp->m_type=="TRUE")
+			{
+				boolean = true;
+				ep->m_type = BOOLEAN;
+				ss<<"\t LI \t$"<<areg<<", \t 1"<<"\t#Load boolean true into register"<<std::endl;
+
+			}
+			else if(tp->m_type=="false" || tp->m_type=="FALSE")
+			{
+				boolean = true;
+				ep->m_type = BOOLEAN;
+						ss<<"\t LI \t$"<<areg<<", \t 0"<<"\t#Load boolean false into register"<<std::endl;
+			}
+		}
+
+	}
+	else
+	{
 		if(var->m_type->m_name=="integer" || var->m_type->m_name=="INTEGER")
 		{
 			ep->m_type = INT;
@@ -993,19 +1125,32 @@ Expression * Table::lookupExpression(Expression * ep)
 		{
 			ep->m_type = BOOLEAN;
 		}
-
-			int location = std::stoi(var->m_location);
-				ss<<"\t lw \t$"<<areg<<", \t" << location<<"($gp)\n";
-				ep->m_location = "$" + std::to_string(areg);
-				Output::comment("looking up id ");
-				Output::out(ss.str());
+		else
+		{
+			yyerror("OOPS, SOMETHING BAD HAPPENED");
+		}
+	} 
+	if(!boolean)
+	{
+		int location = std::stoi(var->m_location);
+		ss<<"\t LW \t$"<<areg<<", \t" << location<<getPointer(var->m_name)<<"\t#Load "<<ep->m_location<<" into register"<<std::endl;
+	}
+	
+	ep->m_location = "$" + std::to_string(areg);
+	// Output::comment("looking up id ");
+	Output::out(ss.str());
 		
-		return ep;
+	return ep;
 }
 
 void Table::writeExpression(Expression * ep)
 {
-	Output::comment("Write Statement"+ std::to_string(ep->m_type));
+	if(ep == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
+	// Output::comment("Write Statement "+ std::to_string(ep->m_type));
 	std::stringstream mst("");
 
 	if(ep->m_type == ID)
@@ -1017,25 +1162,27 @@ void Table::writeExpression(Expression * ep)
 	switch(ep->m_type)
 	{
 		case INT:
+		case BOOLEAN:
 		{
-			mst<<"\tli\t $v0, \t1 \n";
-			mst<<"\tmove\t $a0,\t "<<ep->m_location<<std::endl;
+			mst<<"\tli\t $v0, \t1"<<"\t#Load COMMAND to print INTEGER"<<" \n";
+			mst<<"\tmove\t $a0,\t "<<ep->m_location<<"\t#load the expressions value"<<std::endl;
 			mst<<"\tsyscall";
 			ep->releaseRegister();
 			break;
 		}
 		case STRING:
 		{
-			mst<<"\tli\t $v0, \t4 \n";
-			mst<<"\tla\t $a0,\t "<<ep->m_location<<std::endl;
+			mst<<"\tli\t $v0, \t4"<<"\t#Load command to print string"<<"\n";
+			mst<<"\tla\t $a0,\t "<<ep->m_location<<"\t#load the expressions value"<<std::endl;
 			mst<<"\tsyscall";
 
 			break;
 		}
 		case CHAR:
 		{
-			mst<<"\tli\t $v0, \t11 \n";
-			mst<<"\tmove\t $a0,\t "<<ep->m_location<<std::endl;
+			ep = intToChar(ep);
+			mst<<"\tli\t $v0, \t11"<<"\t#load commad to print char"<<" \n";
+			mst<<"\tmove\t $a0,\t "<<ep->m_location<<"\t#Load the expressions value"<<std::endl;
 			mst<<"\tsyscall";
 			ep->releaseRegister();
 			break;
@@ -1048,6 +1195,11 @@ void Table::writeExpression(Expression * ep)
 
 void Table::makeReadStatement(std::deque<Expression*>* elist)
 {
+	if(elist == NULL)
+	{
+		yyerror("invalid expression list");
+	}
+
 	for(Expression* ep : *elist)
 	{
 		readExpression(ep);
@@ -1056,40 +1208,53 @@ void Table::makeReadStatement(std::deque<Expression*>* elist)
 
 void Table::readExpression(Expression * ep)
 {
+	if(ep == NULL)
+	{
+		yyerror("invalid expression");
+	}
+	
 	auto var = dynamic_cast<Var*>( Table::GetElement(ep->m_value).get());
+
+	if(var == NULL)
+	{
+		yyerror("Unknown Symbol");
+	}
 
 	int type;
 	int location = std::stoi(var->m_location);
-	if(var->m_type->m_name=="integer" || var->m_type->m_name=="INTEGER")
+	if(var->m_type->m_name=="integer" || var->m_type->m_name=="INTEGER" || var->m_type->m_name=="boolean" || var->m_type->m_name=="BOOLEAN"  )
 	{
 		type = 5;
 	}
-	else 
+	else if(var->m_type->m_name=="CHAR" || var->m_type->m_name=="char"  )
 	{
-		//add checks for other types
+		type = 12;
 	}
 	std::stringstream mst("");
 
-	Output::comment("read expression");
-	mst <<"\t li \t $v0, \t "<<type<<std::endl;
+	// Output::comment("read expression");
+	mst <<"\t li \t $v0, \t "<<type<<"\t#Load correct system call int is 5 char is 12"<<std::endl;
 	mst <<"\tsyscall\n";
 
 	int reg = Output::getRegister();
-	mst<<"\t sw \t$v0, \t" << location<<"($gp)\n";
-
+	mst<<"\t sw \t$v0, \t" << location<<getPointer(ep->m_value)<<"\t#save the value that was read"<<std::endl;
 
 	Output::out(mst.str());
 	Output::freeRegister(reg);
 }
 
 
-void Table::makeAssignment(Expression* left, Expression* right)
+Expression* Table::makeAssignment(Expression* left, Expression* right)
 {
+	if(left == NULL || right == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
 	std::stringstream ss("");
 	if(left->m_type != ID)
 	{
-		std::cout<<"ERROR NOT AN LVALUE"<<std::endl;
-		exit(-1);
+		yyerror("ERROR NOT AN LVALUE");
 	}
 	if(right->m_type == ID)
 	{
@@ -1099,12 +1264,21 @@ void Table::makeAssignment(Expression* left, Expression* right)
 	auto var = dynamic_cast<Var*>( Table::GetElement(left->m_value).get());
 	int location = std::stoi(var->m_location);
 
-	ss<<"\t sw \t"<< right->m_location<<", \t"<<location<<"($gp)";
+	ss<<"\tSW\t"<< right->m_location<<", \t-"<<location<<getPointer(left->m_value)<<"\t#assign new value to " << left->m_location<<std::endl;
+
 	Output::out(ss.str());
+	right ->releaseRegister();
+	return left;
 }
 
 int Table::makeBeginIfStatement(Expression * exp)
 {
+	// Output::comment("IF STATEMENT");
+	if(exp == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
 	std::stringstream ss("");
 	if(exp->m_type == ID)
 	{
@@ -1115,7 +1289,7 @@ int Table::makeBeginIfStatement(Expression * exp)
 	Output::pushEndIfQueue();
 	int ifCount = Output::pushIfQueue();
 	
-	ss<<"\t BEQ \t $0"<<", \t"<<exp->m_location<<", ELSEIF"<<ifCount<<std::endl;
+	ss<<"\t BEQ \t $0"<<", \t"<<exp->m_location<<", ELSEIF"<<ifCount<<"\t#comparison for if statement"<<std::endl;
 	Output::out(ss.str());
 	return 999;
 
@@ -1123,6 +1297,10 @@ int Table::makeBeginIfStatement(Expression * exp)
 
 void Table::makeIfStuff(Expression * exp)
 {
+	if(exp == NULL)
+	{
+		yyerror("invalid expression");
+	}
 	std::stringstream ss("");
 	if(exp->m_type == ID)
 	{
@@ -1131,13 +1309,13 @@ void Table::makeIfStuff(Expression * exp)
 	exp->releaseRegister();
 	int nextLabel = Output::pushIfQueue();
 
-	Output::comment(" nextLabel: " +std::to_string( nextLabel));
+	// Output::comment(" nextLabel: " +std::to_string( nextLabel));
 
 
 
 	//finish off the last part of the la
 
-	ss<<"\t BEQ \t $0"<<", \t"<<exp->m_location<<", ELSEIF"<<nextLabel<<std::endl;
+	ss<<"\t BEQ \t $0"<<", \t"<<exp->m_location<<", ELSEIF"<<nextLabel<<"\t#else if part of if statement"<<std::endl;
 	Output::out(ss.str());
 }
 
@@ -1153,10 +1331,10 @@ void Table::finishSubIf()
 {
 	std::stringstream ss("");
 	int curLabel = Output::popIfQueue();
-	ss<<"\tJ\t ENDOFIFSTATEMENT"<<Output::getEndIfQueue()<<std::endl;
+	ss<<"\tJ\t ENDOFIFSTATEMENT"<<Output::getEndIfQueue()<<"\t#Jump to the end of the if statement"<<std::endl;
 
 	//set up the label for this else if
-	ss<<"ELSEIF"<<curLabel<<":\n";
+	ss<<"ELSEIF"<<curLabel<<"\t# sub else if statement"<<":\n";
 
 	Output::out(ss.str());
 }
@@ -1176,17 +1354,380 @@ void Table::printElse()
 }
 
 
+void Table::beginWhileLoop()
+{
+	// Output::comment("WHILE LOOP");
+	std::stringstream ss("");
+	ss<<"WHILE"<<Output::pushWhile()<<":\n";
+	Output::out(ss.str());
+}
+
+void Table::evaluateWhileCondition(Expression* exp)
+{
+	std::stringstream ss("");
+	
+	if(exp->m_type == ID){
+		lookupExpression(exp);
+	}
+	
+	exp->releaseRegister();
+	ss<<"\tBEQZ\t"<<exp->m_location<<"\t ENDWHILE"<<Output::getWhile()<<"\t#Evaluate While Condition"<<std::endl;
+	Output::out(ss.str());
+
+}
+
+void Table::endWhileLoop()
+{
+	std::stringstream ss("");
+
+	ss<<"\tJ WHILE"<<Output::getWhile()<<"\n";
+	ss<<"ENDWHILE"<<Output::popWhile()<<":\n";
+	Output::out(ss.str());
+}
+
+
+void Table::beginRepeat()
+{
+	Output::comment("REPEAT LOOP");
+	std::stringstream ss("");
+	ss<<"REPEAT"<<Output::pushRepeat()<<":\n";
+	Output::out(ss.str());
+}
+
+
+void Table::finishRepeat(Expression* exp)
+{
+	if(exp == NULL)
+	{
+		yyerror("invalid expression");
+	}
+	std::stringstream ss("");
+
+	if(exp->m_type == ID){
+		lookupExpression(exp);
+	}
+	exp->releaseRegister();
+
+	ss<<"\tBEQZ\t"<<exp->m_location<<"\tREPEAT"<<Output::popRepeat()<<"\t#evaluate repeat loop"<<std::endl;
+	Output::out(ss.str());
+}
+
+void Table::beginForLoop(Expression* counter, Expression* limit, bool increment)
+{
+	Output::comment("FOR LOOP");
+	if(counter == NULL || limit == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
+	std::stringstream ss("");
+
+	if(limit->m_type == ID){
+		lookupExpression(limit);
+	}
+
+
+	//get the expression into a register
+	int areg = Output::getRegister();
+	auto var = dynamic_cast<Var*>( Table::GetElement(counter->m_value).get());
+	int location = std::stoi(var->m_location);
+
+
+	ss<<"\tJ\tFORBODY"<<Output::pushFor()<<std::endl;
+
+
+	
+	ss<<"FORINCREMENT"<<Output::getFor()<<"\t#increment the counter variable"<<":\n";
+
+	ss<<"\tLW \t$"<<areg<<", \t" << location<<getPointer(var->m_name)<<"\n";
+
+	if(increment)
+	{
+		ss<<"\tADDI\t$";
+	}
+	else
+	{
+		ss<<"\tSUBI\t$";
+	}	
+	ss<<areg<<",\t$"<<areg<<",\t"<<1<<"\t#Increment/decrement loop"<<std::endl;
+
+	ss<<"\tSW\t$"<<areg<<", \t"<<location<<getPointer(var->m_name)<<"\t#save off the incremented variable"<<"\n";
+
+	if(increment)
+	{
+		ss<<"\tBGT\t$";
+	}
+	else
+	{
+		ss<<"\tBLT\t$";
+	}
+	ss<<areg<<",\t"<<limit->m_location<<",\tFOREND"<<Output::getFor()<<"\t#check done condition"<<std::endl;
+
+	ss<<"FORBODY"<<Output::getFor()<<":\n";
+
+	Output::out(ss.str());
+	//limit->releaseRegister();
+	Output::freeRegister(areg);
+}
+
+void Table::finishForLoop(Expression* t)
+{
+	if(t == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
+	t->releaseRegister();
+	std::stringstream ss("");
+	ss<<"\tJ\tFORINCREMENT"<<Output::getFor()<<std::endl;
+	ss<<"FOREND"<<Output::popFor()<<":\n";
+	Output::out(ss.str());
+}
+
+
+Expression* Table::intToChar(Expression* exp)
+{
+	if(exp == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
+	if(exp->m_type == ID){
+		lookupExpression(exp);
+	}
+
+	exp->m_type = CHAR;
+
+	return exp; 
+}
+
+Expression* Table::charToInt(Expression* exp)
+{
+
+	if(exp == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
+	if(exp->m_type == ID){
+		lookupExpression(exp);
+	}
+
+	exp->m_type = INT;
+
+	return exp; 
+}
 
 
 
+Expression* Table::incrementExpression(Expression* exp)
+{
+
+	// Output::comment("INCREMENT CHAR");
+	if(exp == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
+	if(exp->m_type == ID){
+		lookupExpression(exp);
+	}
+
+	std::stringstream ss("");
+
+	ss<<"\tADDI\t"<<exp->m_location<<",\t"<<exp->m_location<<",\t1"<<"\t#increment character";
+	Output::out(ss.str());
+	return exp;
+}
+
+
+Expression* Table::decrementExpression(Expression* exp)
+{
+	Output::comment("DECREMENT CHAR");
+	if(exp == NULL)
+	{
+		yyerror("invalid expression");
+	}
+	if(exp->m_type == ID){
+		lookupExpression(exp);
+	}
+
+	std::stringstream ss("");
+
+	ss<<"\tSUBI\t"<<exp->m_location<<",\t"<<exp->m_location<<",\t1"<<"\t#decrement char";
+	Output::out(ss.str());
+	return exp;
+}
+
+
+void Table::checkFunctionSignature(std::string id, std::deque<Expression*>* elist)
+{
+	auto func = dynamic_cast<Function*>( Table::GetElement(id).get());
+	if(func == NULL) 
+		yyerror("UNKNOWN Function");
+	if(elist->size() != func->m_parameters.size())
+		yyerror("ivalid parameters");
+
+}
+
+
+void Table::makeProcedureCall(std::string id, Expression* exp, std::deque<Expression*>* elist)
+{
+	std::stringstream ss("");
+
+
+	//Output::comment("make space to save the return address and frame pointer");
+//	ss<<"\tSW\t$fp,\t0($sp)\n";
 
 
 
+	if(exp == NULL)
+	{
+
+	}
+	else
+	{	
+		elist->push_front(exp);
+		checkFunctionSignature(id,elist);
 
 
+		ss<<"\tADDI\t$sp,\t$sp,\t-8"<<"\t#move the stack pointer to make room for saving it later"<<std::endl;
+
+		// push everything on the stack
+		for(Expression* ep : *elist)
+		{
+			if(ep->m_type == ID)
+			{
+				lookupExpression(ep);
+			}
+
+			ss<<"\tADDI\t$sp,\t$sp"<<",\t-";
+			ss<<ep->m_size <<"\t#increment the sp for new parameter"<<std::endl;
+			ss<<"\tSW\t"<<ep->m_location<<",\t0($sp)"<<"\t#store the value into the stack"<<std::endl;
+			ep->releaseRegister();
+		}
+	}
+
+	auto func = dynamic_cast<Function*>( Table::GetElement(id).get());
+	
+	if(func == NULL)
+		yyerror("Unknown function");
+
+	ss<<"JAL "<<func->m_location<<"_PROLOG"<<"\t#go to the funciton"<<"\n";
+	Output::out(ss.str());
+}
 
 
+void Table::makeProcedureProlog(std::string id)
+{
+	Output::setCurFunction(id);
+	// Output::comment("making procedure");
+	std::stringstream ss("");
+	
+	ss<<id<<"_PROLOG:\n";
+//	ss<<"\tADDI\t$sp,\t$sp,\t"<<std::endl;
+	ss<<"\t"<<"SW\t $fp, \t"<<-4<<"($sp)"<<"\t#save the old stack pointer"<<std::endl;
+	
+	ss<<"\tSW\t$ra,\t"<<-8<<"($sp)"<<"\t#save the return address"<<std::endl;
+	ss<<"\tMOVE\t$fp,\t$sp"<<"\t#move the frame pointer to point at the top of the stack"<<std::endl;
+	Output::out(ss.str());
+
+}
 
 
+void Table::makeProcedureEpilog(std::string id)
+{
+	std::stringstream ss("");
+	ss<<id<<"_EPILOG:\n";
+	ss<<"\tMOVE\t$sp,\t$fp"<<"\t#move the stack pointer back to the beginning of the frame"<<std::endl;
+
+	ss<<"\tLW\t $ra\t, -8($sp)"<<"\t#re load the return address"<<std::endl;
+	
+	ss<<"\tLW\t $fp\t, -4($sp)"<<"\t#reload the old frame pointer"<<std::endl;
+	
+	ss<<"\tJR\t$ra"<<"\t#Jump back to where we came from";
+	Output::out(ss.str());
+	Output::setCurFunction("__BEGIN");
+}
+
+void Table::makeReturnStatement(Expression* ep)
+{
+	std::stringstream ss("");
 
 
+	auto func = dynamic_cast<Function*>( Table::GetElement(Output::getCurFunction()).get());
+
+	if(func == NULL)
+	{
+		yyerror("UNKNOWN FUNCTION");
+	}
+
+	if(ep == NULL)
+	{
+		if(getReturnType(func) != UNKNOWN )
+		{
+			yyerror("FUNCTION MUST RETURN A VALUE");
+		}
+	}
+	else
+	{
+		if(ep->m_type == ID)
+		{
+			lookupExpression(ep);
+		}
+		if(ep->m_type != getReturnType(func))
+		{
+			yyerror("FUNCTION RETURNING INVALID TYPE");
+		}
+		ss<<"\tMOVE\t$v0\t,"<<ep->m_location<<"\t#load the return value to v0"<<std::endl;
+		ep->releaseRegister();
+	}
+	ss<<"\tJ\t"<<Output::getCurFunction()<<"_EPILOG"<<"\t#Jump to the end of this function"<<std::endl;
+	Output::out(ss.str());
+}
+
+
+Expression* Table::functionReturn(std::string id)
+{
+	std::stringstream ss("");
+
+	auto func = dynamic_cast<Function*>( Table::GetElement(id).get());
+	if(func == NULL)
+	{
+		yyerror("UNKNOWN FUNCTION");
+	}
+
+	int reg = Output::getRegister();
+	ss<<"\tMOVE\t$"<<reg<<",\t$v0"<<"\t#load the return value to the new register"<<std::endl;
+
+	Output::out(ss.str());
+
+	auto temp =  new Expression(getReturnType(func), "$" + std::to_string(reg));
+
+	return temp;
+}
+
+
+ConstType Table::getReturnType(Function* func)
+{
+	if(func == NULL)
+	{
+		yyerror("something bad happened");
+	}
+	if(func->m_returnType == NULL)
+	{
+		return UNKNOWN;
+	}
+	else if(func->m_returnType->m_name == "integer" || func->m_returnType->m_name == "INTEGER")
+	{
+		return INT;
+	}
+	else if(func->m_returnType->m_name == "char" || func->m_returnType->m_name == "CHAR")
+	{
+		return CHAR;
+	}
+	else if(func->m_returnType->m_name == "boolean" || func->m_returnType->m_name == "boolean")
+	{
+		return BOOLEAN;
+	}
+}

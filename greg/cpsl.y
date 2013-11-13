@@ -16,7 +16,7 @@ extern "C" int yyparse();
 extern "C" FILE *yyin;
 extern "C" int numLines;
  
-void yyerror(const char *s);
+extern "C" void yyerror(const char *s);
 
 %}
 
@@ -97,7 +97,7 @@ void yyerror(const char *s);
 %type <type> ArrayType
 
 
-%type <none_type> Assignment
+%type <exp_type> Assignment
 //%type Block
 //%type Body
 //%type ConstantDecl
@@ -109,11 +109,13 @@ void yyerror(const char *s);
 %type <formalParameter> FormalParameters
 //%type ForStatement
 //%type FunctionDecl
-//%type <formalParameter> FuncStuff
+%type <name_ptr> FuncStuff
 %type <identList> IdentList
 %type <identList> IdentStuff
 %type <none_type> IfStatement
 %type <none_type> IfStuff
+%type <exp_type> IncrementingFor
+%type <exp_type> DecrementingFor
 %type <none_type> BeginIfStuff
 %type <int_val> BeginIfStatement
 %type <exp_type>LValue
@@ -121,10 +123,13 @@ void yyerror(const char *s);
 //%type NullStatement
 %type <formalParameter> ParamStuff
 %type <none_type> PreIfStuff
-//%type ProcedureCall
+%type <none_type> ProcedureCall
 //%type ProcedureDecl
 //%type ProcedureStuff
 //%type ProcFunc
+%type <name_ptr> PreFuncBody
+%type <name_ptr> PreProcBody
+%type <name_ptr> ProcStuff
 //%type Program
 %type <nonetype> ReadStatement
 %type <exp_list_type> ReadStuff
@@ -136,7 +141,7 @@ void yyerror(const char *s);
 //%type Statement
 //%type StatementSequence
 //%type StatementStuff
-//%type StopStatement
+%type <none_type> StopStatement
 %type <type> Type
 //%type TypeDecl
 //%type TypeStuff
@@ -156,17 +161,20 @@ void yyerror(const char *s);
 %%
 
 
-Program			    : ConstantDecl TypeDecl VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
-					| ConstantDecl TypeDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
-					| ConstantDecl VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
-					| ConstantDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
-					| TypeDecl VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
-					| TypeDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
-					| VarDecl ProcFunc Block DOT_SYMBOL {Output::endFile();}
-					| ProcFunc Block DOT_SYMBOL {Output::endFile();}
+Program			    : BeginMain Block DOT_SYMBOL {Output::endFile();}
 					;
 
-ConstantDecl 		: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL ConstantStuff {Table::MakeConst($2,$4);}
+BeginMain			: ConstantDecl TypeDecl VarDecl ProcFunc 		 {Output::out("_begin:");}
+					| ConstantDecl TypeDecl ProcFunc 		 {Output::out("_begin:");}
+					| ConstantDecl VarDecl ProcFunc 		 {Output::out("_begin:");}
+					| ConstantDecl ProcFunc 		 {Output::out("_begin:");}
+					| TypeDecl VarDecl ProcFunc 		 {Output::out("_begin:");}
+					| TypeDecl ProcFunc 		 {Output::out("_begin:");}
+					| VarDecl ProcFunc 		 {Output::out("_begin:");}
+					| ProcFunc 		 {Output::out("_begin:");}
+
+ConstantDecl 		: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL ConstantStuff 
+					{Table::MakeConst($2,$4);}
 			 		;
 
 ConstantStuff		:
@@ -178,18 +186,34 @@ ProcFunc 			: ProcedureDecl ProcFunc
 					|
 					;
 
-ProcedureDecl 		: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL {Element element(new Function($2,*$4,$2,true)); Table::InsertElement($2, element);}
-			  		| ProcStuff Body SEMI_COLON_SYMBOL {Table::RemoveScope();}
+ProcedureDecl 		: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL 
+							{Element element(new Function($2,*$4,$2,true)); Table::InsertElement($2, element);}
+			  		| PreProcBody Block SEMI_COLON_SYMBOL { Table::makeProcedureEpilog($1); Table::RemoveScope();}
 			  		;
 
-ProcStuff			: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL {Element element(new Function($2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4);}
+PreProcBody			: ProcStuff BodyStuff {Table::makeProcedureProlog($1); $$ = $1;}
 					;
 
-FunctionDecl 		: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL  {Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,true)); Table::InsertElement($2, element);}
-			 		| FuncStuff Body SEMI_COLON_SYMBOL {Table::RemoveScope();}
+PreFuncBody			: FuncStuff BodyStuff {Table::makeProcedureProlog($1); $$ = $1;}
+					;
+
+
+ProcStuff			: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL 
+						{Element element(new Function($2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4); $$ = $2;}
+					;
+
+FunctionDecl 		: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL  
+										{Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,true)); Table::InsertElement($2, element);}
+			 		|  PreFuncBody Block SEMI_COLON_SYMBOL {Table::makeProcedureEpilog($1); Table::RemoveScope();}
 			 		;
 
-FuncStuff			: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL{Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4);}
+FuncStuff			: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL
+                    	{
+                    		Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,false)); 
+                    		Table::InsertElement($2, element); 
+                    		Table::AddScope($4);
+                    		$$ = $2;
+                    	}
 					;
 
 FormalParameters 	: {$$ = new std::vector<std::shared_ptr<Var>>;}
@@ -202,9 +226,7 @@ ParamStuff 			: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type ParamSt
 		   			| {$$ = new std::vector<std::shared_ptr<Var>>;}
 		   			;
 
-Body 				: BodyStuff Block
-	 				| Block
-	 				;
+
 
 BodyStuff			: ConstantDecl TypeDecl VarDecl
 					| ConstantDecl TypeDecl
@@ -213,6 +235,7 @@ BodyStuff			: ConstantDecl TypeDecl VarDecl
 					| TypeDecl VarDecl
 					| TypeDecl
 					| VarDecl
+					|
 					;
 
 Block 				: BEGIN_SYMBOL StatementSequence END_SYMBOL
@@ -243,7 +266,8 @@ RecordStuff			: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL RecordStuff {$$ = 
 					| {$$ = new std::vector<std::shared_ptr<Type>>;}
 					;
 
-ArrayType			: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type {$$ = new Array(Table::getSize($3),Table::getSize($5),std::shared_ptr<Type>($8),Table::getArraySize($3,$5,$8->m_size), $8->m_name);}
+ArrayType			: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type 
+						{$$ = new Array(Table::getSize($3),Table::getSize($5),std::shared_ptr<Type>($8),Table::getArraySize($3,$5,$8->m_size), $8->m_name);}
 					;
 
 IdentList			: ID_SYMBOL IdentStuff {$2->push_back($1); $$ = $2;} 
@@ -253,11 +277,13 @@ IdentStuff			: {$$ = new std::vector<std::string>;}
 					| COMMA_SYMBOL ID_SYMBOL IdentStuff {$3->push_back($2); $$ = $3;}
 					;
 
-VarDecl				: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL VarStuff {Table::MakeVar($2,$4); delete $2; delete $4;}
+VarDecl				: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL VarStuff 
+						{Table::MakeVar($2,$4); delete $2; delete $4;}
 					;
 
 VarStuff			: 
-					| IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL VarStuff {Table::MakeVar($1,$3); delete $1; delete $3;}
+					| IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL VarStuff 
+						{Table::MakeVar($1,$3); delete $1; delete $3;}
 					;
 
 StatementSequence 	: Statement StatementStuff
@@ -267,81 +293,102 @@ StatementStuff		:
 					| SEMI_COLON_SYMBOL Statement StatementStuff
 					;
 
-Statement 			: Assignment
-					| IfStatement
-					| WhileStatement
-					| RepeatStatement
-					| ForStatement
-					| StopStatement
-					| ReturnStatement
-					| ReadStatement
-					| WriteStatement
-					| ProcedureCall
+Statement 			: Assignment 		//done
+					| IfStatement 		//done
+					| WhileStatement	//done
+					| RepeatStatement	//done
+					| ForStatement		//done
+					| StopStatement 	//done
+					| ReturnStatement 	
+					| ReadStatement 	//done
+					| WriteStatement 	//done
+					| ProcedureCall 	//done
 					| NullStatement
 					;
 
 //done
-Assignment			: LValue ASSIGN_SYMBOL Expression {Table::makeAssignment($1,$3);}
+Assignment			: LValue ASSIGN_SYMBOL Expression {$$ = Table::makeAssignment($1,$3);}
 					;
 
+//done
 IfStatement			: BeginIfStatement StatementSequence IfStuff ElseStatement StatementSequence END_SYMBOL {Table::finishElseStatement();}
 					| BeginIfStatement StatementSequence IfStuff END_SYMBOL {Table::finishIfStatement($1);}
 					;
-
+//done
 ElseStatement		:	ELSE_SYMBOL {Table::finishSubIf();}
 					;
-
+//done
 BeginIfStatement	: IF_SYMBOL Expression THEN_SYMBOL {$$ =  Table::makeBeginIfStatement($2);}
 					;
 
-
+//done
 IfStuff				: {/*Empty*/}
 					| BeginIfStuff StatementSequence IfStuff {/*Table::makeIfStuff();*/}
 					;
-
+//done
 BeginIfStuff		: PreIfStuff ELSEIF_SYMBOL Expression THEN_SYMBOL { Table::makeIfStuff($3);}
 					;
-
+//done
 PreIfStuff			: {Table::finishSubIf();}
 					;
 
-
-WhileStatement		: WHILE_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
+//done
+WhileStatement		: WhileBegin  WhileMiddle StatementSequence END_SYMBOL {Table::endWhileLoop();}
+					;
+//done
+WhileBegin			: WHILE_SYMBOL {Table::beginWhileLoop();}
+					;
+//done
+WhileMiddle			:Expression DO_SYMBOL {Table::evaluateWhileCondition($1); }
 					;
 
-RepeatStatement		: REPEAT_SYMBOL StatementSequence UNTIL_SYMBOL Expression
+//done
+RepeatStatement		: RepeatBegin StatementSequence UNTIL_SYMBOL Expression  {Table::finishRepeat( $4 );}
+					;
+//done
+RepeatBegin			: REPEAT_SYMBOL {Table::beginRepeat();}
+					;
+//done
+ForStatement		: IncrementingFor StatementSequence END_SYMBOL {Table::finishForLoop($1);}
+					| DecrementingFor StatementSequence END_SYMBOL {Table::finishForLoop($1);}
+					;
+//done
+IncrementingFor		: FOR_SYMBOL Assignment TO_SYMBOL Expression DO_SYMBOL {$$ = $4; Table::beginForLoop($2,$4, true);}
+					;
+//done
+DecrementingFor		:  FOR_SYMBOL Assignment DOWNTO_SYMBOL Expression DO_SYMBOL {$$ = $4; Table::beginForLoop($2,$4, false);}
+					; 
+
+//done
+StopStatement		: STOP_SYMBOL {Output::out("li\t $v0, 10\n syscall\n\n");}
 					;
 
-ForStatement		: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression TO_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
-					| FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression DOWNTO_SYMBOL Expression DO_SYMBOL StatementSequence END_SYMBOL
+ReturnStatement		: RETURN_SYMBOL Expression   {Table::makeReturnStatement($2);}
+					| RETURN_SYMBOL 			 {Table::makeReturnStatement(NULL);}
 					;
-
-StopStatement		: STOP_SYMBOL
-					;
-
-ReturnStatement		: RETURN_SYMBOL Expression
-					| RETURN_SYMBOL
-					;
-
+//done
 ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL 	{$4->push_front($3); Table::makeReadStatement($4);}
 					;
-
+//done
 ReadStuff			: COMMA_SYMBOL LValue ReadStuff 	{$$ = $3; $3->push_front($2);	}
 					|  									{$$ = new std::deque<Expression*>();}
 					;
-
+//done
 WriteStatement		: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL 
 							{$4->push_front($3); Table::makeWriteStatement($4);}
 					;
 
 
 ProcedureCall		: ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL
+						{Table::makeProcedureCall($1,$3,$4);}
 					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
+						{Table::makeProcedureCall($1,NULL,NULL);}
+
 					;
 
 NullStatement		:
 					;
-
+//done
 ExpressionList		: COMMA_SYMBOL Expression ExpressionList 	{	$$ = $3; $3->push_front($2);	}
 					| 											{$$ = new std::deque<Expression*>();}
 					;
@@ -363,12 +410,12 @@ Expression 			: Expression OR_SYMBOL Expression 											{$$ = Table::makeExpr
 					| NOT_SYMBOL Expression 													{$$ = Table::makeExpression(new Expression("",UNKNOWN), NOT, $2);}
 					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL 							{$$ = Table::makeExpression(new Expression("",UNKNOWN), UNARY, $2);}
 					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL 							{$$ = $2;}
-					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL							{/*function call*/}
-					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL	{/*function call*/}
-					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*char cast*/}
-					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*something*/}
-					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*something*/}
-					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{/*something*/}
+					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL							{ Table::makeProcedureCall($1,NULL,NULL); $$ = Table::functionReturn($1);}
+					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL	{Table::makeProcedureCall($1,$3,$4); $$ = Table::functionReturn($1);}
+					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{ $$ = Table::intToChar($3);/*char cast*/}
+					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{ $$ = Table::charToInt($3);/*int cast*/ }
+					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{ $$ = Table::decrementExpression($3);}
+					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL				{ $$ = Table::incrementExpression($3);}
 					| INTEGER_SYMBOL															{$$ = Table::makeIntExpression($1);}				
 					| CHARACTER_SYMBOL 															{$$ = Table::makeCharExpression($1); }				
 					| STRING_SYMBOL 															{$$ = Table::makeStringExpression($1); }				
@@ -377,14 +424,14 @@ Expression 			: Expression OR_SYMBOL Expression 											{$$ = Table::makeExpr
 
 
 LValue 				: ID_SYMBOL  		{$$ = new Expression($1,ID);}
-				//	| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff
-				//	| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
+					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff {$$ = NULL;}
+					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff {$$ = NULL; }
 					;
 
-// LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
-// 					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
-// 					|
-				// ;
+LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
+					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
+					|
+				;
 
 ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression {$$ = Table::makeConst($1,OR,$3);}
 					| ConstExpression AND_SYMBOL ConstExpression {$$ = Table::makeConst($1,AND,$3);}

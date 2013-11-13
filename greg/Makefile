@@ -26,7 +26,7 @@ output:
 	g++ -g -c -std=c++11 OutputFile.cpp -c
 
 debug:
-	gdb  --args ./cpsl TestFiles/expressions.cpsl run
+	gdb -tui --args ./cpsl TestFiles/myTest.cpsl default.asm run
 
 clean:
 	-rm -rf *.asm

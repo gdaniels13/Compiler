@@ -87,6 +87,7 @@ public:
 	std::string m_location;
 	std::string m_value;
 	ConstType m_type;
+	int m_size;
 	Expression();
 	Expression(ConstType, std::string);
 	Expression(std::string, ConstType);
@@ -166,6 +167,13 @@ public:
 	static void PrintScope();
 	static bool isVerbose();
 	static void setVerbose(bool);
+ 	static int whichScope(std::string id);
+ 	static int getScopeSize();
+
+ 	static std::string getPointer(std::string);
+ 	static void checkFunctionSignature(std::string, std::deque<Expression*>*);
+//expressions
+
 	static Expression * makeExpression(Expression *, symbols , Expression *);
 	static void makeWriteStatement(std::deque<Expression*>*);
 	static Expression* makeIntExpression(int);
@@ -175,7 +183,7 @@ public:
 	static void readExpression(Expression *);
 	static void makeReadStatement(std::deque<Expression *>*);
 	static Expression* lookupExpression(Expression*);
-	static void makeAssignment(Expression*, Expression*);
+	static Expression* makeAssignment(Expression*, Expression*);
 
 	//If Statements
 	static void finishIfStatement(int);
@@ -184,6 +192,37 @@ public:
 	static void finishSubIf();
 	static void printElse();
 	static void finishElseStatement();
+
+	//while staement
+	static void beginWhileLoop();
+	static void evaluateWhileCondition(Expression *);
+	static void endWhileLoop();
+
+	//Repeat Statement
+	static void beginRepeat();
+	static void finishRepeat(Expression* );
+
+	//for statement
+	static void beginForLoop(Expression* , Expression*, bool);
+	static void finishForLoop(Expression*);
+
+	//char cast
+	static Expression* intToChar(Expression*);
+	static Expression* charToInt(Expression*);
+
+	//increment
+	static Expression* incrementExpression(Expression*);
+	static Expression* decrementExpression(Expression*);
+
+	// procedure stuff
+	static void makeProcedureCall(std::string, Expression*, std::deque<Expression*>*);
+	static void makeProcedureProlog(std::string);
+	static void makeProcedureEpilog(std::string);
+
+	static void makeReturnStatement(Expression*);
+
+	static Expression* functionReturn(std::string);
+	static ConstType getReturnType(Function*);
 
 	~Table(){};
 private:

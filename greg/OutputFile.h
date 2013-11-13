@@ -12,9 +12,15 @@ class Output
 public:
 	int ifCount;
 	int EndIfStatement;
+	int whileCount;
+	int repeatCount;
+	int forCount;
+
 	std::deque<int> ifQueue;
 	std::deque<int> endIfQueue;
-
+	std::deque<int> whileQueue;
+	std::deque<int> repeatQueue;
+	std::deque<int> forQueue;
 	static void createEndOfIfStatement();
 	static int getEndOfIfStatement();
 	static int pushIfQueue();
@@ -22,6 +28,19 @@ public:
 	static int pushEndIfQueue();
 	static int popEndIfQueue();
 	static int getEndIfQueue();
+
+	static int pushWhile();
+	static int popWhile();
+	static int getWhile();
+
+	static int pushRepeat();
+	static int popRepeat();
+	static int getRepeat();
+
+	static int pushFor();
+	static int popFor();
+	static int getFor();
+
 
 	static void SetFilePath(std::string path);
 	static void out(std::string);
@@ -32,7 +51,12 @@ public:
 	static std::string addString(std::string);
 
 	static std::shared_ptr<Output> getInstance();
+
+	static void setCurFunction(std::string);
+	static std::string getCurFunction();
+
 private:
+	std::string currentFunction;
 	void setUpFile();
 	bool registers[17];
 	std::map<std::string, std::string> strings;
