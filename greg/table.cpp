@@ -78,7 +78,7 @@ std::string Table::getPointer(std::string id)
 	if(scope ==1)
 		return "($gp)";
 	else
-		return "($sp)";
+		return "($fp)";
 }
 
 bool Table::isVerbose()
@@ -231,12 +231,14 @@ void Table::RemoveScope()
 
 std::vector<std::shared_ptr<Var>> * Table::MakeVars(Type* type, std::vector<std::string> * identList, std::vector<std::shared_ptr<Var>> * paramStuff)
 {
-	std::for_each(identList->begin(), identList->end(), [&] (std::string element)
+	//std::for_each(identList->begin(), identList->end(), [&] (std::string element)
+	for(int i = identList->size()-1; i>=0; --i)
 	{
+		auto element = identList->at(i);
 		std::shared_ptr<Type> newType(new Type(type->m_size, type->m_name));
 		std::shared_ptr<Var> myVar(new Var("NONE", newType, element));
 		paramStuff->push_back(myVar);
-	});
+	}//);
 	return paramStuff;
 }
 
@@ -263,8 +265,10 @@ Record * Table::MakeRecord(std::vector<std::shared_ptr<Type>>* types)
 
 void Table::MakeVar(std::vector<std::string>* identList, Type * type)
 {
-	std::for_each(identList->begin(), identList->end(), [&] (std::string element)
+	//std::for_each(identList->begin(), identList->end(), [&] (std::string element)
+	for(int i = identList->size()-1; i>=0; --i)
 	{
+		std::string element = identList->at(i);
 		std::shared_ptr<Type> newType(new Type(type->m_size, type->m_name));
 		std::shared_ptr<Var> myVar(new Var(std::to_string(m_localStackPointer), newType, element));
 		InsertElement(element,myVar);
@@ -278,12 +282,13 @@ void Table::MakeVar(std::vector<std::string>* identList, Type * type)
 		{
 			m_localStackPointer += type->m_size;
 		}
-	});
+	}
+	//});
 	
-	std::stringstream ss("");
-		ss<<"\tADDI $sp,\t$sp,\t-"<<m_localStackPointer<<"\t# increment sp to make space for local variables";
+	// std::stringstream ss("");
+	// 	ss<<"\tADDI $sp,\t$sp,\t-"<<m_localStackPointer<<"\t# increment sp to make space for local variables";
 
-	Output::out(ss.str());
+	// Output::out(ss.str());
 
 
 }
@@ -488,20 +493,9 @@ int Table::getArraySize(Const *a,Const *b, int size)
 
 void Table::MakeConst(std::string element, Const * type)
 {
-	//std::shared_ptr<Const> myConst(new Const(type->m_value, std::to_string(m_localStackPointer), element, type->m_type));
 	std::shared_ptr<Const> myConst(new Const(type->m_value, element, element, type->m_type));
 	InsertElement(element,myConst);
-	/*
-	if(m_localStackPointer == m_globalStackPointer)
-	{
-		m_localStackPointer += 4;
-		m_globalStackPointer += 4;
-	}
-	else
-	{
-		m_localStackPointer += 4;
-	}
-	*/
+
 }
 
 int Table::getSize(Const * a)
@@ -565,6 +559,11 @@ m_location(location),
 m_parameters(parameters),
 m_forward(forward)
 {
+	m_parameterSize = 0;
+	for(auto var : parameters)
+	{
+		m_parameterSize+= var->m_type->m_size;
+	}
 }
 
 Function::Function(std::string location, std::vector<std::shared_ptr<Var>> parameters, std::string name, bool forward):
@@ -574,6 +573,11 @@ m_location(location),
 m_parameters(parameters),
 m_forward(forward)
 {
+	m_parameterSize = 0;
+	for(auto var : parameters)
+	{
+		m_parameterSize+= var->m_type->m_size;
+	}
 }
 
 Type::Type():
@@ -772,10 +776,12 @@ m_location(""),
 m_type(UNKNOWN),
 m_value("")
 {
+	m_isConstant = false;
 }
 
 Expression::Expression(ConstType type, std::string location)
 {
+	m_isConstant = false;
 	m_location = location;
 	m_type = type;
 }
@@ -786,6 +792,7 @@ m_location(""),
 m_type(type),
 m_value(value)
 {
+	m_isConstant = false;
 }
 
 void Expression::releaseRegister()
@@ -799,6 +806,10 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 {
 	std::stringstream mst("");
 	int reg = Output::getRegister();
+	if(a==NULL || b== NULL)
+	{
+		yyerror("NULL Expression");
+	}
 	if(a->m_type == ID)
 	{
 		lookupExpression(a);
@@ -807,6 +818,20 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 	{
 		lookupExpression(b);
 	}
+
+		int areg = Output::getRegister();
+		int breg = Output::getRegister();
+	
+	if(a->m_isConstant)
+	{
+		mst<<"\tLI,\t$"<<areg<<",\t"<<a->m_value<<"# load the constant value into register\n";
+	}
+	if(b->m_isConstant)
+	{
+		mst<<"\tLI,\t$"<<breg<<",\t"<<b->m_value<<"# load the constant value into register\n";
+	}
+	Output::freeRegister(areg);
+	Output::freeRegister(breg);
 
 
 
@@ -1078,7 +1103,7 @@ Expression * Table::lookupExpression(Expression * ep)
 {
 	if(ep == NULL)
 	{
-		yyerror("Invalid Expression");
+		yyerror("Expression can not be null");
 	}
 
 	std::stringstream ss("");
@@ -1086,12 +1111,24 @@ Expression * Table::lookupExpression(Expression * ep)
 	auto var = dynamic_cast<Var*>( Table::GetElement(ep->m_value).get());
 	bool boolean = false;
 	SimpleType * tp;
-	if(var == NULL)
+	if(var == NULL) // not a var
 	{
 		tp = dynamic_cast<SimpleType*>( Table::GetElement(ep->m_value).get());
-		if(tp == NULL)
+	
+		if(tp == NULL) // it might be constant
 		{
-			yyerror("UNKNOWN SYMBOL " );
+			auto p = dynamic_cast<Const*>( Table::GetElement(ep->m_value).get());
+
+			if(p==NULL)
+			{
+				auto temp = "UNKNOWN SYMBOL " + ep->m_value; 
+				yyerror(temp.c_str() );
+			}
+
+			ep->m_value = p->m_value;
+			ep->m_isConstant = true;
+			ep->m_type = p->m_type;
+			return ep;
 		}
 		else
 		{
@@ -1133,7 +1170,7 @@ Expression * Table::lookupExpression(Expression * ep)
 	if(!boolean)
 	{
 		int location = std::stoi(var->m_location);
-		ss<<"\t LW \t$"<<areg<<", \t" << location<<getPointer(var->m_name)<<"\t#Load "<<ep->m_location<<" into register"<<std::endl;
+		ss<<"\t LW \t$"<<areg<<", \t -" << location<<getPointer(var->m_name)<<"\t#Load "<<ep->m_location<<" into register"<<std::endl;
 	}
 	
 	ep->m_location = "$" + std::to_string(areg);
@@ -1141,6 +1178,7 @@ Expression * Table::lookupExpression(Expression * ep)
 	Output::out(ss.str());
 		
 	return ep;
+	
 }
 
 void Table::writeExpression(Expression * ep)
@@ -1153,11 +1191,16 @@ void Table::writeExpression(Expression * ep)
 	// Output::comment("Write Statement "+ std::to_string(ep->m_type));
 	std::stringstream mst("");
 
-	if(ep->m_type == ID)
+	if(ep->m_type == ID )
 	{
 		lookupExpression(ep);
 	}
-
+	if(ep->m_isConstant)
+	{
+		auto treg = Output::getRegister();
+		mst<<"\tLI \t$"<<treg<<",\t"<<ep->m_value<<"\t#load the constant into a register to print\n";
+		ep->m_location = "$" + std::to_string(treg);
+	}
 
 	switch(ep->m_type)
 	{
@@ -1217,7 +1260,8 @@ void Table::readExpression(Expression * ep)
 
 	if(var == NULL)
 	{
-		yyerror("Unknown Symbol");
+		auto temp =  ep->m_value + " is not known in the current scope";
+		yyerror( temp.c_str());
 	}
 
 	int type;
@@ -1237,7 +1281,7 @@ void Table::readExpression(Expression * ep)
 	mst <<"\tsyscall\n";
 
 	int reg = Output::getRegister();
-	mst<<"\t sw \t$v0, \t" << location<<getPointer(ep->m_value)<<"\t#save the value that was read"<<std::endl;
+	mst<<"\t sw \t$v0, \t-" << location<<getPointer(ep->m_value)<<"\t#save the value that was read"<<std::endl;
 
 	Output::out(mst.str());
 	Output::freeRegister(reg);
@@ -1264,7 +1308,7 @@ Expression* Table::makeAssignment(Expression* left, Expression* right)
 	auto var = dynamic_cast<Var*>( Table::GetElement(left->m_value).get());
 	int location = std::stoi(var->m_location);
 
-	ss<<"\tSW\t"<< right->m_location<<", \t-"<<location<<getPointer(left->m_value)<<"\t#assign new value to " << left->m_location<<std::endl;
+	ss<<"\tSW\t"<< right->m_location<<", \t-"<<location<<getPointer(left->m_value)<<"\t#assign new value to " << left->m_value<<std::endl;
 
 	Output::out(ss.str());
 	right ->releaseRegister();
@@ -1334,7 +1378,7 @@ void Table::finishSubIf()
 	ss<<"\tJ\t ENDOFIFSTATEMENT"<<Output::getEndIfQueue()<<"\t#Jump to the end of the if statement"<<std::endl;
 
 	//set up the label for this else if
-	ss<<"ELSEIF"<<curLabel<<"\t# sub else if statement"<<":\n";
+	ss<<"ELSEIF"<<curLabel<<":\t# sub else if statement"<<"\n";
 
 	Output::out(ss.str());
 }
@@ -1437,9 +1481,9 @@ void Table::beginForLoop(Expression* counter, Expression* limit, bool increment)
 
 
 	
-	ss<<"FORINCREMENT"<<Output::getFor()<<"\t#increment the counter variable"<<":\n";
+	ss<<"FORINCREMENT"<<Output::getFor()<<":\t#increment the counter variable"<<":\n";
 
-	ss<<"\tLW \t$"<<areg<<", \t" << location<<getPointer(var->m_name)<<"\n";
+	ss<<"\tLW \t$"<<areg<<", \t-" << location<<getPointer(var->m_name)<<"\n";
 
 	if(increment)
 	{
@@ -1451,7 +1495,7 @@ void Table::beginForLoop(Expression* counter, Expression* limit, bool increment)
 	}	
 	ss<<areg<<",\t$"<<areg<<",\t"<<1<<"\t#Increment/decrement loop"<<std::endl;
 
-	ss<<"\tSW\t$"<<areg<<", \t"<<location<<getPointer(var->m_name)<<"\t#save off the incremented variable"<<"\n";
+	ss<<"\tSW\t$"<<areg<<", \t-"<<location<<getPointer(var->m_name)<<"\t#save off the incremented variable"<<"\n";
 
 	if(increment)
 	{
@@ -1575,12 +1619,15 @@ void Table::makeProcedureCall(std::string id, Expression* exp, std::deque<Expres
 {
 	std::stringstream ss("");
 
+		ss<<"\tSW\t$fp,\t-4($sp)\t#Save the old frame pointer onto the stack\n";
+		ss<<"\tMOVE\t$fp,\t$sp\t#move the frame pointer to point at the stack pointer\n";
+		ss<<"\tADDI\t$sp,\t$sp,\t-4"<<"\t#move the stack pointer to make room the frame pointer"<<std::endl;
+	auto func = dynamic_cast<Function*>( Table::GetElement(id).get());
 
-	//Output::comment("make space to save the return address and frame pointer");
-//	ss<<"\tSW\t$fp,\t0($sp)\n";
+	if(func == NULL)
+		yyerror("Unknown function");
 
-
-
+	int functionOffset;
 	if(exp == NULL)
 	{
 
@@ -1590,8 +1637,7 @@ void Table::makeProcedureCall(std::string id, Expression* exp, std::deque<Expres
 		elist->push_front(exp);
 		checkFunctionSignature(id,elist);
 
-
-		ss<<"\tADDI\t$sp,\t$sp,\t-8"<<"\t#move the stack pointer to make room for saving it later"<<std::endl;
+		ss<<"\tADDI\t$sp,\t$sp,\t-4"<<"\t#move the stack pointer to make room the ra"<<std::endl;
 
 		// push everything on the stack
 		for(Expression* ep : *elist)
@@ -1601,19 +1647,13 @@ void Table::makeProcedureCall(std::string id, Expression* exp, std::deque<Expres
 				lookupExpression(ep);
 			}
 
-			ss<<"\tADDI\t$sp,\t$sp"<<",\t-";
-			ss<<ep->m_size <<"\t#increment the sp for new parameter"<<std::endl;
+			ss<<"\tADDI\t$sp,\t$sp"<<",\t-"<<ep->m_size <<"\t#increment the sp for new parameter"<<std::endl;
 			ss<<"\tSW\t"<<ep->m_location<<",\t0($sp)"<<"\t#store the value into the stack"<<std::endl;
 			ep->releaseRegister();
 		}
 	}
 
-	auto func = dynamic_cast<Function*>( Table::GetElement(id).get());
-	
-	if(func == NULL)
-		yyerror("Unknown function");
-
-	ss<<"JAL "<<func->m_location<<"_PROLOG"<<"\t#go to the funciton"<<"\n";
+	ss<<"JAL "<<func->m_location<<"_PROLOG"<<"\t#go to the function"<<"\n";
 	Output::out(ss.str());
 }
 
@@ -1623,13 +1663,22 @@ void Table::makeProcedureProlog(std::string id)
 	Output::setCurFunction(id);
 	// Output::comment("making procedure");
 	std::stringstream ss("");
-	
 	ss<<id<<"_PROLOG:\n";
-//	ss<<"\tADDI\t$sp,\t$sp,\t"<<std::endl;
-	ss<<"\t"<<"SW\t $fp, \t"<<-4<<"($sp)"<<"\t#save the old stack pointer"<<std::endl;
 	
-	ss<<"\tSW\t$ra,\t"<<-8<<"($sp)"<<"\t#save the return address"<<std::endl;
-	ss<<"\tMOVE\t$fp,\t$sp"<<"\t#move the frame pointer to point at the top of the stack"<<std::endl;
+		auto func = dynamic_cast<Function*>( Table::GetElement(id).get());
+	
+	if(func == NULL)
+		yyerror("Unknown function");
+	ss<<"\tSW\t$ra,\t"<<-8<<"($fp)"<<"\t#save the return address above the stack pointer"<<std::endl;
+	ss<<"\tADDI\t$fp,\t$fp,\t-12\t#move frame pointer up 8\n";
+
+	ss<<"\tADD\t$sp,\t$fp,\t-"<<m_localStackPointer<<"\t#make room for local variables \n";	
+
+//	ss<<"\tADDI\t$sp,\t$sp,\t"<<m_localStackPointer<<"#make space for local variables\n";
+//	ss<<"\tADDI\t$sp,\t$sp,\t"<<std::endl;
+//ss<<"\t"<<"SW\t $fp, \t"<<-4<<"($sp)"<<"\t#save the old stack pointer"<<std::endl;
+	
+//	ss<<"\tMOVE\t$fp,\t$sp"<<"\t#move the frame pointer to point at the top of the stack"<<std::endl;
 	Output::out(ss.str());
 
 }
@@ -1639,6 +1688,8 @@ void Table::makeProcedureEpilog(std::string id)
 {
 	std::stringstream ss("");
 	ss<<id<<"_EPILOG:\n";
+	ss<<"\tADDI\t$fp,\t$fp,\t12\t#move frame pointer back 8\n";
+
 	ss<<"\tMOVE\t$sp,\t$fp"<<"\t#move the stack pointer back to the beginning of the frame"<<std::endl;
 
 	ss<<"\tLW\t $ra\t, -8($sp)"<<"\t#re load the return address"<<std::endl;

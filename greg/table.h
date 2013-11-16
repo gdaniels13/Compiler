@@ -87,6 +87,7 @@ public:
 	std::string m_location;
 	std::string m_value;
 	ConstType m_type;
+	bool m_isConstant;
 	int m_size;
 	Expression();
 	Expression(ConstType, std::string);
@@ -138,6 +139,7 @@ public:
 	std::shared_ptr<Type> m_returnType;
 	std::vector<std::shared_ptr<Var>> m_parameters;
 	std::string m_location;
+	int m_parameterSize;
 	virtual void print();
 	~Function(){};
 	Function();

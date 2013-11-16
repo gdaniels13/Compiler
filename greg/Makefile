@@ -1,9 +1,5 @@
 default: clean bison lex output logger table cpsl
 
-run: default
-	./cpsl TestFile/expressions.cpsl default.asm
-	java -jar ~/otherprograms/Mars4_4.jar default.asm
-
 cpsl: 
 	g++ -g -o cpsl -std=c++11 -g OutputFile.o table.o cpsl.tab.c logger.o  lex.yy.c  -ll
 
@@ -20,13 +16,14 @@ table:
 	g++ -g -std=c++11 table.cpp -c
 
 test: 
-		./cpsl TestFiles/myTest.cpsl default.asm
+		./cpsl TestFiles/myTest.cpsl default.asm -v
 		java -jar ~/otherprograms/Mars4_4.jar default.asm
+
 output:
 	g++ -g -c -std=c++11 OutputFile.cpp -c
 
 debug:
-	gdb -tui --args ./cpsl TestFiles/myTest.cpsl default.asm run
+	gdb -tui --args ./cpsl TestFiles/personnel.cpsl default.asm run
 
 clean:
 	-rm -rf *.asm

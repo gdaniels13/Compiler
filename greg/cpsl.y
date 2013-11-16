@@ -299,7 +299,7 @@ Statement 			: Assignment 		//done
 					| RepeatStatement	//done
 					| ForStatement		//done
 					| StopStatement 	//done
-					| ReturnStatement 	
+					| ReturnStatement 	//done
 					| ReadStatement 	//done
 					| WriteStatement 	//done
 					| ProcedureCall 	//done
@@ -433,26 +433,26 @@ LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
 					|
 				;
 
-ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression {$$ = Table::makeConst($1,OR,$3);}
-					| ConstExpression AND_SYMBOL ConstExpression {$$ = Table::makeConst($1,AND,$3);}
-					| ConstExpression EQUAL_SYMBOL ConstExpression {$$ = Table::makeConst($1,EQUAL,$3);}
-					| ConstExpression NOT_EQUAL_SYMBOL ConstExpression {$$ = Table::makeConst($1,NOT_EQUAL,$3);}
-					| ConstExpression LESS_EQUAL_SYMBOL ConstExpression {$$ = Table::makeConst($1,LESS_EQUAL,$3);}
-					| ConstExpression GREAT_EQUAL_SYMBOL ConstExpression {$$ = Table::makeConst($1,GREAT_EQUAL,$3);}
-					| ConstExpression LESS_SYMBOL ConstExpression {$$ = Table::makeConst($1,LESS,$3);}
-					| ConstExpression GREAT_SYMBOL ConstExpression {$$ = Table::makeConst($1,GREAT,$3);}
-					| ConstExpression ADD_SYMBOL ConstExpression {$$ = Table::makeConst($1,ADD,$3);}
-					| ConstExpression SUB_SYMBOL ConstExpression {$$ = Table::makeConst($1,SUB,$3);}
-					| ConstExpression MULT_SYMBOL ConstExpression {$$ = Table::makeConst($1,MULT,$3);}
-					| ConstExpression DIV_SYMBOL ConstExpression {$$ = Table::makeConst($1,DIV,$3);}
-					| ConstExpression PERCENT_SYMBOL ConstExpression {$$ = Table::makeConst($1,MOD,$3);}
-					| NOT_SYMBOL ConstExpression {$$ = Table::makeConst(new Const("",UNKNOWN),NOT,$2);}
-					| SUB_SYMBOL ConstExpression %prec UNARY_MINUS_SYMBOL {$$ = Table::makeConst(new Const("",UNKNOWN),UNARY,$2);}
-					| LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL {$$ = $2;}
-					| INTEGER_SYMBOL 	{$$ = new Const(std::to_string($1),INT);}				
-					| CHARACTER_SYMBOL 	{$$ = new Const($1,CHAR);}				
-					| STRING_SYMBOL 	{$$ = new Const($1,STRING);}				
-					| ID_SYMBOL 		{$$ = new Const($1,ID);}
+ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression { $$ = Table::makeConst($1,OR,$3);}
+					| ConstExpression AND_SYMBOL ConstExpression { $$ = Table::makeConst($1,AND,$3);}
+					| ConstExpression EQUAL_SYMBOL ConstExpression { $$ = Table::makeConst($1,EQUAL,$3);}
+					| ConstExpression NOT_EQUAL_SYMBOL ConstExpression { $$ = Table::makeConst($1,NOT_EQUAL,$3);}
+					| ConstExpression LESS_EQUAL_SYMBOL ConstExpression { $$ = Table::makeConst($1,LESS_EQUAL,$3);}
+					| ConstExpression GREAT_EQUAL_SYMBOL ConstExpression { $$ = Table::makeConst($1,GREAT_EQUAL,$3);}
+					| ConstExpression LESS_SYMBOL ConstExpression { $$ = Table::makeConst($1,LESS,$3);}
+					| ConstExpression GREAT_SYMBOL ConstExpression { $$ = Table::makeConst($1,GREAT,$3);}
+					| ConstExpression ADD_SYMBOL ConstExpression { $$ = Table::makeConst($1,ADD,$3);}
+					| ConstExpression SUB_SYMBOL ConstExpression { $$ = Table::makeConst($1,SUB,$3);}
+					| ConstExpression MULT_SYMBOL ConstExpression { $$ = Table::makeConst($1,MULT,$3);}
+					| ConstExpression DIV_SYMBOL ConstExpression { $$ = Table::makeConst($1,DIV,$3);}
+					| ConstExpression PERCENT_SYMBOL ConstExpression { $$ = Table::makeConst($1,MOD,$3);}
+					| NOT_SYMBOL ConstExpression { $$ = Table::makeConst(new Const("",UNKNOWN),NOT,$2);}
+					| SUB_SYMBOL ConstExpression %prec UNARY_MINUS_SYMBOL { $$ = Table::makeConst(new Const("",UNKNOWN),UNARY,$2);}
+					| LEFT_BRACE_SYMBOL ConstExpression RIGHT_BRACE_SYMBOL { $$ = $2;}
+					| INTEGER_SYMBOL 	{ $$ = new Const(std::to_string($1),INT);}				
+					| CHARACTER_SYMBOL 	{ $$ = new Const($1,CHAR);}				
+					| STRING_SYMBOL 	{ $$ = new Const($1,STRING);}				
+					| ID_SYMBOL 		{ $$ = new Const($1,ID);}
 					;
 %%
 
