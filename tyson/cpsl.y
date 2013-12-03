@@ -181,10 +181,10 @@ ParamStuff 			: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type ParamSt
 		   			| {$$ = new std::vector<std::shared_ptr<Var>>;}
 		   			;
 
-PreFuncBody			: FuncStuff BodyStuff {Table::MakeProcedureMain($1); $$ = $1;}
+PreFuncBody			: FuncStuff BodyStuff {Table::SetFunctionSize($1); Table::MakeProcedureMain($1); $$ = $1;}
 					;
 
-PreProcBody			: ProcStuff BodyStuff {Table::MakeProcedureMain($1); $$ = $1;}
+PreProcBody			: ProcStuff BodyStuff {Table::SetFunctionSize($1); Table::MakeProcedureMain($1); $$ = $1;}
 					;
 
 BodyStuff			: ConstantDecl TypeDecl VarDecl
@@ -252,15 +252,15 @@ StatementStuff		:
 					| SEMI_COLON_SYMBOL Statement StatementStuff
 					;
 
-Statement 			: Assignment //done
-					| IfStatement //done
-					| WhileStatement //done
-					| RepeatStatement //done
-					| ForStatement //done
+Statement 			: Assignment 
+					| IfStatement 
+					| WhileStatement 
+					| RepeatStatement 
+					| ForStatement 
 					| StopStatement 
 					| ReturnStatement
-					| ReadStatement //done
-					| WriteStatement //done
+					| ReadStatement 
+					| WriteStatement 
 					| ProcedureCall
 					| NullStatement
 					;
@@ -316,11 +316,11 @@ ForDownTo			: ForBegin DOWNTO_SYMBOL Expression DO_SYMBOL {Table::MakeForDownTo(
 ForBegin			: FOR_SYMBOL ID_SYMBOL ASSIGN_SYMBOL Expression {$$ = Table::MakeForBegin($2,$4);}
 					;
 
-StopStatement		: STOP_SYMBOL
+StopStatement		: STOP_SYMBOL {Output::endFile();}
 					;
 
 ReturnStatement		: RETURN_SYMBOL Expression {Table::MakeReturn($2);}
-					| RETURN_SYMBOL  //does nothing?
+					| RETURN_SYMBOL  
 					;
 
 ReadStatement		: READ_SYMBOL LEFT_BRACE_SYMBOL LValue ReadStuff RIGHT_BRACE_SYMBOL {$4->push_back($3); Table::ReadCode($4);}
@@ -345,7 +345,7 @@ ProcedureStuff		:  {$$ = new std::vector<Expression *>;}
 					| COMMA_SYMBOL Expression ProcedureStuff {$3->push_back($2); $$ = $3;}
 					;
 
-NullStatement		:
+NullStatement		: 
 					;
 
 Expression 			: Expression OR_SYMBOL Expression {$$ = Table::makeExpression($1, OR, $3);}
@@ -364,12 +364,12 @@ Expression 			: Expression OR_SYMBOL Expression {$$ = Table::makeExpression($1, 
 					| NOT_SYMBOL Expression {$$ = Table::makeExpression(new Expression("",UNKNOWN),NOT,$2);}
 					| SUB_SYMBOL Expression %prec UNARY_MINUS_SYMBOL {$$ = Table::makeExpression(new Expression("",UNKNOWN),UNARY,$2);}
 					| LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = $2;}
-					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL {$$ = Table::MakeFunctionCall(0,$1);}//function
+					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL {$$ = Table::MakeFunctionCall(0,$1);}
 					| ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionStuff RIGHT_BRACE_SYMBOL {$4->push_back($3); $$ = Table::MakeFunctionCall($4, $1);}//function
-					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//int to char
-					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//char to int
-					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//-- on chars only
-					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = 0;}//++ on chars
+					| CHR_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = Table::MakeChr($3);}
+					| ORD_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = Table::MakeOrd($3);}
+					| PRED_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = Table::MakePrec($3);}
+					| SUCC_SYMBOL LEFT_BRACE_SYMBOL Expression RIGHT_BRACE_SYMBOL {$$ = Table::MakeSucc($3);}
 					| INTEGER_SYMBOL 	{$$ = new Expression(std::to_string($1),INT);}				
 					| CHARACTER_SYMBOL 	{$$ = new Expression($1,CHAR);}				
 					| STRING_SYMBOL 	{$$ = new Expression($1,STRING,Table::getStringCount());}
@@ -382,11 +382,11 @@ ExpressionStuff 	: COMMA_SYMBOL Expression ExpressionStuff {$3->push_back($2); $
 
 LValue 				: ID_SYMBOL {$$ = new Expression($1,ID);}
 					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff  {$$ = 0;}//record
-					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff {$$ = 0;}//array
+					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff {Expression * temp = Table::GetArrayNumber($3,$5); $$ = Table::MakeArrayIndex($1,temp);}
 					;
 
 LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff{$$ = 0;}
-					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff{$$ = 0;}
+					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff {$$ = Table::GetArrayNumber($2,$4);}
 					| {$$ = 0;}
 					;
 
