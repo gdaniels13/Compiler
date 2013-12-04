@@ -17,13 +17,13 @@ table:
 
 test: 
 		./cpsl TestFiles/myTest.cpsl default.asm -v
-		java -jar ~/otherprograms/Mars4_4.jar default.asm
+		#java -jar ~/otherprograms/Mars4_4.jar default.asm
 
 output:
 	g++ -g -c -std=c++11 OutputFile.cpp -c
 
 debug:
-	gdb -tui --args ./cpsl TestFiles/personnel.cpsl default.asm run
+	gdb -tui --args ./cpsl TestFiles/myTest.cpsl default.asm run
 
 clean:
 	-rm -rf *.asm

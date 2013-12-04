@@ -8,19 +8,19 @@
 
 enum symbols
 {
-	OR,
-	AND,
+	OR,		//0
+	AND,	//1
 	NOT_EQUAL,
 	EQUAL,
 	LESS_EQUAL,
 	GREAT,
 	GREAT_EQUAL,
 	LESS,
-	ADD,
+	ADD,	//8
 	SUB,
 	DIV,
 	MOD,
-	MULT,
+	MULT,	//12
 	NOT,
 	UNARY
 };
@@ -32,7 +32,10 @@ enum ConstType
 	INT,
 	CHAR,
 	STRING,
-	BOOLEAN
+	BOOLEAN,
+	RECORD,
+	ARRAY,
+	REFFERENCE
 };
 
 class Symbol
@@ -49,6 +52,7 @@ public:
 class Type : public Symbol
 {
 public:
+	ConstType m_constype;
 	int m_size;
 	virtual void print();
 	~Type(){};
@@ -87,6 +91,7 @@ public:
 	std::string m_location;
 	std::string m_value;
 	ConstType m_type;
+	std::shared_ptr<Type> m_typeReal;
 	bool m_isConstant;
 	int m_size;
 	Expression();
@@ -110,6 +115,7 @@ public:
 class Var : public Symbol
 {
 public:
+	std::string typeName;
 	std::shared_ptr<Type> m_type;
 	std::string m_location;
 	virtual void print();
@@ -173,6 +179,7 @@ public:
  	static int getScopeSize();
 
  	static std::string getPointer(std::string);
+ 	static std::string getArrayPointer(std::string);
  	static void checkFunctionSignature(std::string, std::deque<Expression*>*);
 //expressions
 
@@ -225,6 +232,14 @@ public:
 
 	static Expression* functionReturn(std::string);
 	static ConstType getReturnType(Function*);
+
+//array Stuff
+	static Expression* arrayToExpression(std::string, Expression*);
+	static void initializeRecordArray(std::string );
+	static void convertToSimple(Expression*);
+
+	//Record Stuff
+	static Expression* RecordToExpression(std::string,std::string);
 
 	~Table(){};
 private:
