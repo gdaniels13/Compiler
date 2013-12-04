@@ -44,7 +44,8 @@ enum SymbolType
 	_Var,
 	_Const,
 	_Function,
-	_Expression
+	_Expression,
+	_ArrayReturn
 };
 
 class Symbol
@@ -203,10 +204,17 @@ public:
 	static void MakeForDownToEnd(char *);
 	static void MakeProcedureCall(std::vector<Expression *> *, char *);
 	static void MakeProcedureMain(char *);
-	static int GetFrameSize(std::vector<std::shared_ptr<Var>> vars);
+	static int GetFrameSize();
 	static void MakeProcedureEnd(char *);
 	static void MakeReturn(Expression *);
 	static Expression * MakeFunctionCall(std::vector<Expression *> *, char *);
+	static void SetFunctionSize(char *);
+	static Expression * MakeChr(Expression *);
+	static Expression * MakeOrd(Expression *);
+	static Expression * MakeSucc(Expression *);
+	static Expression * MakePrec(Expression *);
+	static Expression * GetArrayNumber(Expression *, Expression *);
+	static Expression * MakeArrayIndex(char *, Expression *);
 	~Table(){};
 private:
 	static std::vector<std::string> m_strings;
@@ -217,6 +225,7 @@ private:
 	std::mutex m_mutex;
 	std::vector<std::map<std::string, Element>> m_table;
 	int m_scope;
+	int m_arrayIndex;
 	std::string getScope(std::string);
 };
 

@@ -1,62 +1,135 @@
+$ Program to sort personnel data
+
 const
   TABLEN = 20;
   NAMELEN = 24;
 
-var
-  a : integer;
-
-function sayHi() : boolean;
-begin
-  write("Hi\n");
-  return true;
-end;
-
-function print (var b,c:integer) : integer;
-var 
- f : boolean;
-begin
-  write("The print function will say hi: ");
-  f := sayHi();
-  write("B: ", b, " C: ", c);
-  return 2;
-end;
-
-function add (a,b: integer) : integer;
-begin
-  return a + b;
-end;
-
-function factorial (n : integer) : integer;
-begin
-  if(n = 0) then
-    return 1;
+type
+  ntype = array[1:NAMELEN] of char;
+  ptype = record
+    age : integer;
+    name : ntype;
   end;
 
-  return factorial(n-1) * n;
+var
+  table : array[1:TABLEN] of ptype;
+  persons : integer;
+
+function exchname (var a,b:ntype) : boolean;
+  var
+    i:integer;
+begin
+  for i := 1 to NAMELEN do
+    if a[i] > b[i]
+      then return true;
+    elseif a[i] < b[i]
+      then return false;
+    end;
+  end;
+  return false;
 end;
 
-function lotsOfArgs(a,b,c,d,e,f,g,h : integer) : integer;
+function exchange (a,b: integer) : boolean;
 begin
-  return a+b+c+d+f+g+h;
+  return a > b;
+end;
+
+procedure nameread (var a : ntype);
+  var
+    c:char;
+    i:integer;
+begin
+  repeat
+    read(c);
+  until c<>' ';
+  i := 1;
+  repeat
+    a[i] := c;
+    read(c);
+    i := i + 1;
+  until c = '\n';
+  while i <= NAMELEN do $pad with spaces
+    a[i] := ' ';
+    i := i+1;
+  end;
+end;
+
+procedure personread (var p:ptype);
+begin
+  read(p.age);
+  nameread(p.name);
+end;
+
+procedure tableread ();
+  var
+    n:integer;
+begin
+  for n:=1 to persons do
+    personread(table[n])
+  end;
+end;
+
+procedure personswap (var a,b : ptype);
+  var
+    t : ptype;
+begin
+  t := a;
+  a := b;
+  b := t;
+end;
+
+procedure printtable();
+  var
+    i,n:integer;
+begin
+  write("#    age    Name\n");
+  write("------------------");
+  for n := 1 to persons do
+    write(n, ":\t", table[n].age, '\t');
+    for i := 1 to NAMELEN do
+      write(table[n].name[i]);
+    end;
+  end;
+end;
+
+procedure agesort();
+  var
+    n,m:integer;
+begin
+  for m := persons downto 1 do
+    for n:=1 to m-1 do
+      if exchange(table[n].age,table[n+1].age)
+        then personswap(table[n],table[n+1]);
+      end;
+    end;
+  end;
+end;
+
+procedure namesort ();
+  var
+    n,m:integer;
+begin
+  for m := persons downto 1 do
+    for n:=1 to m-1 do
+      if exchname(table[n].name,table[n+1].name)
+        then personswap(table[n],table[n+1]);
+      end;
+    end;
+  end;
 end;
 
 begin
-  a := sayHi();
-
-  write(sayHi(), " was returned by sayHi().\n");
-
-  write("SayHi() returned: ", a, '\n');
-
-  a := print(20,13);
-  write("\na: ", a,'\n', "add(12,3)=", add(12,3), '\n');
-
-  write("\nfactorial(1) = ", factorial(1));
-  write("\nfactorial(2) = ", factorial(2));
-  write("\nfactorial(3) = ", factorial(3));
-  write("\nfactorial(4) = ", factorial(4));
-  write("\nfactorial(5) = ", factorial(5));
-
-  write('\n');
-
-  write("\nLots of args = ", lotsOfArgs(1,1,1,1,1,1,1,1));
+  read(persons);
+  if persons > TABLEN then 
+    write("Too many persons (", persons, ").  Limit is ", TABLEN, '\n');
+    stop;
+  end;
+  tableread();
+  printtable();
+  write("\n\tSorted by age:\n\n");
+  agesort();
+  printtable();
+  write("\n\tSorted by name:\n\n");
+  namesort();
+  printtable();
 end.

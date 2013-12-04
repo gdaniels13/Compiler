@@ -34,7 +34,8 @@ std::vector<std::string> Table::m_strings;
 Table::Table():
 m_mutex(),
 m_table(),
-m_scope(0)
+m_scope(0),
+m_arrayIndex(0)
 {
 	ifVec = std::vector<int>();
 	endVec = std::vector<int>();
@@ -923,6 +924,185 @@ Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 			{
 				std::cout << "CONST ERRORS UNKNOWN SYMBOL" << std::endl;
 				exit(-1);
+			}
+		}
+		else if(a->m_location != "" && b->m_location != "")
+		{
+			int regA = Output::getRegister();
+			int regB = Output::getRegister();
+			switch(sym)
+			{
+				case OR:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg1 = Output::getRegister();
+					Output::out("\tadd $" + std::to_string(tempReg1) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB));
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					int tempReg2 = Output::getRegister();
+					Output::out("\tsgt $" + std::to_string(tempReg2) + ", $" + std::to_string(tempReg1) + ", 0");
+					Output::freeRegister(tempReg1);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg2));
+				}
+				case AND:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg1 = Output::getRegister();
+					Output::out("\tsne $" + std::to_string(tempReg1) + ", $" + std::to_string(regA) + ", 0");
+					Output::freeRegister(regA);
+					int tempReg2 = Output::getRegister();
+					Output::out("\tsne $" + std::to_string(tempReg2) + ", $" + std::to_string(regB) + ", 0");
+					Output::freeRegister(regB);
+					int tempReg3 = Output::getRegister();
+					Output::out("\tseq $" + std::to_string(tempReg3) + ", $" + std::to_string(tempReg2) + ", $" + std::to_string(tempReg1));
+					Output::freeRegister(tempReg1);
+					Output::freeRegister(tempReg2);
+					int tempReg4 = Output::getRegister();
+					Output::out("\tseq $" + std::to_string(tempReg4) + ", $" + std::to_string(tempReg3) + ", 1 \t#and expression");
+					Output::freeRegister(tempReg3);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg4));
+				}
+				case NOT_EQUAL:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tsne $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#not equal expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case EQUAL:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tseq $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#equal expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case LESS_EQUAL:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tsle $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#less equal expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case GREAT:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tsgt $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#great expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case GREAT_EQUAL:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tsge $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#great equal expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case LESS:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tslt $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#less expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case ADD:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tadd $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#add expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case SUB:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tsub $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#sub expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case DIV:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tdiv $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#div expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case MOD:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\trem $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#mod expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				case MULT:
+				{
+					Output::out("\tmove $" + std::to_string(regA) + ", $" + a->m_location);
+					Output::out("\tmove $" + std::to_string(regB) + ", $" + b->m_location);
+					int tempReg = Output::getRegister();
+					Output::out("\tmul $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + std::to_string(regB) +" \t#mul expressions");
+					Output::freeRegister(regA);
+					Output::freeRegister(regB);
+					Output::freeRegister(std::stoi(a->m_location));
+					Output::freeRegister(std::stoi(b->m_location));
+					return new Expression(a->m_value, a->m_type, std::to_string(tempReg));
+				}
+				default:
+					std::cout << "EXP ERRORS MAKE CONST" << std::endl;
+					exit(-1);
 			}
 		}
 		else if(a->m_type == ID && b->m_type == INT || a->m_type == ID && b->m_type == CHAR)
@@ -4962,6 +5142,61 @@ void Table::Assign(Expression * lVal, Expression * rVal)
 {
 	if(lVal == 0 || rVal == 0)
 	{
+		std::cout << "errors" << std::endl;
+		exit(-1);
+	}
+	if(lVal->m_value == "ARRAYRETURN")
+	{
+		if(rVal->m_location != "")
+		{
+			int regA = Output::getRegister();
+			Output::out("\tmove $" + std::to_string(regA) + ", $" + rVal->m_location);
+			Output::out("\tsw $" + std::to_string(regA) + ", 0($25)");
+			Output::freeRegister(regA);
+			Output::freeRegister(std::stoi(rVal->m_location));
+			Output::freeRegister(std::stoi(lVal->m_location));
+		}
+		else if(rVal->m_value != "")
+		{
+			if((rVal->m_type == INT && lVal->m_type == INT) || (rVal->m_type == CHAR && lVal->m_type == CHAR))
+			{
+				int regA = Output::getRegister();
+				Output::out("\tli $" + std::to_string(regA) + ", " + rVal->m_value);
+				Output::out("\tsw $" + std::to_string(regA) + ", 0($25)");
+				Output::freeRegister(regA);
+				Output::freeRegister(std::stoi(lVal->m_location));
+			}
+			else if(rVal->m_type == ID)
+			{
+				auto temp = GetElement(rVal->m_value);
+				if(temp->m_symbolType == _Var)
+				{
+					auto newRVal = dynamic_cast<Var *>(temp.get());
+					int regA = Output::getRegister();
+					Output::out("\tlw $" + std::to_string(regA) + ", " + newRVal->m_location + "($sp)");
+					Output::out("\tsw $" + std::to_string(regA) + ", 0($25)");
+					Output::freeRegister(regA);
+					Output::freeRegister(std::stoi(lVal->m_location));
+				}
+				else if(temp->m_symbolType == _Const)
+				{
+					auto newRVal = dynamic_cast<Const *>(temp.get());
+					int regA = Output::getRegister();
+					Output::out("\tli $" + std::to_string(regA) + ", " + newRVal->m_value);
+					Output::out("\tsw $" + std::to_string(regA) + ", 0($25)");
+					Output::freeRegister(regA);
+					Output::freeRegister(std::stoi(lVal->m_location));
+				}
+				else
+				{
+					std::cout << "FLIP" << std::endl;
+				}
+			}
+		}
+		else
+		{
+			std::cout << "here.." << std::endl;
+		}
 	}
 	else
 	{
@@ -5636,55 +5871,62 @@ void Table::MakeProcedureCall(std::vector<Expression *> * exprList, char * id)
 			{
 				//this is where we write the code for each item on the stack
 				auto temp = newList[i];
-				if(temp->m_location != "")
+				if(!temp)
 				{
-					Output::out("\tsw $" + temp->m_location + ", " + std::to_string(currentSize) + "($sp)");
-					currentSize += 4;
-					Output::freeRegister(std::stoi(temp->m_location));
+					std::cout << "User defined types not implemented";
 				}
 				else
 				{
-					if(temp->m_type == ID)
+					if(temp->m_location != "")
 					{
-						auto sym = GetElement(temp->m_value);
-						if(sym->m_symbolType == _Var)
-						{
-							auto var = dynamic_cast<Var *>(sym.get());
-							int regA = Output::getRegister();
-							Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
-							Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
-							Output::freeRegister(regA);
-							currentSize += 4;
-
-						}
-						else if(sym->m_symbolType == _Const)
-						{
-							auto var = dynamic_cast<Const *>(sym.get());
-							int regA = Output::getRegister();
-							if(var->m_type == STRING)
-								Output::out("\tla $" + std::to_string(regA) + ", " + var->m_value);
-							else if(var->m_type == INT || var->m_type == CHAR)
-								Output::out("\tli $" + std::to_string(regA) + ", " + var->m_value);
-							Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
-							Output::freeRegister(regA);
-							currentSize += 4;
-						}
-						else
-						{
-							std::cout << "unimplemented procedure call";
-						}
-
+						Output::out("\tsw $" + temp->m_location + ", " + std::to_string(currentSize) + "($sp)");
+						currentSize += 4;
+						Output::freeRegister(std::stoi(temp->m_location));
 					}
 					else
 					{
-						int regA = Output::getRegister();
-						if(temp->m_type == STRING)
-							Output::out("\tla $" + std::to_string(regA) + ", " + temp->m_value);
-						else if(temp->m_type == INT || temp->m_type == CHAR)
-							Output::out("\tli $" + std::to_string(regA) + ", " + temp->m_value);
-						Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
-						Output::freeRegister(regA);
-						currentSize += 4;
+						if(temp->m_type == ID)
+						{
+							auto sym = GetElement(temp->m_value);
+							if(sym->m_symbolType == _Var)
+							{
+								auto var = dynamic_cast<Var *>(sym.get());
+								int regA = Output::getRegister();
+								Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
+								Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
+								Output::freeRegister(regA);
+								currentSize += 4;
+
+							}
+							else if(sym->m_symbolType == _Const)
+							{
+								auto var = dynamic_cast<Const *>(sym.get());
+								int regA = Output::getRegister();
+								if(var->m_type == STRING)
+									Output::out("\tla $" + std::to_string(regA) + ", " + var->m_value);
+								else if(var->m_type == INT || var->m_type == CHAR)
+									Output::out("\tli $" + std::to_string(regA) + ", " + var->m_value);
+								Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
+								Output::freeRegister(regA);
+								currentSize += 4;
+							}
+							else
+							{
+								std::cout << "unimplemented procedure call";
+							}
+
+						}
+						else
+						{
+							int regA = Output::getRegister();
+							if(temp->m_type == STRING)
+								Output::out("\tla $" + std::to_string(regA) + ", " + temp->m_value);
+							else if(temp->m_type == INT || temp->m_type == CHAR)
+								Output::out("\tli $" + std::to_string(regA) + ", " + temp->m_value);
+							Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
+							Output::freeRegister(regA);
+							currentSize += 4;
+						}
 					}
 				}
 			}
@@ -5727,55 +5969,62 @@ Expression * Table::MakeFunctionCall(std::vector<Expression *> * exprList, char 
 			{
 				//this is where we write the code for each item on the stack
 				auto temp = newList[i];
-				if(temp->m_location != "")
+				if(!temp)
 				{
-					Output::out("\tsw $" + temp->m_location + ", " + std::to_string(currentSize) + "($sp)");
-					currentSize += 4;
-					Output::freeRegister(std::stoi(temp->m_location));
+					std::cout << "User defined types not implemented";
 				}
 				else
 				{
-					if(temp->m_type == ID)
+					if(temp->m_location != "")
 					{
-						auto sym = GetElement(temp->m_value);
-						if(sym->m_symbolType == _Var)
-						{
-							auto var = dynamic_cast<Var *>(sym.get());
-							int regA = Output::getRegister();
-							Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
-							Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
-							Output::freeRegister(regA);
-							currentSize += 4;
-
-						}
-						else if(sym->m_symbolType == _Const)
-						{
-							auto var = dynamic_cast<Const *>(sym.get());
-							int regA = Output::getRegister();
-							if(var->m_type == STRING)
-								Output::out("\tla $" + std::to_string(regA) + ", " + var->m_value);
-							else if(var->m_type == INT || var->m_type == CHAR)
-								Output::out("\tli $" + std::to_string(regA) + ", " + var->m_value);
-							Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
-							Output::freeRegister(regA);
-							currentSize += 4;
-						}
-						else
-						{
-							std::cout << "unimplemented procedure call";
-						}
-
+						Output::out("\tsw $" + temp->m_location + ", " + std::to_string(currentSize) + "($sp)");
+						currentSize += 4;
+						Output::freeRegister(std::stoi(temp->m_location));
 					}
 					else
 					{
-						int regA = Output::getRegister();
-						if(temp->m_type == STRING)
-							Output::out("\tla $" + std::to_string(regA) + ", " + temp->m_value);
-						else if(temp->m_type == INT || temp->m_type == CHAR)
-							Output::out("\tli $" + std::to_string(regA) + ", " + temp->m_value);
-						Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
-						Output::freeRegister(regA);
-						currentSize += 4;
+						if(temp->m_type == ID)
+						{
+							auto sym = GetElement(temp->m_value);
+							if(sym->m_symbolType == _Var)
+							{
+								auto var = dynamic_cast<Var *>(sym.get());
+								int regA = Output::getRegister();
+								Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
+								Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
+								Output::freeRegister(regA);
+								currentSize += 4;
+
+							}
+							else if(sym->m_symbolType == _Const)
+							{
+								auto var = dynamic_cast<Const *>(sym.get());
+								int regA = Output::getRegister();
+								if(var->m_type == STRING)
+									Output::out("\tla $" + std::to_string(regA) + ", " + var->m_value);
+								else if(var->m_type == INT || var->m_type == CHAR)
+									Output::out("\tli $" + std::to_string(regA) + ", " + var->m_value);
+								Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
+								Output::freeRegister(regA);
+								currentSize += 4;
+							}
+							else
+							{
+								std::cout << "unimplemented procedure call";
+							}
+
+						}
+						else
+						{
+							int regA = Output::getRegister();
+							if(temp->m_type == STRING)
+								Output::out("\tla $" + std::to_string(regA) + ", " + temp->m_value);
+							else if(temp->m_type == INT || temp->m_type == CHAR)
+								Output::out("\tli $" + std::to_string(regA) + ", " + temp->m_value);
+							Output::out("\tsw $" + std::to_string(regA) + ", " + std::to_string(currentSize) + "($sp)");
+							Output::freeRegister(regA);
+							currentSize += 4;
+						}
 					}
 				}
 			}
@@ -5799,20 +6048,17 @@ Expression * Table::MakeFunctionCall(std::vector<Expression *> * exprList, char 
 	}
 }
 
-int Table::GetFrameSize(std::vector<std::shared_ptr<Var>> vars)
+int Table::GetFrameSize()
 {
 	int size = 0;
-	std::for_each(vars.begin(), vars.end(), [&](std::shared_ptr<Var> var)
-	{
-		auto temp = var->m_type;
-		size += temp->m_size;
-	});
+	//Table::PrintScope();
 	std::for_each(getInstance()->m_table[getInstance()->m_scope].begin(), getInstance()->m_table[getInstance()->m_scope].end(), [&](std::pair<std::string, Element> sym)
 	{
 		if(sym.second->m_symbolType == _Var)
 		{
 			auto temp = dynamic_cast<Var *>(sym.second.get());
 			size += temp->m_type->m_size;
+			//std::cout << "name: " << sym.first << " size_var: " << temp->m_type->m_size << std::endl;
 		}
 		else if(sym.second->m_symbolType == _Const)
 		{
@@ -5824,38 +6070,61 @@ int Table::GetFrameSize(std::vector<std::shared_ptr<Var>> vars)
 				{
 					auto rec = dynamic_cast<Array *>(var.get());
 					size += rec->m_size;
+					//std::cout << "size_array: " << rec->m_size << std::endl;
 				}
 				else if(var->m_symbolType == _Record)
 				{
 					auto rec = dynamic_cast<Record *>(var.get());
 					size += rec->m_size;
+					//std::cout << "size_record: " << rec->m_size << std::endl;
 				}
 				else if(var->m_symbolType == _Type)
 				{
 					auto rec = dynamic_cast<Type *>(var.get());
 					size += rec->m_size;
+					//std::cout << "size_type: " << rec->m_size << std::endl;
 				}
 				else
 				{
 					size += 4;
+					//std::cout << "other_size: " << 4 << std::endl;
 				}
 			}
 			else
 			{
 				size += 4;
+				//std::cout << "other_size: " << 4 << std::endl;
 			}
 		}
 		else if(sym.second->m_symbolType == _Type)
 		{
 			auto temp = dynamic_cast<Type *>(sym.second.get());
 			size += temp->m_size;
+			//std::cout << "size_type: " << temp->m_size << std::endl;
 		}
 		else
 		{
-			std::cout << sym.first << std::endl;
+			//std::cout << sym.first << " is not implemented" << std::endl;
 		}
 	});
+	//std::cout << "total_size: " << size << std::endl;
 	return size;
+}
+
+void Table::SetFunctionSize(char * id)
+{
+	int size = Table::GetFrameSize();
+	auto temp = Table::GetElement(id);
+	auto func = dynamic_cast<Function *>(temp.get());
+
+	if(!func)
+	{
+		
+	}
+	else
+	{
+		func->m_size = size;
+	}
 }
 
 Symbol::Symbol():
@@ -5905,7 +6174,7 @@ m_location(location),
 m_parameters(parameters),
 m_forward(forward)
 {
-	m_size = Table::GetFrameSize(parameters);
+	//m_size = Table::GetFrameSize(parameters);
 }
 
 Function::Function(std::string location, std::vector<std::shared_ptr<Var>> parameters, std::string name, bool forward):
@@ -5915,7 +6184,7 @@ m_location(location),
 m_parameters(parameters),
 m_forward(forward)
 {
-	m_size = Table::GetFrameSize(parameters);
+	//m_size = Table::GetFrameSize(parameters);
 }
 
 Type::Type(SymbolType type):
@@ -6139,4 +6408,374 @@ void Const::print()
 void SimpleType::print()
 {
     std::cout << std::setw(SIZE) << "Simple --- ID: " << std::left << std::setw(SIZE2) << m_name << std::right << " Size: " << m_size << " Type: " << m_type;
+}
+
+Expression * Table::MakeChr(Expression * a)
+{
+	//takes int and makes char
+	if(a->m_type == ID)
+	{
+		auto temp = GetElement(a->m_value);
+		if(temp->m_symbolType == _Var)
+		{
+			//auto var = dynamic_cast<Var *>(temp.get());
+		}
+		else if(temp->m_symbolType == _Const)
+		{
+			auto var = dynamic_cast<Const *>(temp.get());
+			if(var->m_type == INT)
+			{
+				var->m_type = CHAR;
+			}
+			else
+			{
+				std::cout << "must be type of type int" << std::endl;
+				exit(-1);
+			}
+		}
+		else
+		{
+			std::cout << "must be type of type int" << std::endl;
+			exit(-1);
+		}
+	}
+	else if(a->m_type == INT)
+	{
+		a->m_type = CHAR;
+	}
+	else
+	{
+		std::cout << "must be type of type int" << std::endl;
+		exit(-1);
+	}
+	return a;
+}
+
+Expression * Table::MakeOrd(Expression * a)
+{
+	if(a->m_type == ID)
+	{
+		auto temp = GetElement(a->m_value);
+		if(temp->m_symbolType == _Var)
+		{
+			//auto var = dynamic_cast<Var *>(temp.get());
+		}
+		else if(temp->m_symbolType == _Const)
+		{
+			auto var = dynamic_cast<Const *>(temp.get());
+			if(var->m_type == CHAR)
+			{
+				var->m_type = INT;
+			}
+			else
+			{
+				std::cout << "must be type of type char" << std::endl;
+				exit(-1);
+			}
+		}
+		else
+		{
+			std::cout << "must be type of type char" << std::endl;
+			exit(-1);
+		}
+	}
+	else if(a->m_type == CHAR)
+	{
+		a->m_type = INT;
+	}
+	else
+	{
+		std::cout << "must be type of type char" << std::endl;
+		exit(-1);
+	}
+	return a;
+}
+
+Expression * Table::MakeSucc(Expression * a)
+{
+	if(a->m_type == ID)
+	{
+		auto temp = GetElement(a->m_value);
+		if(temp->m_symbolType == _Var)
+		{
+			auto var = dynamic_cast<Var *>(temp.get());
+			if(var->m_type->m_name == "CHAR" || var->m_type->m_name == "char")
+			{
+				int regA = Output::getRegister();
+				Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
+				Output::out("\taddi $" + std::to_string(regA) + ", $" + std::to_string(regA) + ", 1");
+				Output::out("\tsw $" + std::to_string(regA) + ", " + var->m_location + "($sp) \t#assign value");
+				Output::freeRegister(regA);
+			}
+			else
+			{
+				std::cout << "must be type of type char" << std::endl;
+				exit(-1);
+			}
+		}
+		else if(temp->m_symbolType == _Const)
+		{
+			auto var = dynamic_cast<Const *>(temp.get());
+			if(var->m_type == CHAR)
+			{
+				int x = std::stoi(var->m_value.c_str());
+				x++;
+				var->m_value = std::to_string(x);
+			}
+			else
+			{
+				std::cout << "must be type of type char" << std::endl;
+				exit(-1);
+			}
+		}
+		else
+		{
+			std::cout << "must be type of type char" << std::endl;
+			exit(-1);
+		}
+	}
+	else if(a->m_type == CHAR)
+	{
+		int x = std::stoi(a->m_value.c_str());
+		x++;
+		a->m_value = std::to_string(x);
+	}
+	else
+	{
+		std::cout << "must be type of type char" << std::endl;
+		exit(-1);
+	}
+	return a;
+}
+
+Expression * Table::MakePrec(Expression * a)
+{
+	if(a->m_type == ID)
+	{
+		auto temp = GetElement(a->m_value);
+		if(temp->m_symbolType == _Var)
+		{
+			auto var = dynamic_cast<Var *>(temp.get());
+			if(var->m_type->m_name == "CHAR" || var->m_type->m_name == "char")
+			{
+				int regA = Output::getRegister();
+				Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
+				Output::out("\tsubi $" + std::to_string(regA) + ", $" + std::to_string(regA) + ", 1");
+				Output::out("\tsw $" + std::to_string(regA) + ", " + var->m_location + "($sp) \t#assign value");
+				Output::freeRegister(regA);
+			}
+			else
+			{
+				std::cout << "must be type of type char" << std::endl;
+				exit(-1);
+			}
+		}
+		else if(temp->m_symbolType == _Const)
+		{
+			auto var = dynamic_cast<Const *>(temp.get());
+			if(var->m_type == CHAR)
+			{
+				int x = std::stoi(var->m_value.c_str());
+				x--;
+				var->m_value = std::to_string(x);
+			}
+			else
+			{
+				std::cout << "must be type of type char" << std::endl;
+				exit(-1);
+			}
+		}
+		else
+		{
+			std::cout << "must be type of type char" << std::endl;
+			exit(-1);
+		}
+	}
+	else if(a->m_type == CHAR)
+	{
+		int x = std::stoi(a->m_value.c_str());
+		x--;
+		a->m_value = std::to_string(x);
+	}
+	else
+	{
+		std::cout << "must be type of type char" << std::endl;
+		exit(-1);
+	}
+	return a;
+}
+
+Expression * Table::GetArrayNumber(Expression * newExpr, Expression * oldExpr)
+{
+	int newSize = 0;
+	int mult = 1;
+
+	if(newExpr == 0)
+		return 0;
+
+	if(oldExpr == 0)
+	{
+		getInstance()->m_arrayIndex = 0;
+		if(newExpr->m_location == "")
+		{
+			if(newExpr->m_type == ID)
+			{
+				auto temp = GetElement(newExpr->m_value);
+				if(temp->m_symbolType == _Var)
+				{
+					auto var = dynamic_cast<Var *>(temp.get());
+					if(var->m_type->m_name == "INTEGER" || var->m_type->m_name == "integer")
+					{
+						int regA = Output::getRegister();
+						Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
+						getInstance()->m_arrayIndex++;
+						return new Expression(newExpr->m_value, newExpr->m_type, std::to_string(regA));
+					}
+					else
+					{
+						std::cout << "must be of type int" << std::endl;
+						exit(-1);
+					}
+				}
+				else if(temp->m_symbolType == _Const)
+				{
+					auto var = dynamic_cast<Const *>(temp.get());
+					if(var->m_type == INT)
+					{
+						int regA = Output::getRegister();
+						Output::out("\tli $" + std::to_string(regA) + ", " + var->m_value);
+						getInstance()->m_arrayIndex++;
+						return new Expression(newExpr->m_value, newExpr->m_type, std::to_string(regA));
+					}
+					else
+					{
+						std::cout << "must be of type int" << std::endl;
+						exit(-1);
+					}
+				}
+				else
+				{
+					std::cout << "must be of type int" << std::endl;
+					exit(-1);	
+				}
+			}
+			else if(newExpr->m_type == INT)
+			{
+				newSize = std::stoi(newExpr->m_value.c_str());
+				newSize *= mult;
+				int regA = Output::getRegister();
+				Output::out("\tli $" + std::to_string(regA) + ", " + newExpr->m_value);
+				getInstance()->m_arrayIndex++;
+				return new Expression(newExpr->m_value, newExpr->m_type, std::to_string(regA));
+			}
+			else
+			{
+				std::cout << "must be of type int" << std::endl;
+				exit(-1);	
+			}
+		}
+	}
+	else
+	{
+		for(int i = 0; i < getInstance()->m_arrayIndex; ++i)
+			mult *= 2;
+		mult += getInstance()->m_arrayIndex;
+
+		int regA = Output::getRegister();
+		int tempReg = Output::getRegister();
+		if(newExpr->m_type == INT)
+			Output::out("\tli $" + std::to_string(regA) + ", " + newExpr->m_value);
+		else if(newExpr->m_type == ID)
+		{
+			auto temp = GetElement(newExpr->m_value);
+			if(temp->m_symbolType == _Var)
+			{
+				auto var = dynamic_cast<Var *>(temp.get());
+				if(var->m_type->m_name == "INTEGER" || var->m_type->m_name == "integer")
+				{
+					Output::out("\tlw $" + std::to_string(regA) + ", " + var->m_location + "($sp)");
+				}
+				else
+				{
+					std::cout << "must be of type int" << std::endl;
+					exit(-1);
+				}
+			}
+			else if(temp->m_symbolType == _Const)
+			{
+				auto var = dynamic_cast<Const *>(temp.get());
+				if(var->m_type == INT)
+				{
+					Output::out("\tli $" + std::to_string(regA) + ", " + var->m_value);
+				}
+				else
+				{
+					std::cout << "must be of type int" << std::endl;
+					exit(-1);
+				}
+			}
+			else
+			{
+				std::cout << "must be of type int" << std::endl;
+				exit(-1);	
+			}
+		}
+		Output::out("\tmul $" + std::to_string(regA) + ", $" + std::to_string(regA) + ", " + std::to_string(mult));
+		Output::out("\tadd $" + std::to_string(tempReg) + ", $" + std::to_string(regA) + ", $" + oldExpr->m_location);
+		Output::freeRegister(regA);
+		Output::freeRegister(std::stoi(oldExpr->m_location.c_str()));
+		return new Expression(newExpr->m_value, newExpr->m_type, std::to_string(tempReg));
+	}
+}
+
+Expression * Table::MakeArrayIndex(char * id, Expression * expr)
+{
+	if(expr == 0)
+	{
+		std::cout << "expr is empty" << std::endl;
+		exit(-1);
+	}
+	auto temp = GetElement(id);
+	if(temp->m_symbolType == _Var)
+	{
+		auto var = dynamic_cast<Var *>(temp.get());
+		int location = std::stoi(var->m_location);
+		auto type = GetElement(var->m_type->m_name.c_str());
+		int size = 0;
+		if(type->m_symbolType == _SimpleType)
+			size = 4;
+		else if(type->m_symbolType == _Array)
+		{
+			auto array = dynamic_cast<Array *>(temp.get());
+			size = array->m_size;
+		}
+		else if(type->m_symbolType == _Record)
+		{
+			auto record = dynamic_cast<Record *>(temp.get());
+			size = record->m_size;
+		}
+		else
+		{
+			std::cout << "incorrect type" << std::endl;
+			exit(-1);
+		}
+		int regA = Output::getRegister();
+		int regB = Output::getRegister();
+		Output::out("\tmul $" + std::to_string(regA) + ", $" + expr->m_location + ", " + std::to_string(size));
+		Output::out("\taddi $" + std::to_string(regA) + ", $" + std::to_string(regA) + ", " + var->m_location);
+		Output::out("\tmove $" + std::to_string(regB) + ", $sp");
+		Output::out("\tadd $" + std::to_string(regB) + ", $" + std::to_string(regB) + ", $" + std::to_string(regA));
+		Output::out("\tmove $25, $" + std::to_string(regB));
+		Output::out("\tlw $" + std::to_string(regB) + ", ($" + std::to_string(regB)+")");
+		Output::freeRegister(regA);
+		Output::freeRegister(std::stoi(expr->m_location.c_str()));
+		getInstance()->m_arrayIndex = 0;
+		return new Expression("ARRAYRETURN", INT, std::to_string(regB));
+		
+	}
+	else
+	{
+		std::cout << "array is not a var" << std::endl;
+		exit(-1);
+	}
 }
