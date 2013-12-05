@@ -6674,6 +6674,10 @@ Expression * Table::GetArrayNumber(Expression * newExpr, Expression * oldExpr)
 				exit(-1);	
 			}
 		}
+		else
+		{
+			return newExpr;
+		}
 	}
 	else
 	{
@@ -6746,12 +6750,12 @@ Expression * Table::MakeArrayIndex(char * id, Expression * expr)
 			size = 4;
 		else if(type->m_symbolType == _Array)
 		{
-			auto array = dynamic_cast<Array *>(temp.get());
+			auto array = dynamic_cast<Array *>(type.get());
 			size = array->m_size;
 		}
 		else if(type->m_symbolType == _Record)
 		{
-			auto record = dynamic_cast<Record *>(temp.get());
+			auto record = dynamic_cast<Record *>(type.get());
 			size = record->m_size;
 		}
 		else
@@ -6759,6 +6763,7 @@ Expression * Table::MakeArrayIndex(char * id, Expression * expr)
 			std::cout << "incorrect type" << std::endl;
 			exit(-1);
 		}
+
 		int regA = Output::getRegister();
 		int regB = Output::getRegister();
 		Output::out("\tmul $" + std::to_string(regA) + ", $" + expr->m_location + ", " + std::to_string(size));
