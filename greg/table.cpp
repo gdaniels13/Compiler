@@ -14,6 +14,7 @@
 
 int m_globalStackPointer = 0;
 int m_localStackPointer = 0;
+int recordArrayPointer = -4;
 
 extern "C" void yyerror(const char *s);
 
@@ -50,7 +51,7 @@ m_scope(0)
 	symbol.reset(new SimpleType("FALSE", 4, "FALSE"));
 	newElement.insert(std::make_pair(symbol->m_name, symbol));
 	m_table.push_back(newElement);
-	std::map<std::string, Element> newElement1 = std::map<std::string, Element>();;
+	std::map<std::string, Element> newElement1 = std::map<std::string, Element>();
 	m_table.push_back(newElement1);
 	m_scope++;
 }
@@ -80,6 +81,16 @@ std::string Table::getPointer(std::string id)
 	else
 		return "($fp)";
 }
+
+std::string Table::getArrayPointer(std::string id)
+{
+	int scope = whichScope(id);
+	if(scope ==1)
+		return "$gp";
+	else
+		return "$fp";
+}
+
 
 bool Table::isVerbose()
 {
@@ -254,7 +265,7 @@ std::vector<std::shared_ptr<Type>> * Table::MakeSubRecord(Type * type, std::vect
 
 Record * Table::MakeRecord(std::vector<std::shared_ptr<Type>>* types)
 {
-	int count = 0;
+	int count = 4;
 	std::for_each(types->begin(), types->end(), [&](std::shared_ptr<Type> t)
 	{
 		count += t->m_size;
@@ -262,6 +273,20 @@ Record * Table::MakeRecord(std::vector<std::shared_ptr<Type>>* types)
 	Record * record = new Record(*types,count,"");
 	return record;
 }
+
+void Table::initializeRecordArray(std::string id)
+{
+	std::stringstream ss("");
+
+	//store the address in fp + offset;
+	int reg = Output::getRegister();
+
+	ss<<"\tADDI\t$"<<reg<<",\t"<<getArrayPointer(id)<<",\t -"<<m_localStackPointer<<"\t#get the address and add the offset\n";
+	ss<<"\tSW\t$"<<reg<<"\t0($"<<reg<<")"<<"#save the address as the first thing\n";
+	Output::out(ss.str());
+	Output::freeRegister(reg);
+}
+
 
 void Table::MakeVar(std::vector<std::string>* identList, Type * type)
 {
@@ -272,6 +297,10 @@ void Table::MakeVar(std::vector<std::string>* identList, Type * type)
 		std::shared_ptr<Type> newType(new Type(type->m_size, type->m_name));
 		std::shared_ptr<Var> myVar(new Var(std::to_string(m_localStackPointer), newType, element));
 		InsertElement(element,myVar);
+		if(type->m_size>4)
+		{
+			initializeRecordArray(element);
+		}
 
 		if(m_localStackPointer == m_globalStackPointer)
 		{
@@ -457,7 +486,7 @@ Const * Table::makeConst(Const * a,symbols sym,Const * b)
 int Table::getArraySize(Const *a,Const *b, int size)
 {
 	int vala = 0;
-	int valb = 0;
+	int valb = 4;
 	if((a->m_type == INT || a->m_type == INT) || (a->m_type == ID || a->m_type == INT) || (a->m_type == INT || a->m_type == ID))
 	{
 		if(a->m_type == INT && b->m_type == INT)
@@ -604,22 +633,25 @@ m_lower(0),
 m_upper(0),
 m_type()
 {
+	m_constype = ARRAY;
 }
 
 Array::Array(int lower,int upper, std::shared_ptr<Type> type, int size, std::string name):
-Type(size, name),
+Type(size+4, name),
 m_lower(lower),
 m_upper(upper),
 m_type(type)
 {
+	m_constype = ARRAY;
 }
 
 Array::Array(int lower,int upper, std::shared_ptr<Type> type, int size):
-Type(size),
+Type(size+4),
 m_lower(lower),
 m_upper(upper),
 m_type(type)
 {
+	m_constype = ARRAY;
 }
 
 Array::Array(int lower,int upper, std::shared_ptr<Type> type):
@@ -628,6 +660,7 @@ m_lower(lower),
 m_upper(upper),
 m_type(type)
 {
+	m_constype = ARRAY;
 }
 
 
@@ -635,12 +668,14 @@ Record::Record():
 Type(),
 m_layout()
 {
+	m_constype = RECORD;
 }
 
 Record::Record(std::vector<std::shared_ptr<Type>> layout, int size, std::string name):
-Type(size, name),
+Type(size+4, name),
 m_layout(layout)
 {
+	m_constype = RECORD;
 }
 
 SimpleType::SimpleType():
@@ -804,6 +839,19 @@ void Expression::releaseRegister()
 
 Expression * Table::makeExpression(Expression * a, symbols sym, Expression * b)
 {
+	if(a->m_type == UNKNOWN)
+	{
+		//call function to convert to simple type
+		convertToSimple(a);
+	}
+
+	if(b->m_type == UNKNOWN)
+	{
+		//call function to onvert to simple type
+		convertToSimple(b);
+	}
+
+
 	std::stringstream mst("");
 	int reg = Output::getRegister();
 	if(a==NULL || b== NULL)
@@ -1162,9 +1210,10 @@ Expression * Table::lookupExpression(Expression * ep)
 		{
 			ep->m_type = BOOLEAN;
 		}
-		else
+		else 
 		{
-			yyerror("OOPS, SOMETHING BAD HAPPENED");
+			ep->m_type = ARRAY;
+			//yyerror("OOPS, SOMETHING BAD HAPPENED");
 		}
 	} 
 	if(!boolean)
@@ -1288,32 +1337,7 @@ void Table::readExpression(Expression * ep)
 }
 
 
-Expression* Table::makeAssignment(Expression* left, Expression* right)
-{
-	if(left == NULL || right == NULL)
-	{
-		yyerror("invalid expression");
-	}
 
-	std::stringstream ss("");
-	if(left->m_type != ID)
-	{
-		yyerror("ERROR NOT AN LVALUE");
-	}
-	if(right->m_type == ID)
-	{
-		lookupExpression(right);
-	}
-
-	auto var = dynamic_cast<Var*>( Table::GetElement(left->m_value).get());
-	int location = std::stoi(var->m_location);
-
-	ss<<"\tSW\t"<< right->m_location<<", \t-"<<location<<getPointer(left->m_value)<<"\t#assign new value to " << left->m_value<<std::endl;
-
-	Output::out(ss.str());
-	right ->releaseRegister();
-	return left;
-}
 
 int Table::makeBeginIfStatement(Expression * exp)
 {
@@ -1647,7 +1671,7 @@ void Table::makeProcedureCall(std::string id, Expression* exp, std::deque<Expres
 				lookupExpression(ep);
 			}
 
-			ss<<"\tADDI\t$sp,\t$sp"<<",\t-"<<ep->m_size <<"\t#increment the sp for new parameter"<<std::endl;
+			ss<<"\tADDI\t$sp,\t$sp"<<",\t-4"<<"\t#increment the sp for new parameter"<<std::endl;
 			ss<<"\tSW\t"<<ep->m_location<<",\t0($sp)"<<"\t#store the value into the stack"<<std::endl;
 			ep->releaseRegister();
 		}
@@ -1680,6 +1704,7 @@ void Table::makeProcedureProlog(std::string id)
 	
 //	ss<<"\tMOVE\t$fp,\t$sp"<<"\t#move the frame pointer to point at the top of the stack"<<std::endl;
 	Output::out(ss.str());
+
 
 }
 
@@ -1781,4 +1806,158 @@ ConstType Table::getReturnType(Function* func)
 	{
 		return BOOLEAN;
 	}
+}
+
+
+Expression* Table::arrayToExpression(std::string id, Expression* offset)
+{	
+	std::stringstream ss("");
+	auto array = dynamic_cast<Var*>( GetElement(id).get());
+	if(array == NULL)
+	{
+		yyerror("unknown Array " ); 
+	}
+
+	if(offset->m_type == ID)
+	{
+		lookupExpression(offset);
+	}
+	int reg = Output::getRegister();
+	int reg2 = Output::getRegister();
+	int location = std::stoi(array->m_location);
+	//load address from arrays symbol table location
+	ss<<"\tLW\t$"<<reg<<",\t -"<<location<<getPointer(id)<<"\t#Load the address into a register\n";
+	//calculate offset
+	auto elementType = dynamic_cast<Array*>( Table::GetElement(array->m_type->m_name).get());
+	if(elementType==NULL)
+	{
+		yyerror("unknown arrayType something strange happened");
+	}
+
+
+
+	ss<<"\tLI\t$"<<reg2<<",\t"<<elementType->m_type->m_size<<"\t#load the size of the type\n";
+	ss<<"\tMULT\t"<<offset->m_location<<",\t$"<<reg2<<std::endl;
+	ss<<"\tMFLO\t$"<<reg2<<"\t#multiply them together\n";
+	//add offset to that
+	ss<<"\tSUB\t$"<< reg<<",\t$"<<reg<<",\t$"<<reg2<<"\t#Add them together\n";
+	//load the address of the element
+	//ss<<"\tLW\t$"<<reg<<",\t"<<"0($"<<reg<<")\t#load the value of whatever is there\n";
+
+	//return as new expression
+	auto toReturn = new Expression();
+	toReturn->m_location = "$" + std::to_string(reg);
+	toReturn->m_typeReal = elementType->m_type;
+	toReturn->m_type = ARRAY;
+
+
+	Output::freeRegister(reg2);
+	offset->releaseRegister();
+	Output::out(ss.str());
+	return toReturn;
+}
+
+Expression* Table::makeAssignment(Expression* left, Expression* right)
+{
+	if(left == NULL || right == NULL)
+	{
+		yyerror("invalid expression");
+	}
+
+	std::stringstream ss("");
+	if(left->m_type != ID && left->m_type != ARRAY && left->m_type != RECORD)
+	{
+		yyerror("ERROR NOT AN LVALUE");
+	}
+	if(right->m_type == ID)
+	{
+		lookupExpression(right);
+	}
+	if(left->m_type == ID)
+	{
+		auto var = dynamic_cast<Var*>( Table::GetElement(left->m_value).get());
+		int location = std::stoi(var->m_location);
+
+		ss<<"\tSW\t"<< right->m_location<<", \t-"<<location<<getPointer(left->m_value)<<"\t#assign new value to " << left->m_value<<std::endl;
+	}
+	else if(left->m_type == ARRAY)
+	{
+		ss<<"\tSW\t"<<right->m_location<<",\t0("<<left->m_location<<")\t#save into an array\n";
+		left->releaseRegister();
+	}
+
+
+	Output::out(ss.str());
+	right ->releaseRegister();
+	return left;
+}
+
+
+Expression* Table::RecordToExpression(std::string name, std::string element){
+	auto var = dynamic_cast<Var*>( Table::GetElement(name).get());
+	if(var==NULL)
+	{
+		yyerror("Unknown Variable");
+	}
+
+	auto type =dynamic_cast<Record*>( Table::GetElement(var->m_type->m_name).get());
+	if(type == NULL)
+	{
+		yyerror("not a record");
+	}
+	auto layout = type->m_layout;
+	int offset = 0;
+	int i;
+	for(i = 0; i<layout.size(); ++i)
+	{
+		if(layout[i]->m_name ==element)
+		{
+			break;
+		}
+		offset+=layout[i]->m_size;
+	}
+	
+	auto elementType = layout[i];
+	std::stringstream ss("");
+
+
+ss<<"\tLI\t$"<<reg2<<",\t"<<elementType->m_type->m_size<<"\t#load the size of the type\n";
+	ss<<"\tMULT\t"<<offset->m_location<<",\t$"<<reg2<<std::endl;
+	ss<<"\tMFLO\t$"<<reg2<<"\t#multiply them together\n";
+	//add offset to that
+	ss<<"\tSUB\t$"<< reg<<",\t$"<<reg<<",\t$"<<reg2<<"\t#Add them together\n";
+	//load the address of the element
+	//ss<<"\tLW\t$"<<reg<<",\t"<<"0($"<<reg<<")\t#load the value of whatever is there\n";
+
+	//return as new expression
+	auto toReturn = new Expression();
+	toReturn->m_location = "$" + std::to_string(reg);
+	toReturn->m_typeReal = elementType->m_type;
+	toReturn->m_type = ARRAY;
+
+
+	ss<<"\tLI\t$"<<reg2<<",\t"<<offset<<"\t#Load location in the record\n";
+	ss<<"\tSUB\t$"<< reg<<",\t$"<<reg<<",\t$"<<reg2<<"\t#Add them together\n";
+	//load the address of the element
+	//ss<<"\tLW\t$"<<reg<<",\t"<<"0($"<<reg<<")\t#load the value of whatever is there\n";
+
+	//return as new expression
+	auto toReturn = new Expression();
+	toReturn->m_location = "$" + std::to_string(reg);
+	toReturn->m_typeReal = elementType;
+	toReturn->m_type = RECORD;
+
+
+	Output::freeRegister(reg2);
+	Output::out(ss.str());
+	return toReturn;
+	
+}
+
+
+
+void Table::convertToSimple(Expression* exp)
+{
+	//figure out constType here;
+	std::cout<<"Unknown"<<std::endl;
 }

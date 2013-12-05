@@ -98,6 +98,7 @@ extern "C" void yyerror(const char *s);
 
 
 %type <exp_type> Assignment
+%type <exp_type> ArrayBegin
 //%type Block
 //%type Body
 //%type ConstantDecl
@@ -133,6 +134,7 @@ extern "C" void yyerror(const char *s);
 //%type Program
 %type <nonetype> ReadStatement
 %type <exp_list_type> ReadStuff
+%type <exp_type> RecordBegin
 %type <type> RecordType
 %type <typeList> RecordStuff
 //%type RepeatStatement
@@ -164,49 +166,55 @@ extern "C" void yyerror(const char *s);
 Program			    : BeginMain Block DOT_SYMBOL {Output::endFile();}
 					;
 
-BeginMain			: ConstantDecl TypeDecl VarDecl ProcFunc 		 {Output::out("_begin:");}
-					| ConstantDecl TypeDecl ProcFunc 		 {Output::out("_begin:");}
-					| ConstantDecl VarDecl ProcFunc 		 {Output::out("_begin:");}
-					| ConstantDecl ProcFunc 		 {Output::out("_begin:");}
-					| TypeDecl VarDecl ProcFunc 		 {Output::out("_begin:");}
-					| TypeDecl ProcFunc 		 {Output::out("_begin:");}
-					| VarDecl ProcFunc 		 {Output::out("_begin:");}
-					| ProcFunc 		 {Output::out("_begin:");}
+//done
+BeginMain			: BeginStuff ProcFunc 		 {Output::out("_begin:");}
 
+BeginStuff			: ConstantDecl TypeDecl VarDecl {Output::out("J _begin");}
+					| ConstantDecl TypeDecl {Output::out("J _begin");}
+					| ConstantDecl VarDecl {Output::out("J _begin");}
+					| ConstantDecl {Output::out("J _begin");}
+					| TypeDecl VarDecl {Output::out("J _begin");}
+					| TypeDecl {Output::out("J _begin");}
+					| VarDecl {Output::out("J _begin");}
+					|
+					;
+
+//done
 ConstantDecl 		: CONST_SYMBOL ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL ConstantStuff 
 					{Table::MakeConst($2,$4);}
 			 		;
-
+//done
 ConstantStuff		:
 					| ID_SYMBOL EQUAL_SYMBOL ConstExpression SEMI_COLON_SYMBOL ConstantStuff {Table::MakeConst($1,$3);}
 					;
-
+//done
 ProcFunc 			: ProcedureDecl ProcFunc
 		 			| FunctionDecl ProcFunc
 					|
 					;
-
+//done
 ProcedureDecl 		: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL 
 							{Element element(new Function($2,*$4,$2,true)); Table::InsertElement($2, element);}
 			  		| PreProcBody Block SEMI_COLON_SYMBOL { Table::makeProcedureEpilog($1); Table::RemoveScope();}
 			  		;
-
+//done
 PreProcBody			: ProcStuff BodyStuff {Table::makeProcedureProlog($1); $$ = $1;}
 					;
-
+//done
 PreFuncBody			: FuncStuff BodyStuff {Table::makeProcedureProlog($1); $$ = $1;}
 					;
 
-
+//done
 ProcStuff			: PROCEDURE_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL SEMI_COLON_SYMBOL 
 						{Element element(new Function($2,*$4,$2,false)); Table::InsertElement($2, element); Table::AddScope($4); $$ = $2;}
 					;
-
+//done
 FunctionDecl 		: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL FORWARD_SYMBOL SEMI_COLON_SYMBOL  
 										{Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,true)); Table::InsertElement($2, element);}
 			 		|  PreFuncBody Block SEMI_COLON_SYMBOL {Table::makeProcedureEpilog($1); Table::RemoveScope();}
 			 		;
 
+//done
 FuncStuff			: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT_BRACE_SYMBOL COLON_SYMBOL Type SEMI_COLON_SYMBOL
                     	{
                     		Element element(new Function(std::shared_ptr<Type>($7),$2,*$4,$2,false)); 
@@ -216,11 +224,13 @@ FuncStuff			: FUNCTION_SYMBOL ID_SYMBOL LEFT_BRACE_SYMBOL FormalParameters RIGHT
                     	}
 					;
 
+//done
 FormalParameters 	: {$$ = new std::vector<std::shared_ptr<Var>>;}
 				 	| VAR_SYMBOL IdentList COLON_SYMBOL Type ParamStuff {$$ = Table::MakeVars($4,$2,$5);}
 				 	| IdentList COLON_SYMBOL Type ParamStuff {$$ = Table::MakeVars($3,$1,$4);}
 				 	;
 
+//done
 ParamStuff 			: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type ParamStuff {$$ = Table::MakeVars($5,$3,$6);}
 		   			| SEMI_COLON_SYMBOL IdentList COLON_SYMBOL Type ParamStuff {$$ = Table::MakeVars($4,$2,$5);}
 		   			| {$$ = new std::vector<std::shared_ptr<Var>>;}
@@ -228,7 +238,7 @@ ParamStuff 			: SEMI_COLON_SYMBOL VAR_SYMBOL IdentList COLON_SYMBOL Type ParamSt
 
 
 
-BodyStuff			: ConstantDecl TypeDecl VarDecl
+BodyStuff			: ConstantDecl TypeDecl VarDecl 
 					| ConstantDecl TypeDecl
 					| ConstantDecl VarDecl
 					| ConstantDecl
@@ -238,17 +248,28 @@ BodyStuff			: ConstantDecl TypeDecl VarDecl
 					|
 					;
 
+//done
 Block 				: BEGIN_SYMBOL StatementSequence END_SYMBOL
 	  				;
 
 TypeDecl 			: TypeBlah TypeStuff 
 					;
 
-TypeBlah			: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL {$4->m_name = $2; Element e($4); Table::InsertElement($2, e);}
+TypeBlah			: TYPE_SYMBOL ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL 
+							{
+								$4->m_name = $2;
+								Element e($4);
+								Table::InsertElement($2, e);
+							}
 					;
 
 TypeStuff			:
-					| ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL TypeStuff{$3->m_name = $1; Element e($3); Table::InsertElement($1, e);}
+					| ID_SYMBOL EQUAL_SYMBOL Type SEMI_COLON_SYMBOL TypeStuff
+							{
+								$3->m_name = $1;
+								Element e($3); 
+								Table::InsertElement($1, e);
+							}
 					;
 
 Type 				: SimpleType {$$ = $1;}
@@ -256,6 +277,7 @@ Type 				: SimpleType {$$ = $1;}
 					| ArrayType {$$ = $1;}
 					;
 
+//done
 SimpleType			: ID_SYMBOL {$$ = Table::MakeSimple($1);}
 					;
 
@@ -269,26 +291,31 @@ RecordStuff			: IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL RecordStuff {$$ = 
 ArrayType			: ARRAY_SYMBOL LEFT_SQUARE_SYMBOL ConstExpression COLON_SYMBOL ConstExpression RIGHT_SQUARE_SYMBOL OF_SYMBOL Type 
 						{$$ = new Array(Table::getSize($3),Table::getSize($5),std::shared_ptr<Type>($8),Table::getArraySize($3,$5,$8->m_size), $8->m_name);}
 					;
-
+//done
 IdentList			: ID_SYMBOL IdentStuff {$2->push_back($1); $$ = $2;} 
 					;
 
+//done
 IdentStuff			: {$$ = new std::vector<std::string>;}
 					| COMMA_SYMBOL ID_SYMBOL IdentStuff {$3->push_back($2); $$ = $3;}
 					;
 
+//done
 VarDecl				: VAR_SYMBOL IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL VarStuff 
 						{Table::MakeVar($2,$4); delete $2; delete $4;}
 					;
 
+//done
 VarStuff			: 
 					| IdentList COLON_SYMBOL Type SEMI_COLON_SYMBOL VarStuff 
 						{Table::MakeVar($1,$3); delete $1; delete $3;}
 					;
 
+//done
 StatementSequence 	: Statement StatementStuff
 					;
 
+//done
 StatementStuff		:
 					| SEMI_COLON_SYMBOL Statement StatementStuff
 					;
@@ -379,6 +406,7 @@ WriteStatement		: WRITE_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT
 					;
 
 
+//done
 ProcedureCall		: ID_SYMBOL LEFT_BRACE_SYMBOL Expression ExpressionList RIGHT_BRACE_SYMBOL
 						{Table::makeProcedureCall($1,$3,$4);}
 					| ID_SYMBOL LEFT_BRACE_SYMBOL RIGHT_BRACE_SYMBOL
@@ -424,14 +452,27 @@ Expression 			: Expression OR_SYMBOL Expression 											{$$ = Table::makeExpr
 
 
 LValue 				: ID_SYMBOL  		{$$ = new Expression($1,ID);}
-					| ID_SYMBOL DOT_SYMBOL ID_SYMBOL LValueStuff {$$ = NULL;}
-					| ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff {$$ = NULL; }
+					| RecordBegin LValueStuff {$$ = NULL;}
+					| ArrayBegin LValueStuff 
+					;
+
+RecordBegin			: ID_SYMBOL DOT_SYMBOL ID_SYMBOL
+						{
+							$$ = Table::RecordToExpression($1,$3);
+						}
+					;
+
+
+ArrayBegin			: ID_SYMBOL LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL
+						{
+							$$ = Table::arrayToExpression($1,$3);
+						}
 					;
 
 LValueStuff			: DOT_SYMBOL ID_SYMBOL LValueStuff
-					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff
+					| LEFT_SQUARE_SYMBOL Expression RIGHT_SQUARE_SYMBOL LValueStuff 
 					|
-				;
+					;
 
 ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression { $$ = Table::makeConst($1,OR,$3);}
 					| ConstExpression AND_SYMBOL ConstExpression { $$ = Table::makeConst($1,AND,$3);}
@@ -457,7 +498,7 @@ ConstExpression 	: ConstExpression OR_SYMBOL ConstExpression { $$ = Table::makeC
 %%
 
 //inputfile, outputfile, -v (print to console)
-int main(int argc, char ** argv)
+int main(int argc, char ** argv) 
 {
 	argc--, argv++;
 	

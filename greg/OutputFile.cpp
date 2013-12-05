@@ -69,7 +69,7 @@ void Output::setUpFile()
 {
 	m_out<<"#header of the file needs to happen here\n";
 	m_out<<("MOVE $fp,\t$sp")<<std::endl;
-	m_out<<("J _begin")<<std::endl;
+	// m_out<<("J _begin")<<std::endl;
 }
 
 void Output::endFile()
